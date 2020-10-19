@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.furkankrktr.pshare.adapter.CommentRecyclerAdapter
+import com.furkankrktr.pshare.model.Comment
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

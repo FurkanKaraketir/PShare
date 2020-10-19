@@ -1,4 +1,4 @@
-package com.furkankrktr.pshare
+package com.furkankrktr.pshare.service
 
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
@@ -9,6 +9,8 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.furkankrktr.pshare.HaberlerActivity
+import com.furkankrktr.pshare.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 

@@ -1,4 +1,4 @@
-package com.furkankrktr.pshare
+package com.furkankrktr.pshare.adapter
 
 import android.app.AlertDialog
 import android.content.DialogInterface
@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.furkankrktr.pshare.R
+import com.furkankrktr.pshare.model.Comment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.recycler_comment.view.*
@@ -50,7 +52,7 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
                 alert.setMessage("Yorumu Silmek İstediğinize Emin misiniz?")
                 alert.setNegativeButton(
                     "Hayır",
-                    DialogInterface.OnClickListener { dialogInterface, i ->
+                    DialogInterface.OnClickListener { _, _ ->
                         Toast.makeText(
                             holder.itemView.context,
                             "İşlem iptal edildi",
@@ -60,7 +62,7 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
 
                 alert.setPositiveButton(
                     "Evet",
-                    DialogInterface.OnClickListener { dialogInterface, i ->
+                    DialogInterface.OnClickListener { _, _ ->
 
                         val yorumsRef = database.collection("Yorumlar")
                         val queryYorum =

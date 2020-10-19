@@ -1,4 +1,4 @@
-package com.furkankrktr.pshare
+package com.furkankrktr.pshare.adapter
 
 import android.app.AlertDialog
 import android.content.DialogInterface
@@ -9,12 +9,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.furkankrktr.pshare.*
+import com.furkankrktr.pshare.model.Post
+import com.furkankrktr.pshare.service.glide
+import com.furkankrktr.pshare.service.placeHolderYap
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.recycler_row.view.*
 
-open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
-    RecyclerView.Adapter<UserEmailFilterAdapter.PostHolder>() {
+open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
+    RecyclerView.Adapter<HashtagRecyclerAdapter.PostHolder>() {
+
 
     lateinit var database: FirebaseFirestore
     lateinit var auth: FirebaseAuth
@@ -24,19 +29,17 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
 
     }
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostHolder {
-
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): PostHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.recycler_row, parent, false)
         return PostHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return postList.size
-    }
-
     override fun onBindViewHolder(holder: PostHolder, position: Int) {
+
         database = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
         if (auth.currentUser != null) {
@@ -73,7 +76,6 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
 
 
 
-
         holder.itemView.deleteButton.setOnClickListener {
             if (postList[position].kullaniciEmail == guncelKullanici || guncelKullanici == "furkankaraketir2005@gmail.com") {
                 //dialog
@@ -85,7 +87,7 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
 
                 alert.setNegativeButton(
                     "Hayır",
-                    DialogInterface.OnClickListener { dialogInterface, i ->
+                    DialogInterface.OnClickListener { _, _ ->
                         Toast.makeText(
                             holder.itemView.context,
                             "İşlem iptal edildi",
@@ -94,7 +96,7 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
                     })
                 alert.setPositiveButton(
                     "Evet",
-                    DialogInterface.OnClickListener { dialogInterface, i ->
+                    DialogInterface.OnClickListener { _, _ ->
                         val itemsRef = database.collection("Post")
 
                         val query = itemsRef.whereEqualTo("postId", postList[position].postId)
@@ -157,11 +159,17 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
 
 
                 }
-
             }
 
 
     }
 
+    override fun getItemCount(): Int {
+        return postList.size
+    }
+
 
 }
+
+
+

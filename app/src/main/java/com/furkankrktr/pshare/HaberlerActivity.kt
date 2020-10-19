@@ -7,6 +7,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.furkankrktr.pshare.adapter.HaberRecyclerAdapter
+import com.furkankrktr.pshare.model.Post
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query

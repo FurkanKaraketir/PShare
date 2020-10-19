@@ -1,4 +1,4 @@
-package com.furkankrktr.pshare
+package com.furkankrktr.pshare.adapter
 
 import android.app.AlertDialog
 import android.content.DialogInterface
@@ -9,6 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.furkankrktr.pshare.*
+import com.furkankrktr.pshare.model.Post
+import com.furkankrktr.pshare.service.glide
+import com.furkankrktr.pshare.service.placeHolderYap
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.recycler_row.view.*
@@ -102,7 +106,7 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
 
                 alert.setNegativeButton(
                     "Hayır",
-                    DialogInterface.OnClickListener { dialogInterface, i ->
+                    DialogInterface.OnClickListener { _, _ ->
                         Toast.makeText(
                             holder.itemView.context,
                             "İşlem iptal edildi",
@@ -111,7 +115,7 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
                     })
                 alert.setPositiveButton(
                     "Evet",
-                    DialogInterface.OnClickListener { dialogInterface, i ->
+                    DialogInterface.OnClickListener { _, _ ->
                         val itemsRef = database.collection("Post")
 
                         val query = itemsRef.whereEqualTo("postId", postList[position].postId)

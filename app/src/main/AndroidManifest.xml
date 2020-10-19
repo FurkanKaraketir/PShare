@@ -57,7 +57,7 @@
             android:value="true" />
 
         <service
-            android:name=".MyFirebaseMessagingService"
+            android:name=".service.MyFirebaseMessagingService"
             android:exported="false"
             tools:ignore="Instantiatable">
             <intent-filter>
