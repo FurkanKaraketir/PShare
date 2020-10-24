@@ -18,11 +18,9 @@ import com.google.firebase.messaging.RemoteMessage
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        println("From: ${remoteMessage.from}")
 
 
         if (remoteMessage.data.isNotEmpty()) {
-            println("Message data payload: ${remoteMessage.data}")
         }
 
         remoteMessage.notification?.let {

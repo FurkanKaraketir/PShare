@@ -19,7 +19,6 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
     lateinit var database: FirebaseFirestore
     lateinit var auth: FirebaseAuth
     lateinit var guncelKullanici: String
-    private lateinit var recyclerCommentViewAdapter: CommentRecyclerAdapter
 
     class CommentHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -44,7 +43,6 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
 
         holder.itemView.deleteYorumButton.setOnClickListener {
             if (commentList[position].kullaniciEmail == guncelKullanici || guncelKullanici == "furkankaraketir2005@gmail.com") {
-                recyclerCommentViewAdapter = CommentRecyclerAdapter(commentList)
 
                 val alert = AlertDialog.Builder(holder.itemView.context)
 
@@ -73,10 +71,9 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
                                     yorumsRef.document(document.id).delete()
                                     Toast.makeText(
                                         holder.itemView.context,
-                                        "Yorum Silindi.Yorumunuz Şuan Görünüyor Olabilir. Ancak Yorumunuz Başarıyla Silinmiştir",
+                                        "Yorum Silindi",
                                         Toast.LENGTH_LONG
                                     ).show()
-                                    recyclerCommentViewAdapter.notifyDataSetChanged()
                                 }
                             } else {
                                 Toast.makeText(holder.itemView.context, "Hata", Toast.LENGTH_SHORT)

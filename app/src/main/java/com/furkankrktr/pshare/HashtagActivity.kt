@@ -46,8 +46,6 @@ class HashtagActivity : AppCompatActivity() {
             .orderBy("tarih", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, exception ->
                 if (exception != null) {
-                    println(exception.localizedMessage)
-
                     Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
                 } else {
                     if (snapshot != null) {

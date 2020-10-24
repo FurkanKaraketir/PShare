@@ -34,7 +34,6 @@ class CommentsActivity : AppCompatActivity() {
         database = FirebaseFirestore.getInstance()
 
         selectedPost = intent.getStringExtra("selectedPost").toString()
-        println("verileri al çağrıldı")
         verileriAl()
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -42,7 +41,6 @@ class CommentsActivity : AppCompatActivity() {
         recyclerCommentsView.layoutManager = layoutManager
         recyclerCommentViewAdapter = CommentRecyclerAdapter(commentList)
         recyclerCommentsView.adapter = recyclerCommentViewAdapter
-        println("lauot manager oluşturuldu")
     }
 
 

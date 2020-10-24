@@ -27,22 +27,9 @@ class HaberlerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_haberler)
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
-        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                println(task.exception)
-            }
-
-            val token = task.result.token
-            println(token)
-
-        }
+        FirebaseInstanceId.getInstance().instanceId
 
         FirebaseMessaging.getInstance().subscribeToTopic("users")
-            .addOnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    println(task.exception)
-                }
-            }
         verileriAl()
 
         val layoutManager = LinearLayoutManager(this)
