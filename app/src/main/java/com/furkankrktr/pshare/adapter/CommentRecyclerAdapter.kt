@@ -16,13 +16,11 @@ import kotlinx.android.synthetic.main.recycler_comment.view.*
 class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
     RecyclerView.Adapter<CommentRecyclerAdapter.CommentHolder>() {
 
-    lateinit var database: FirebaseFirestore
+    private lateinit var database: FirebaseFirestore
     lateinit var auth: FirebaseAuth
-    lateinit var guncelKullanici: String
+    private lateinit var guncelKullanici: String
 
-    class CommentHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    }
+    class CommentHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentHolder {
         val inflater = LayoutInflater.from(parent.context)

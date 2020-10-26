@@ -18,7 +18,7 @@ class HashtagActivity : AppCompatActivity() {
     private lateinit var recyclerViewAdapter: HashtagRecyclerAdapter
     private lateinit var selectedHashtag: String
 
-    var postList = ArrayList<Post>()
+    private var postList = ArrayList<Post>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +40,7 @@ class HashtagActivity : AppCompatActivity() {
         recyclerView.adapter = recyclerViewAdapter
     }
 
-    fun verileriAl() {
+    private fun verileriAl() {
 
         database.collection("Post").whereEqualTo("kullaniciyorum", selectedHashtag)
             .orderBy("tarih", Query.Direction.DESCENDING)

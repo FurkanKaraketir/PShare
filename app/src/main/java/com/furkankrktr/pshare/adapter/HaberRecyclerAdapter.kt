@@ -22,13 +22,11 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
 
     RecyclerView.Adapter<HaberRecyclerAdapter.PostHolder>() {
 
-    lateinit var database: FirebaseFirestore
+    private lateinit var database: FirebaseFirestore
     lateinit var auth: FirebaseAuth
-    lateinit var guncelKullanici: String
+    private lateinit var guncelKullanici: String
 
-    class PostHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    }
+    class PostHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostHolder {

@@ -20,9 +20,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
 
-        if (remoteMessage.data.isNotEmpty()) {
-        }
-
         remoteMessage.notification?.let {
 
             val intent = Intent(this, HaberlerActivity::class.java).apply {

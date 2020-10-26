@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
-import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_gorsel.*
 import java.io.File
 import java.io.FileOutputStream

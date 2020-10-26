@@ -23,7 +23,7 @@ class CommentsActivity : AppCompatActivity() {
     private lateinit var database: FirebaseFirestore
     private lateinit var selectedPost: String
     private lateinit var recyclerCommentViewAdapter: CommentRecyclerAdapter
-    var commentList = ArrayList<Comment>()
+    private var commentList = ArrayList<Comment>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,11 +55,11 @@ class CommentsActivity : AppCompatActivity() {
             val tarih = Timestamp.now()
 
             val commentHashMap = hashMapOf<String, Any>()
-            commentHashMap.put("kullaniciemail", guncelKullaniciEmail)
-            commentHashMap.put("kullanicicomment", commentText)
-            commentHashMap.put("selectedPost", selectedPost)
-            commentHashMap.put("commentId", uuid.toString())
-            commentHashMap.put("tarih", tarih)
+            commentHashMap["kullaniciemail"] = guncelKullaniciEmail
+            commentHashMap["kullanicicomment"] = commentText
+            commentHashMap["selectedPost"] = selectedPost
+            commentHashMap["commentId"] = uuid.toString()
+            commentHashMap["tarih"] = tarih
 
             database.collection("Yorumlar").add(commentHashMap).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -80,7 +80,7 @@ class CommentsActivity : AppCompatActivity() {
     }
 
 
-    fun verileriAl() {
+    private fun verileriAl() {
         database.collection("Yorumlar").whereEqualTo("selectedPost", selectedPost)
             .orderBy("tarih", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, exception ->
@@ -96,13 +96,11 @@ class CommentsActivity : AppCompatActivity() {
                             for (document in documents) {
                                 val kullaniciComment = document.get("kullanicicomment") as String
                                 val kullaniciEmail = document.get("kullaniciemail") as String
-                                val selectedPost = document.get("selectedPost") as String
                                 val commentId = document.get("commentId") as String
                                 val indirilenComment =
                                     Comment(
                                         kullaniciEmail,
                                         kullaniciComment,
-                                        selectedPost,
                                         commentId
                                     )
                                 commentList.add(indirilenComment)

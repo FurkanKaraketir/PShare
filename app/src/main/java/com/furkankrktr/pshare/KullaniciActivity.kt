@@ -33,30 +33,35 @@ class KullaniciActivity : AppCompatActivity() {
         val email = emailText.text.toString()
         val sifre = passwordText.text.toString()
 
-        if (email.isEmpty()) {
-            emailLayout.error = "Bu Alanı Boş Bırakamazsın"
-        } else if (sifre.isEmpty()) {
-            emailLayout.error = null
-            passwordLayout.error = "Bu Alanı Boş Bırakamazsın"
-        } else if (sifre.length < 6) {
-            emailLayout.error = null
-            passwordLayout.error = "Kullanıcı Şifresi En Az 6 Karakter İle Oluşturulmuştur"
-        } else {
-            emailLayout.error = null
-            passwordLayout.error = null
-            Toast.makeText(this, "Giriş Yapılıyor...", Toast.LENGTH_SHORT).show()
-
-            auth.signInWithEmailAndPassword(email, sifre).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val intent = Intent(this, HaberlerActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
-            }.addOnFailureListener { exception ->
-                Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
+        when {
+            email.isEmpty() -> {
+                emailLayout.error = "Bu Alanı Boş Bırakamazsın"
             }
+            sifre.isEmpty() -> {
+                emailLayout.error = null
+                passwordLayout.error = "Bu Alanı Boş Bırakamazsın"
+            }
+            sifre.length < 6 -> {
+                emailLayout.error = null
+                passwordLayout.error = "Kullanıcı Şifresi En Az 6 Karakter İle Oluşturulmuştur"
+            }
+            else -> {
+                emailLayout.error = null
+                passwordLayout.error = null
+                Toast.makeText(this, "Giriş Yapılıyor...", Toast.LENGTH_SHORT).show()
+
+                auth.signInWithEmailAndPassword(email, sifre).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val intent = Intent(this, HaberlerActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }.addOnFailureListener { exception ->
+                    Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
+                }
 
 
+            }
         }
     }
 
@@ -65,30 +70,35 @@ class KullaniciActivity : AppCompatActivity() {
         val email = emailText.text.toString()
         val sifre = passwordText.text.toString()
 
-        if (email.isEmpty()) {
-            emailLayout.error = "Bu Alanı Boş Bırakamazsın"
-        } else if (sifre.isEmpty()) {
-            emailLayout.error = null
-            passwordLayout.error = "Bu Alanı Boş Bırakamazsın"
-        } else if (sifre.length < 6) {
-            emailLayout.error = null
-            passwordLayout.error = "Kullanıcı Şifresi En Az 6 Karakter İle Oluşturulmuştur"
-        } else {
-            emailLayout.error = null
-            passwordLayout.error = null
-            Toast.makeText(this, "Kullanıcı Kaydediliyor...", Toast.LENGTH_SHORT).show()
+        when {
+            email.isEmpty() -> {
+                emailLayout.error = "Bu Alanı Boş Bırakamazsın"
+            }
+            sifre.isEmpty() -> {
+                emailLayout.error = null
+                passwordLayout.error = "Bu Alanı Boş Bırakamazsın"
+            }
+            sifre.length < 6 -> {
+                emailLayout.error = null
+                passwordLayout.error = "Kullanıcı Şifresi En Az 6 Karakter İle Oluşturulmuştur"
+            }
+            else -> {
+                emailLayout.error = null
+                passwordLayout.error = null
+                Toast.makeText(this, "Kullanıcı Kaydediliyor...", Toast.LENGTH_SHORT).show()
 
-            auth.createUserWithEmailAndPassword(email, sifre).addOnCompleteListener { task ->
+                auth.createUserWithEmailAndPassword(email, sifre).addOnCompleteListener { task ->
 
 
-                if (task.isSuccessful) {
-                    //diğer aktivite
-                    val intent = Intent(this, HaberlerActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                    if (task.isSuccessful) {
+                        //diğer aktivite
+                        val intent = Intent(this, HaberlerActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }.addOnFailureListener { exception ->
+                    Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
                 }
-            }.addOnFailureListener { exception ->
-                Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
             }
         }
 

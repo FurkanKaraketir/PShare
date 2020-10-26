@@ -20,7 +20,7 @@ class HaberlerActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseFirestore
     private lateinit var recyclerViewAdapter: HaberRecyclerAdapter
-    var postList = ArrayList<Post>()
+    private var postList = ArrayList<Post>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +67,7 @@ class HaberlerActivity : AppCompatActivity() {
     }
 
 
-    fun verileriAl() {
+    private fun verileriAl() {
 
         database.collection("Post").orderBy("tarih", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, exception ->

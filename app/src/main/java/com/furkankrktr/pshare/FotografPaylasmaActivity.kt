@@ -26,8 +26,8 @@ import java.util.*
 open class FotografPaylasmaActivity : AppCompatActivity() {
 
     var secilenGorsel: Uri? = null
-    var secilenBitmap: Bitmap? = null
-    var player: MediaPlayer? = null
+    private var secilenBitmap: Bitmap? = null
+    private var player: MediaPlayer? = null
 
     private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
@@ -65,7 +65,7 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
         val kullaniciYorum = yorumText.text.toString()
         if (secilenGorsel != null && kullaniciYorum.isNotEmpty()) {
             paylasButton.isClickable = false
-            spinner.visibility = View.VISIBLE;
+            spinner.visibility = View.VISIBLE
             if (player == null) {
                 player = MediaPlayer.create(this, R.raw.sound)
             }
@@ -81,7 +81,7 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
 
             Toast.makeText(this, "Paylaşılıyor, Lütfen Bekleyin...", Toast.LENGTH_LONG).show()
 
-            gorselReference.putFile(secilenGorsel!!).addOnSuccessListener { taskSnapshot ->
+            gorselReference.putFile(secilenGorsel!!).addOnSuccessListener { _ ->
 
                 val yuklenenGorselReference =
                     FirebaseStorage.getInstance().reference.child("images").child(gorselIsim)
@@ -96,11 +96,11 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
                     val tarih = Timestamp.now()
                     //veritabanı işlemleri
                     val postHashMap = hashMapOf<String, Any>()
-                    postHashMap.put("postId", postId)
-                    postHashMap.put("gorselurl", downloadUrl)
-                    postHashMap.put("kullaniciemail", guncelKullaniciEmail)
-                    postHashMap.put("kullaniciyorum", kullaniciYorum)
-                    postHashMap.put("tarih", tarih)
+                    postHashMap["postId"] = postId
+                    postHashMap["gorselurl"] = downloadUrl
+                    postHashMap["kullaniciemail"] = guncelKullaniciEmail
+                    postHashMap["kullaniciyorum"] = kullaniciYorum
+                    postHashMap["tarih"] = tarih
 
                     database.collection("Post").add(postHashMap).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
@@ -109,7 +109,7 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
                                 player!!.release()
                                 player = null
                             }
-                            spinner.visibility = View.INVISIBLE;
+                            spinner.visibility = View.INVISIBLE
                             finish()
                         }
                     }.addOnFailureListener { exception ->
@@ -120,7 +120,7 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
                         }
                         paylasButton.isClickable = true
 
-                        spinner.visibility = View.INVISIBLE;
+                        spinner.visibility = View.INVISIBLE
 
                     }
 
@@ -133,7 +133,7 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
                     }
                     paylasButton.isClickable = true
 
-                    spinner.visibility = View.INVISIBLE;
+                    spinner.visibility = View.INVISIBLE
 
 
                 }
@@ -145,7 +145,7 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
                 }
                 paylasButton.isClickable = true
 
-                spinner.visibility = View.INVISIBLE;
+                spinner.visibility = View.INVISIBLE
             }
         } else if (secilenGorsel == null) {
             paylasButton.isClickable = true

@@ -18,7 +18,7 @@ class UserEmailFilterActivity : AppCompatActivity() {
     private lateinit var recyclerViewAdapter: UserEmailFilterAdapter
     private lateinit var selectedEmail: String
 
-    var postList = ArrayList<Post>()
+    private var postList = ArrayList<Post>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +42,7 @@ class UserEmailFilterActivity : AppCompatActivity() {
 
     }
 
-    fun verileriAl() {
+    private fun verileriAl() {
 
         database.collection("Post").whereEqualTo("kullaniciemail", selectedEmail)
             .orderBy("tarih", Query.Direction.DESCENDING)
