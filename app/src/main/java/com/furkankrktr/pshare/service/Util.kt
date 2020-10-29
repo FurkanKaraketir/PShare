@@ -15,7 +15,7 @@ fun ImageView.glide(url: String?, placeholder: CircularProgressDrawable){
 
 fun placeHolderYap(context: Context) : CircularProgressDrawable{
     return CircularProgressDrawable(context).apply {
-        strokeWidth = 8f
+        strokeWidth = 10f
         centerRadius = 40f
         start()
     }
