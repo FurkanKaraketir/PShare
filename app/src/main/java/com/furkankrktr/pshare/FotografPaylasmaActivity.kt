@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -25,7 +27,7 @@ import java.util.*
 
 open class FotografPaylasmaActivity : AppCompatActivity() {
 
-    var secilenGorsel: Uri? = null
+    private var secilenGorsel: Uri? = null
     private var secilenBitmap: Bitmap? = null
     private var player: MediaPlayer? = null
 
@@ -42,76 +44,112 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
         paylasButton.isClickable = true
+        val paylasmaButton = findViewById<Button>(R.id.paylasButton)
+        val imageSec = findViewById<ImageView>(R.id.imageView)
+        imageSec.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                //İzin Verilmedi, iste
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA),
+                    1
+                )
 
 
-    }
+            } else {
+                //İzin Var
+                CropImage.activity().start(this)
 
 
-    fun paylas(view: View) {
-
-        //depo işlemleri
-        val spinner = progress_circular
-
-
-        //UUID
-
-
-        val uuid = UUID.randomUUID()
-        val gorselIsim = "${uuid}.jpg"
-        val postId = "${uuid}"
-        val reference = storage.reference
-        val gorselReference = reference.child("images").child(gorselIsim)
-
-        val kullaniciYorum = yorumText.text.toString()
-        if (secilenGorsel != null && kullaniciYorum.isNotEmpty()) {
-            paylasButton.isClickable = false
-            spinner.visibility = View.VISIBLE
-            if (player == null) {
-                player = MediaPlayer.create(this, R.raw.sound)
             }
-            player?.setOnCompletionListener {
-                if (player != null) {
-                    player!!.release()
-                    player = null
+        }
+        paylasmaButton.setOnClickListener {
+
+
+            //depo işlemleri
+            val spinner = progress_circular
+
+
+            //UUID
+
+
+            val uuid = UUID.randomUUID()
+            val gorselIsim = "${uuid}.jpg"
+            val postId = "${uuid}"
+            val reference = storage.reference
+            val gorselReference = reference.child("images").child(gorselIsim)
+
+            val kullaniciYorum = yorumText.text.toString()
+            if (secilenGorsel != null && kullaniciYorum.isNotEmpty()) {
+                paylasButton.isClickable = false
+                spinner.visibility = View.VISIBLE
+                if (player == null) {
+                    player = MediaPlayer.create(this, R.raw.sound)
                 }
-            }
-            player?.start()
+                player?.setOnCompletionListener {
+                    if (player != null) {
+                        player!!.release()
+                        player = null
+                    }
+                }
+                player?.start()
 
-            yorumLayout.error = null
+                yorumLayout.error = null
 
-            Toast.makeText(this, "Paylaşılıyor, Lütfen Bekleyin...", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Paylaşılıyor, Lütfen Bekleyin...", Toast.LENGTH_LONG).show()
 
-            gorselReference.putFile(secilenGorsel!!).addOnSuccessListener { _ ->
+                gorselReference.putFile(secilenGorsel!!).addOnSuccessListener { _ ->
 
-                val yuklenenGorselReference =
-                    FirebaseStorage.getInstance().reference.child("images").child(gorselIsim)
+                    val yuklenenGorselReference =
+                        FirebaseStorage.getInstance().reference.child("images").child(gorselIsim)
 
-                yuklenenGorselReference.downloadUrl.addOnSuccessListener { uri ->
+                    yuklenenGorselReference.downloadUrl.addOnSuccessListener { uri ->
 
-                    val downloadUrl = uri.toString()
+                        val downloadUrl = uri.toString()
 
 
-                    val guncelKullaniciEmail = auth.currentUser!!.email.toString()
+                        val guncelKullaniciEmail = auth.currentUser!!.email.toString()
 
-                    val tarih = Timestamp.now()
-                    //veritabanı işlemleri
-                    val postHashMap = hashMapOf<String, Any>()
-                    postHashMap["postId"] = postId
-                    postHashMap["gorselurl"] = downloadUrl
-                    postHashMap["kullaniciemail"] = guncelKullaniciEmail
-                    postHashMap["kullaniciyorum"] = kullaniciYorum
-                    postHashMap["tarih"] = tarih
+                        val tarih = Timestamp.now()
+                        //veritabanı işlemleri
+                        val postHashMap = hashMapOf<String, Any>()
+                        postHashMap["postId"] = postId
+                        postHashMap["gorselurl"] = downloadUrl
+                        postHashMap["kullaniciemail"] = guncelKullaniciEmail
+                        postHashMap["kullaniciyorum"] = kullaniciYorum
+                        postHashMap["tarih"] = tarih
 
-                    database.collection("Post").add(postHashMap).addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Toast.makeText(this, "Paylaşım Yapıldı", Toast.LENGTH_LONG).show()
+                        database.collection("Post").add(postHashMap).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                Toast.makeText(this, "Paylaşım Yapıldı", Toast.LENGTH_LONG).show()
+                                if (player != null) {
+                                    player!!.release()
+                                    player = null
+                                }
+                                spinner.visibility = View.INVISIBLE
+                                finish()
+                            }
+                        }.addOnFailureListener { exception ->
+                            Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG)
+                                .show()
                             if (player != null) {
                                 player!!.release()
                                 player = null
                             }
+                            paylasButton.isClickable = true
+
                             spinner.visibility = View.INVISIBLE
-                            finish()
+
                         }
+
+
                     }.addOnFailureListener { exception ->
                         Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
                         if (player != null) {
@@ -122,9 +160,8 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
 
                         spinner.visibility = View.INVISIBLE
 
+
                     }
-
-
                 }.addOnFailureListener { exception ->
                     Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
                     if (player != null) {
@@ -134,55 +171,21 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
                     paylasButton.isClickable = true
 
                     spinner.visibility = View.INVISIBLE
-
-
                 }
-            }.addOnFailureListener { exception ->
-                Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
-                if (player != null) {
-                    player!!.release()
-                    player = null
-                }
+            } else if (secilenGorsel == null) {
                 paylasButton.isClickable = true
 
-                spinner.visibility = View.INVISIBLE
+                Toast.makeText(this, "Lütfen Bir Görsel Seçiniz", Toast.LENGTH_SHORT).show()
+            } else if (kullaniciYorum.isEmpty()) {
+                paylasButton.isClickable = true
+                yorumLayout.error = "Bu Alanı Boş Bırakamazsınız"
             }
-        } else if (secilenGorsel == null) {
-            paylasButton.isClickable = true
 
-            Toast.makeText(this, "Lütfen Bir Görsel Seçiniz", Toast.LENGTH_SHORT).show()
-        } else if (kullaniciYorum.isEmpty()) {
-            paylasButton.isClickable = true
-            yorumLayout.error = "Bu Alanı Boş Bırakamazsınız"
+
         }
 
     }
 
-
-    fun gorselSec(view: View) {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            //İzin Verilmedi, iste
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA),
-                1
-            )
-
-
-        } else {
-            //İzin Var
-            CropImage.activity().start(this)
-
-
-        }
-    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

@@ -3,4 +3,11 @@
     <string name="title_activity_gorsel">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="yorum_yap">Yorum Yap</string>
+    <string name="a_klama">Açıklama</string>
+    <string name="payla">Paylaş</string>
+    <string name="kullan_c_email">Kullanıcı Email</string>
+    <string name="kullan_c_ifre">Kullanıcı Şifre</string>
+    <string name="giri_yap">Giriş Yap</string>
+    <string name="kay_t_ol">Kayıt Ol</string>
 </resources>

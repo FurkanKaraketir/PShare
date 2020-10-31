@@ -1,9 +1,9 @@
 package com.furkankrktr.pshare
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.widget.ImageButton
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.furkankrktr.pshare.adapter.CommentRecyclerAdapter
 import com.furkankrktr.pshare.model.Comment
@@ -32,7 +32,7 @@ class CommentsActivity : AppCompatActivity() {
         storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
-
+        val sendButton = findViewById<ImageButton>(R.id.sendButton)
         selectedPost = intent.getStringExtra("selectedPost").toString()
         verileriAl()
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -41,41 +41,42 @@ class CommentsActivity : AppCompatActivity() {
         recyclerCommentsView.layoutManager = layoutManager
         recyclerCommentViewAdapter = CommentRecyclerAdapter(commentList)
         recyclerCommentsView.adapter = recyclerCommentViewAdapter
-    }
 
 
-    fun commentSend(view: View) {
-        val commentText = commentSendEditText.text.toString()
-        val uuid = UUID.randomUUID()
-        Toast.makeText(this, "Tek Seferde Yalnızca 1 Yorum Yapabilirsin", Toast.LENGTH_SHORT).show()
-        if (commentText.isNotEmpty()) {
-            sendButton.isClickable = false
-            val guncelKullaniciEmail = auth.currentUser!!.email.toString()
+        sendButton.setOnClickListener {
+            val commentText = commentSendEditText.text.toString()
+            val uuid = UUID.randomUUID()
+            Toast.makeText(this, "Tek Seferde Yalnızca 1 Yorum Yapabilirsin", Toast.LENGTH_SHORT)
+                .show()
+            if (commentText.isNotEmpty()) {
+                sendButton.isClickable = false
+                val guncelKullaniciEmail = auth.currentUser!!.email.toString()
 
-            val tarih = Timestamp.now()
+                val tarih = Timestamp.now()
 
-            val commentHashMap = hashMapOf<String, Any>()
-            commentHashMap["kullaniciemail"] = guncelKullaniciEmail
-            commentHashMap["kullanicicomment"] = commentText
-            commentHashMap["selectedPost"] = selectedPost
-            commentHashMap["commentId"] = uuid.toString()
-            commentHashMap["tarih"] = tarih
+                val commentHashMap = hashMapOf<String, Any>()
+                commentHashMap["kullaniciemail"] = guncelKullaniciEmail
+                commentHashMap["kullanicicomment"] = commentText
+                commentHashMap["selectedPost"] = selectedPost
+                commentHashMap["commentId"] = uuid.toString()
+                commentHashMap["tarih"] = tarih
 
-            database.collection("Yorumlar").add(commentHashMap).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    commentSendEditText.text = null
-                    Toast.makeText(this, "Yorum Yapıldı", Toast.LENGTH_LONG).show()
-                    recyclerCommentViewAdapter.notifyDataSetChanged()
-                    verileriAl()
+                database.collection("Yorumlar").add(commentHashMap).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        commentSendEditText.text = null
+                        Toast.makeText(this, "Yorum Yapıldı", Toast.LENGTH_LONG).show()
+                        recyclerCommentViewAdapter.notifyDataSetChanged()
+                        verileriAl()
 
+                    }
+                }.addOnFailureListener { exception ->
+                    Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
                 }
-            }.addOnFailureListener { exception ->
-                Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
-            }
 
-        } else {
-            sendButton.isClickable = true
-            Toast.makeText(this, "Boş Yorum Yapamazsınız", Toast.LENGTH_SHORT).show()
+            } else {
+                sendButton.isClickable = true
+                Toast.makeText(this, "Boş Yorum Yapamazsınız", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

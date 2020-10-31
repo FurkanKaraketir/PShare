@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:hint="Kullanıcı Email">
+        android:hint="@string/kullan_c_email">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailText"
@@ -31,7 +31,7 @@
         android:layout_below="@id/emailLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:hint="Kullanıcı Şifre"
+        android:hint="@string/kullan_c_ifre"
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -52,20 +52,20 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/mainGirisYap"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Giriş Yap"
-            android:onClick="girisYap"/>
+            android:text="@string/giri_yap"/>
 
         <Button
+            android:id="@+id/mainKayitOl"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Kayıt Ol"
-            android:onClick="kayitOl"/>
+            android:text="@string/kay_t_ol"/>
     </LinearLayout>
 
 

@@ -12,7 +12,6 @@
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:onClick="gorselSec"
         android:src="@drawable/ic_photo_black" />
 
 
@@ -35,7 +34,7 @@
         android:layout_below="@id/progress_circular"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:hint="Açıklama">
+        android:hint="@string/a_klama">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/yorumText"
@@ -52,8 +51,7 @@
         android:layout_below="@id/yorumLayout"
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
-        android:onClick="paylas"
-        android:text="Paylaş" />
+        android:text="@string/payla" />
 
 
 </RelativeLayout>

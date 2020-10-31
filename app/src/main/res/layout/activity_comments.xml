@@ -30,7 +30,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Yorum Yap"
+                android:hint="@string/yorum_yap"
                 tools:ignore="NestedWeights" />
 
             <ImageButton
@@ -38,8 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/Widget.AppCompat.Button.Colored"
-                android:src="@drawable/ic_send_white"
-                android:onClick="commentSend"/>
+                android:src="@drawable/ic_send_white"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
