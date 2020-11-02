@@ -5,16 +5,15 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
-import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.Timestamp
@@ -29,7 +28,6 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
 
     private var secilenGorsel: Uri? = null
     private var secilenBitmap: Bitmap? = null
-    private var player: MediaPlayer? = null
 
     private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
@@ -90,16 +88,6 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
             if (secilenGorsel != null && kullaniciYorum.isNotEmpty()) {
                 paylasButton.isClickable = false
                 spinner.visibility = View.VISIBLE
-                if (player == null) {
-                    player = MediaPlayer.create(this, R.raw.sound)
-                }
-                player?.setOnCompletionListener {
-                    if (player != null) {
-                        player!!.release()
-                        player = null
-                    }
-                }
-                player?.start()
 
                 yorumLayout.error = null
 
@@ -129,20 +117,13 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
                         database.collection("Post").add(postHashMap).addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 Toast.makeText(this, "Paylaşım Yapıldı", Toast.LENGTH_LONG).show()
-                                if (player != null) {
-                                    player!!.release()
-                                    player = null
-                                }
                                 spinner.visibility = View.INVISIBLE
                                 finish()
                             }
                         }.addOnFailureListener { exception ->
                             Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG)
                                 .show()
-                            if (player != null) {
-                                player!!.release()
-                                player = null
-                            }
+
                             paylasButton.isClickable = true
 
                             spinner.visibility = View.INVISIBLE
@@ -152,10 +133,7 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
 
                     }.addOnFailureListener { exception ->
                         Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
-                        if (player != null) {
-                            player!!.release()
-                            player = null
-                        }
+
                         paylasButton.isClickable = true
 
                         spinner.visibility = View.INVISIBLE
@@ -164,10 +142,7 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
                     }
                 }.addOnFailureListener { exception ->
                     Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
-                    if (player != null) {
-                        player!!.release()
-                        player = null
-                    }
+
                     paylasButton.isClickable = true
 
                     spinner.visibility = View.INVISIBLE
@@ -232,15 +207,6 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
 
 
         super.onActivityResult(requestCode, resultCode, data)
-    }
-
-
-    override fun onStop() {
-        super.onStop()
-        if (player != null) {
-            player!!.release()
-            player = null
-        }
     }
 
 }
