@@ -13,7 +13,12 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:hint="@string/kullan_c_email">
+        android:hint="@string/kullan_c_email"
+        android:outlineAmbientShadowColor="@color/beyaz"
+        android:outlineSpotShadowColor="@color/beyaz"
+        android:textColorHint="@color/beyaz"
+        app:boxStrokeColor="@color/mavi"
+        tools:targetApi="p">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailText"
@@ -32,7 +37,12 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:hint="@string/kullan_c_ifre"
-        app:passwordToggleEnabled="true">
+        android:outlineAmbientShadowColor="@color/beyaz"
+        android:outlineSpotShadowColor="@color/beyaz"
+        android:textColorHint="@color/beyaz"
+        app:boxStrokeColor="@color/mavi"
+        app:passwordToggleEnabled="true"
+        tools:targetApi="p">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordText"
@@ -53,19 +63,21 @@
 
         <Button
             android:id="@+id/mainGirisYap"
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="@string/giri_yap"/>
+            android:text="@string/giri_yap"
+            android:textColor="@color/beyaz" />
 
         <Button
             android:id="@+id/mainKayitOl"
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="@string/kay_t_ol"/>
+            android:text="@string/kay_t_ol"
+            android:textColor="@color/beyaz" />
     </LinearLayout>
 
 

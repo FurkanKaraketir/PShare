@@ -64,16 +64,16 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
             holder.itemView.context.startActivity(intent)
         }
         if (holder.itemView.recycler_row_kullanici_yorum.text[0] == "#"[0]) {
-            holder.itemView.recycler_row_kullanici_yorum.setTextColor(Color.parseColor("#6200EE"))
+            holder.itemView.recycler_row_kullanici_yorum.setTextColor(Color.parseColor("#00FFFF"))
         } else {
-            holder.itemView.recycler_row_kullanici_yorum.setTextColor(Color.parseColor("#009688"))
+            holder.itemView.recycler_row_kullanici_yorum.setTextColor(Color.parseColor("#ffffff"))
         }
 
 
         if (holder.itemView.recycler_row_kullanici_email.text == guncelKullanici) {
-            holder.itemView.recycler_row_kullanici_email.setTextColor(Color.parseColor("#009688"))
+            holder.itemView.recycler_row_kullanici_email.setTextColor(Color.parseColor("#00FFFF"))
         } else {
-            holder.itemView.recycler_row_kullanici_email.setTextColor(Color.parseColor("#6200EE"))
+            holder.itemView.recycler_row_kullanici_email.setTextColor(Color.parseColor("#ffffff"))
         }
 
         holder.itemView.recycler_row_kullanici_yorum.setOnClickListener {

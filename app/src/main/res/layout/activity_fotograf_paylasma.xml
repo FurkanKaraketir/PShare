@@ -15,8 +15,6 @@
         android:src="@drawable/ic_photo_black" />
 
 
-
-
     <ProgressBar
         android:id="@+id/progress_circular"
         android:layout_width="wrap_content"
@@ -34,24 +32,30 @@
         android:layout_below="@id/progress_circular"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:hint="@string/a_klama">
+        android:hint="@string/a_klama"
+        android:outlineAmbientShadowColor="@color/beyaz"
+        android:outlineSpotShadowColor="@color/beyaz"
+        android:textColorHint="@color/beyaz"
+        app:boxStrokeColor="@color/mavi"
+        tools:targetApi="p">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/yorumText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/paylasButton"
-        style="@style/Widget.AppCompat.Button.Colored"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/yorumLayout"
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
-        android:text="@string/payla" />
+        android:text="@string/payla"
+        android:textColor="@color/beyaz" />
 
 
 </RelativeLayout>

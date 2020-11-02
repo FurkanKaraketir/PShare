@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#6200EE</color>
-    <color name="aciklama">#009688</color>
+    <color name="colorPrimary">#6900FF</color>
+    <color name="colorPrimaryDark">#4900EF</color>
+    <color name="colorAccent">#BA6CFF</color>
+    <color name="aciklama">#00DCC7</color>
     <color name="black_overlay">#66000000</color>
+    <color name="gri">#888888</color>
+    <color name="beyaz">#ffffffff</color>
+    <color name="mavi">#00FFFF</color>
 </resources>

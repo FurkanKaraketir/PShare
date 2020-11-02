@@ -27,7 +27,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="7dp"
                     android:text=""
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/mavi"
                     android:textSize="12sp" />
 
                 <TextView
@@ -37,14 +37,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="10dp"
                     android:text=""
-                    android:textColor="#009688"
+                    android:textColor="@color/beyaz"
                     android:textSize="18sp" />
             </LinearLayout>
 
 
             <ImageButton
                 android:id="@+id/deleteYorumButton"
-                style="@style/Widget.AppCompat.Button.Colored"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
