@@ -60,6 +60,9 @@ class HaberlerActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
 
+        } else if (item.itemId == R.id.settings) {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
         }
 
 
