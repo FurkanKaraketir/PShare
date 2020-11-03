@@ -1,11 +1,13 @@
 package com.furkankrktr.pshare
 
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.furkankrktr.pshare.adapter.HaberRecyclerAdapter
 import com.furkankrktr.pshare.model.Post
@@ -60,9 +62,13 @@ class HaberlerActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
 
-        } else if (item.itemId == R.id.settings) {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
+        } else if (item.itemId == R.id.temaDegistir) {
+            when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                Configuration.UI_MODE_NIGHT_YES ->
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                Configuration.UI_MODE_NIGHT_NO ->
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
         }
 
 

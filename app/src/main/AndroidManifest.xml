@@ -18,10 +18,7 @@
         android:roundIcon="@mipmap/ic_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".SettingsActivity"
-            android:parentActivityName=".HaberlerActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".UserEmailFilterActivity"
             android:parentActivityName=".HaberlerActivity"

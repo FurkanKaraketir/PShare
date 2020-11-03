@@ -5,11 +5,10 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="yorum_yap">Yorum Yap</string>
     <string name="a_klama">Açıklama</string>
-    <string name="payla">Paylaş</string>
+    <string name="payla">PAYLAŞ</string>
     <string name="kullan_c_email">Kullanıcı Email</string>
     <string name="kullan_c_ifre">Kullanıcı Şifre</string>
-    <string name="giri_yap">Giriş Yap</string>
-    <string name="kay_t_ol">Kayıt Ol</string>
+    <string name="giri_yap">GİRİŞ YAP</string>
+    <string name="kay_t_ol">KAYIT OL</string>
     <string name="_0_yorum">0 Yorum</string>
-    <string name="tema_de_i_tir">Tema Değiştirmek İçin Tıkla</string>
 </resources>

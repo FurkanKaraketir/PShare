@@ -7,8 +7,8 @@
         android:id="@+id/cikis_yap"
         android:title="Çıkış Yap" />
     <item
-        android:id="@+id/settings"
-        android:title="Seçenekler" />
+        android:id="@+id/temaDegistir"
+        android:title="Tema Değiştir" />
 
 
 </menu>
