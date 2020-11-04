@@ -62,14 +62,14 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
             holder.itemView.context.startActivity(intent)
         }
         if (holder.itemView.recycler_row_kullanici_yorum.text[0] == "#"[0]) {
-            holder.itemView.recycler_row_kullanici_yorum.setTextColor(Color.parseColor("#00FFFF"))
+            holder.itemView.recycler_row_kullanici_yorum.setTextColor(Color.parseColor("#00DCC7"))
         } else {
             holder.itemView.recycler_row_kullanici_yorum.setTextColor(Color.parseColor("#888888"))
         }
 
 
         if (holder.itemView.recycler_row_kullanici_email.text == guncelKullanici) {
-            holder.itemView.recycler_row_kullanici_email.setTextColor(Color.parseColor("#00FFFF"))
+            holder.itemView.recycler_row_kullanici_email.setTextColor(Color.parseColor("#00DCC7"))
         } else {
             holder.itemView.recycler_row_kullanici_email.setTextColor(Color.parseColor("#888888"))
         }
