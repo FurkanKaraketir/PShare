@@ -18,7 +18,7 @@
         android:roundIcon="@mipmap/ic_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".RepliesActivity" />
         <activity
             android:name=".UserEmailFilterActivity"
             android:parentActivityName=".HaberlerActivity"

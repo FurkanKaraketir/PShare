@@ -2,16 +2,20 @@ package com.furkankrktr.pshare.adapter
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.furkankrktr.pshare.CommentsActivity
 import com.furkankrktr.pshare.R
+import com.furkankrktr.pshare.RepliesActivity
 import com.furkankrktr.pshare.model.Comment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.recycler_comment.view.*
+import kotlinx.android.synthetic.main.recycler_row.view.*
 
 class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
     RecyclerView.Adapter<CommentRecyclerAdapter.CommentHolder>() {
@@ -90,7 +94,41 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
                 ).show()
             }
         }
+        holder.itemView.replyYorumButton.setOnClickListener {
+            val intent = Intent(holder.itemView.context, RepliesActivity::class.java)
+            intent.putExtra("selectedComment", commentList[position].commentId)
+            intent.putExtra("selectedCommentEmail", commentList[position].kullaniciEmail)
+            intent.putExtra("selectedCommentText",commentList[position].kullaniciComment)
+            holder.itemView.context.startActivity(intent)
+        }
+        holder.itemView.replyCount.setOnClickListener {
+            val intent = Intent(holder.itemView.context, RepliesActivity::class.java)
+            intent.putExtra("selectedComment", commentList[position].commentId)
+            intent.putExtra("selectedCommentEmail", commentList[position].kullaniciEmail)
+            intent.putExtra("selectedCommentText",commentList[position].kullaniciComment)
+            holder.itemView.context.startActivity(intent)
+        }
 
+
+        database.collection("Yanıtlar").whereEqualTo("selectedComment", commentList[position].commentId)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    println(exception.localizedMessage)
+                } else {
+                    if (snapshot != null) {
+                        if (!snapshot.isEmpty) {
+                            val documents = snapshot.documents
+                            holder.itemView.replyCount.text = "${documents.size} Yanıt"
+
+                        } else {
+                            holder.itemView.replyCount.text = "0 Yanıt"
+                        }
+                    }
+
+
+                }
+
+            }
     }
 
     override fun getItemCount(): Int {

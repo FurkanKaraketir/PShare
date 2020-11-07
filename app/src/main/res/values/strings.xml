@@ -11,4 +11,7 @@
     <string name="giri_yap">GİRİŞ YAP</string>
     <string name="kay_t_ol">KAYIT OL</string>
     <string name="_0_yorum">0 Yorum</string>
+    <string name="i_in_cevap">Yorumu için yanıtlar</string>
+    <string name="cevap_yaz">Yanıt Yaz</string>
+    <string name="_0_yan_t">0 Yanıt</string>
 </resources>

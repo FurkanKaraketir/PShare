@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +19,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/commentEmail"
+                    android:id="@+id/replyEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -31,7 +29,7 @@
                     android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/comment"
+                    android:id="@+id/replyText"
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -39,27 +37,10 @@
                     android:text=""
                     android:textColor="@color/gri"
                     android:textSize="18sp" />
-                <TextView
-                    android:id="@+id/replyCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:text="@string/_0_yan_t"
-                    android:textColor="@color/mavi"
-                    android:textSize="18sp"/>
             </LinearLayout>
 
             <ImageButton
-                android:id="@+id/replyYorumButton"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="5"
-                android:src="@drawable/ic_yorum_white" />
-
-            <ImageButton
-                android:id="@+id/deleteYorumButton"
+                android:id="@+id/deleteReplyButton"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
@@ -71,6 +52,4 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
-
-
 </LinearLayout>

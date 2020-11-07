@@ -48,7 +48,6 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
         }
         holder.itemView.recycler_row_kullanici_email.text = postList[position].kullaniciEmail
         holder.itemView.recycler_row_kullanici_yorum.text = postList[position].kullaniciYorum
-        //Picasso.get().load(postList[position].gorselUrl).into(holder.itemView.recycler_row_imageview)
         holder.itemView.recycler_row_imageview.glide(
             postList[position].gorselUrl,
             placeHolderYap(holder.itemView.context)
@@ -59,6 +58,11 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
             holder.itemView.context.startActivity(intent)
         }
         holder.itemView.commentsButton.setOnClickListener {
+            val intent = Intent(holder.itemView.context, CommentsActivity::class.java)
+            intent.putExtra("selectedPost", postList[position].postId)
+            holder.itemView.context.startActivity(intent)
+        }
+        holder.itemView.commentCountText.setOnClickListener {
             val intent = Intent(holder.itemView.context, CommentsActivity::class.java)
             intent.putExtra("selectedPost", postList[position].postId)
             holder.itemView.context.startActivity(intent)
