@@ -14,8 +14,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:hint="@string/kullan_c_email"
-        android:outlineAmbientShadowColor="@color/beyaz"
-        android:outlineSpotShadowColor="@color/beyaz"
         android:textColorHint="@color/gri"
         app:boxStrokeColor="@color/mavi"
         tools:targetApi="p">
@@ -37,8 +35,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:hint="@string/kullan_c_ifre"
-        android:outlineAmbientShadowColor="@color/beyaz"
-        android:outlineSpotShadowColor="@color/beyaz"
         android:textColorHint="@color/gri"
         app:boxStrokeColor="@color/mavi"
         app:passwordToggleEnabled="true"

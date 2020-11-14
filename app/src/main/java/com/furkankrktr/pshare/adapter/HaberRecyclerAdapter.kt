@@ -3,11 +3,13 @@ package com.furkankrktr.pshare.adapter
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.RecyclerView
 import com.furkankrktr.pshare.*
 import com.furkankrktr.pshare.model.Post
@@ -46,32 +48,41 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
         if (auth.currentUser != null) {
             guncelKullanici = auth.currentUser!!.email.toString()
         }
+
+
         holder.itemView.recycler_row_kullanici_email.text = postList[position].kullaniciEmail
         holder.itemView.recycler_row_kullanici_yorum.text = postList[position].kullaniciYorum
+
+
         holder.itemView.recycler_row_imageview.glide(
             postList[position].gorselUrl,
             placeHolderYap(holder.itemView.context)
         )
+
+
         holder.itemView.recycler_row_imageview.setOnClickListener {
             val intent = Intent(holder.itemView.context, GorselActivity::class.java)
             intent.putExtra("resim", postList[position].gorselUrl)
             holder.itemView.context.startActivity(intent)
         }
+
+
         holder.itemView.commentsButton.setOnClickListener {
-            val intent = Intent(holder.itemView.context, CommentsActivity::class.java)
-            intent.putExtra("selectedPost", postList[position].postId)
-            holder.itemView.context.startActivity(intent)
+            commentGit(holder, position)
         }
         holder.itemView.commentCountText.setOnClickListener {
-            val intent = Intent(holder.itemView.context, CommentsActivity::class.java)
-            intent.putExtra("selectedPost", postList[position].postId)
-            holder.itemView.context.startActivity(intent)
+            commentGit(holder, position)
         }
+
+
+
         if (holder.itemView.recycler_row_kullanici_yorum.text[0] == "#"[0]) {
             holder.itemView.recycler_row_kullanici_yorum.setTextColor(Color.parseColor("#00DCC7"))
         } else {
             holder.itemView.recycler_row_kullanici_yorum.setTextColor(Color.parseColor("#888888"))
         }
+
+
 
 
         if (holder.itemView.recycler_row_kullanici_email.text == guncelKullanici) {
@@ -80,6 +91,8 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
             holder.itemView.recycler_row_kullanici_email.setTextColor(Color.parseColor("#888888"))
         }
 
+
+
         holder.itemView.recycler_row_kullanici_yorum.setOnClickListener {
             if (holder.itemView.recycler_row_kullanici_yorum.text[0] == "#"[0]) {
                 val intent = Intent(holder.itemView.context, HashtagActivity::class.java)
@@ -87,6 +100,8 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
                 holder.itemView.context.startActivity(intent)
             }
         }
+
+
         holder.itemView.recycler_row_kullanici_email.setOnClickListener {
 
             val intent = Intent(holder.itemView.context, UserEmailFilterActivity::class.java)
@@ -184,6 +199,12 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
             }
 
 
+    }
+
+    private fun commentGit(holder: PostHolder, position: Int) {
+        val intent = Intent(holder.itemView.context, CommentsActivity::class.java)
+        intent.putExtra("selectedPost", postList[position].postId)
+        holder.itemView.context.startActivity(intent)
     }
 
 

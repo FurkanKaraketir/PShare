@@ -41,26 +41,34 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
     override fun onBindViewHolder(holder: PostHolder, position: Int) {
         database = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
+
         if (auth.currentUser != null) {
             guncelKullanici = auth.currentUser!!.email.toString()
         }
+
         holder.itemView.recycler_row_kullanici_email.text = postList[position].kullaniciEmail
         holder.itemView.recycler_row_kullanici_yorum.text = postList[position].kullaniciYorum
-        //Picasso.get().load(postList[position].gorselUrl).into(holder.itemView.recycler_row_imageview)
+
         holder.itemView.recycler_row_imageview.glide(
             postList[position].gorselUrl,
             placeHolderYap(holder.itemView.context)
         )
+
+
         holder.itemView.recycler_row_imageview.setOnClickListener {
             val intent = Intent(holder.itemView.context, GorselActivity::class.java)
             intent.putExtra("resim", postList[position].gorselUrl)
             holder.itemView.context.startActivity(intent)
         }
+
         holder.itemView.commentsButton.setOnClickListener {
-            val intent = Intent(holder.itemView.context, CommentsActivity::class.java)
-            intent.putExtra("selectedPost", postList[position].postId)
-            holder.itemView.context.startActivity(intent)
+            commentGit(holder, position)
         }
+        holder.itemView.commentCountText.setOnClickListener {
+            commentGit(holder, position)
+        }
+
+
         if (holder.itemView.recycler_row_kullanici_yorum.text[0] == "#"[0]) {
             holder.itemView.recycler_row_kullanici_yorum.setTextColor(Color.parseColor("#00DCC7"))
         } else {
@@ -164,6 +172,12 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
             }
 
 
+    }
+
+    private fun commentGit(holder: PostHolder, position: Int) {
+        val intent = Intent(holder.itemView.context, CommentsActivity::class.java)
+        intent.putExtra("selectedPost", postList[position].postId)
+        holder.itemView.context.startActivity(intent)
     }
 
 

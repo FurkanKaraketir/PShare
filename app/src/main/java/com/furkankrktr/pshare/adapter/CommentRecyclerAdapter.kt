@@ -95,18 +95,10 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
             }
         }
         holder.itemView.replyYorumButton.setOnClickListener {
-            val intent = Intent(holder.itemView.context, RepliesActivity::class.java)
-            intent.putExtra("selectedComment", commentList[position].commentId)
-            intent.putExtra("selectedCommentEmail", commentList[position].kullaniciEmail)
-            intent.putExtra("selectedCommentText",commentList[position].kullaniciComment)
-            holder.itemView.context.startActivity(intent)
+            replyGit(holder, position)
         }
         holder.itemView.replyCount.setOnClickListener {
-            val intent = Intent(holder.itemView.context, RepliesActivity::class.java)
-            intent.putExtra("selectedComment", commentList[position].commentId)
-            intent.putExtra("selectedCommentEmail", commentList[position].kullaniciEmail)
-            intent.putExtra("selectedCommentText",commentList[position].kullaniciComment)
-            holder.itemView.context.startActivity(intent)
+            replyGit(holder, position)
         }
 
 
@@ -129,6 +121,14 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
                 }
 
             }
+    }
+
+    private fun replyGit(holder: CommentHolder, position: Int){
+        val intent = Intent(holder.itemView.context, RepliesActivity::class.java)
+        intent.putExtra("selectedComment", commentList[position].commentId)
+        intent.putExtra("selectedCommentEmail", commentList[position].kullaniciEmail)
+        intent.putExtra("selectedCommentText",commentList[position].kullaniciComment)
+        holder.itemView.context.startActivity(intent)
     }
 
     override fun getItemCount(): Int {
