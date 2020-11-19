@@ -3,12 +3,8 @@ package com.furkankrktr.pshare
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -27,7 +23,6 @@ import java.util.*
 open class FotografPaylasmaActivity : AppCompatActivity() {
 
     private var secilenGorsel: Uri? = null
-    private var secilenBitmap: Bitmap? = null
 
     private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
@@ -37,6 +32,9 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fotograf_paylasma)
+
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
@@ -186,17 +184,7 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
                 secilenGorsel = result.uri
 
 
-                if (Build.VERSION.SDK_INT >= 28) {
-                    val sources = ImageDecoder.createSource(this.contentResolver, secilenGorsel!!)
-                    secilenBitmap = ImageDecoder.decodeBitmap(sources)
-                    imageView.setImageBitmap(secilenBitmap)
-
-
-                } else {
-                    secilenBitmap =
-                        MediaStore.Images.Media.getBitmap(this.contentResolver, secilenGorsel)
-                    imageView.setImageBitmap(secilenBitmap)
-                }
+                imageView.setImageURI(secilenGorsel)
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val e = result.error

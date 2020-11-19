@@ -18,12 +18,18 @@
         android:roundIcon="@mipmap/ic_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WebViewActivity"
+        <activity
+            android:name=".GifShareActivity"
             android:parentActivityName=".HaberlerActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".RepliesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".WebViewActivity"
+            android:parentActivityName=".HaberlerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RepliesActivity"
             android:parentActivityName=".CommentsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UserEmailFilterActivity"
             android:parentActivityName=".HaberlerActivity"
@@ -46,6 +52,7 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".FotografPaylasmaActivity"
+            android:parentActivityName=".HaberlerActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".HaberlerActivity"

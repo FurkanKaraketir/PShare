@@ -46,6 +46,10 @@ dependencies {
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
     implementation 'com.google.firebase:firebase-messaging:21.0.0'
     implementation 'com.google.firebase:firebase-crashlytics-ktx:17.3.0'
+    implementation 'com.giphy.sdk:ui:2.0.5'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+
+
     //noinspection GradleCompatible
     implementation 'com.android.support:design:28.0.0'
     //noinspection GradleCompatible

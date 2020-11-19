@@ -4,14 +4,17 @@
         android:id="@+id/fotograf_paylas"
         android:title="@string/foto_raf_payla" />
     <item
-        android:id="@+id/cikis_yap"
-        android:title="@string/k_yap" />
+        android:id="@+id/gif_paylas"
+        android:title="@string/gif_payla" />
     <item
         android:id="@+id/temaDegistir"
         android:title="@string/tema_de_i_tir" />
     <item
         android:id="@+id/WebSite"
         android:title="@string/web_sitesi" />
+    <item
+        android:id="@+id/cikis_yap"
+        android:title="@string/k_yap" />
 
 
 </menu>
