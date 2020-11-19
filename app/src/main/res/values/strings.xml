@@ -14,4 +14,8 @@
     <string name="i_in_cevap">Yorumu için yanıtlar</string>
     <string name="cevap_yaz">Yanıt Yaz</string>
     <string name="_0_yan_t">0 Yanıt</string>
+    <string name="foto_raf_payla">Fotoğraf Paylaş</string>
+    <string name="k_yap">Çıkış Yap</string>
+    <string name="tema_de_i_tir">Tema Değiştir</string>
+    <string name="web_sitesi">Web Sitesi</string>
 </resources>

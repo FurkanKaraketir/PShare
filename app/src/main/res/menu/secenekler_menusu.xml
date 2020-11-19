@@ -2,13 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/fotograf_paylas"
-        android:title="Fotoğraf Paylaş" />
+        android:title="@string/foto_raf_payla" />
     <item
         android:id="@+id/cikis_yap"
-        android:title="Çıkış Yap" />
+        android:title="@string/k_yap" />
     <item
         android:id="@+id/temaDegistir"
-        android:title="Tema Değiştir" />
+        android:title="@string/tema_de_i_tir" />
+    <item
+        android:id="@+id/WebSite"
+        android:title="@string/web_sitesi" />
 
 
 </menu>

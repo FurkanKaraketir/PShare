@@ -69,6 +69,9 @@ class HaberlerActivity : AppCompatActivity() {
                 Configuration.UI_MODE_NIGHT_NO ->
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
+        } else if(item.itemId == R.id.WebSite){
+            val intent = Intent(this, WebViewActivity::class.java)
+            startActivity(intent)
         }
 
 
