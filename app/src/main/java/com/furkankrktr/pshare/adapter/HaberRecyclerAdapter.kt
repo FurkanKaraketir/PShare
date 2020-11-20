@@ -3,13 +3,11 @@ package com.furkankrktr.pshare.adapter
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.RecyclerView
 import com.furkankrktr.pshare.*
 import com.furkankrktr.pshare.model.Post
@@ -54,10 +52,14 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
         holder.itemView.recycler_row_kullanici_yorum.text = postList[position].kullaniciYorum
 
 
-        holder.itemView.recycler_row_imageview.glide(
-            postList[position].gorselUrl,
-            placeHolderYap(holder.itemView.context)
-        )
+        if (postList[position].gorselUrl == "") {
+            holder.itemView.recycler_row_imageview.visibility = View.GONE
+        } else {
+            holder.itemView.recycler_row_imageview.glide(
+                postList[position].gorselUrl,
+                placeHolderYap(holder.itemView.context)
+            )
+        }
 
 
         holder.itemView.recycler_row_imageview.setOnClickListener {

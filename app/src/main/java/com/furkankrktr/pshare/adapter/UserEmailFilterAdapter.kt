@@ -49,10 +49,14 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
         holder.itemView.recycler_row_kullanici_email.text = postList[position].kullaniciEmail
         holder.itemView.recycler_row_kullanici_yorum.text = postList[position].kullaniciYorum
 
-        holder.itemView.recycler_row_imageview.glide(
-            postList[position].gorselUrl,
-            placeHolderYap(holder.itemView.context)
-        )
+        if (postList[position].gorselUrl == "") {
+            holder.itemView.recycler_row_imageview.visibility = View.GONE
+        } else {
+            holder.itemView.recycler_row_imageview.glide(
+                postList[position].gorselUrl,
+                placeHolderYap(holder.itemView.context)
+            )
+        }
 
 
         holder.itemView.recycler_row_imageview.setOnClickListener {

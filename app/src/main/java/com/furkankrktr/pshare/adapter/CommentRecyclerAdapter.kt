@@ -8,14 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.furkankrktr.pshare.CommentsActivity
 import com.furkankrktr.pshare.R
 import com.furkankrktr.pshare.RepliesActivity
 import com.furkankrktr.pshare.model.Comment
+import com.furkankrktr.pshare.service.glide
+import com.furkankrktr.pshare.service.placeHolderYap
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.recycler_comment.view.*
-import kotlinx.android.synthetic.main.recycler_row.view.*
 
 class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
     RecyclerView.Adapter<CommentRecyclerAdapter.CommentHolder>() {
@@ -39,7 +39,15 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
         if (auth.currentUser != null) {
             guncelKullanici = auth.currentUser!!.email.toString()
         }
-
+        if (commentList[position].commentAttach == "") {
+            holder.itemView.commentImageView.visibility = View.GONE
+        } else {
+            holder.itemView.commentImageView.visibility = View.VISIBLE
+            holder.itemView.commentImageView.glide(
+                commentList[position].commentAttach,
+                placeHolderYap(holder.itemView.context)
+            )
+        }
         holder.itemView.commentEmail.text = commentList[position].kullaniciEmail
         holder.itemView.comment.text = commentList[position].kullaniciComment
 
@@ -102,7 +110,8 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
         }
 
 
-        database.collection("Yanıtlar").whereEqualTo("selectedComment", commentList[position].commentId)
+        database.collection("Yanıtlar")
+            .whereEqualTo("selectedComment", commentList[position].commentId)
             .addSnapshotListener { snapshot, exception ->
                 if (exception != null) {
                     println(exception.localizedMessage)
@@ -123,11 +132,12 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
             }
     }
 
-    private fun replyGit(holder: CommentHolder, position: Int){
+    private fun replyGit(holder: CommentHolder, position: Int) {
         val intent = Intent(holder.itemView.context, RepliesActivity::class.java)
         intent.putExtra("selectedComment", commentList[position].commentId)
         intent.putExtra("selectedCommentEmail", commentList[position].kullaniciEmail)
-        intent.putExtra("selectedCommentText",commentList[position].kullaniciComment)
+        intent.putExtra("selectedCommentText", commentList[position].kullaniciComment)
+        intent.putExtra("selectedCommentImage",commentList[position].commentAttach)
         holder.itemView.context.startActivity(intent)
     }
 

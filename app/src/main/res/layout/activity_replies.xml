@@ -28,11 +28,17 @@
                 android:textColor="@color/mavi"
                 android:textSize="17sp" />
 
+            <ImageView
+                android:id="@+id/selectedCommentImage"
+                android:layout_width="100dp"
+                android:layout_height="75dp"
+                android:layout_gravity="center_horizontal" />
+
             <TextView
                 android:id="@+id/replyToCommentText"
-                android:layout_marginTop="7dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
                 android:text=""
                 android:textColor="@color/gri"
                 android:textSize="20sp" />
@@ -41,8 +47,8 @@
                 android:id="@+id/toYouText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/i_in_cevap"
                 android:layout_marginTop="12dp"
+                android:text="@string/i_in_cevap"
                 android:textColor="@color/gri"
                 android:textSize="17sp" />
         </LinearLayout>
@@ -66,24 +72,38 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/replySendEditText"
-                android:layout_width="0dp"
+            <ImageView
+                android:id="@+id/attachReplyButton"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_baseline_attach_file_24" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/cevap_yaz"
-                tools:ignore="NestedWeights" />
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/replySendButton"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_send_white" />
+                <EditText
+                    android:id="@+id/replySendEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/cevap_yaz"
+                    tools:ignore="NestedWeights" />
 
+                <ImageButton
+                    android:id="@+id/replySendButton"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_send_white" />
+
+            </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

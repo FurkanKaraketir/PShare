@@ -1,6 +1,8 @@
 package com.furkankrktr.pshare
 
 import android.Manifest
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -12,6 +14,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.furkankrktr.pshare.service.glide
+import com.furkankrktr.pshare.service.placeHolderYap
+import com.giphy.sdk.core.models.Media
+import com.giphy.sdk.ui.GPHContentType
+import com.giphy.sdk.ui.Giphy
+import com.giphy.sdk.ui.views.GiphyDialogFragment
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -20,9 +28,12 @@ import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_fotograf_paylasma.*
 import java.util.*
 
-open class FotografPaylasmaActivity : AppCompatActivity() {
-
+open class FotografPaylasmaActivity : AppCompatActivity(),
+    GiphyDialogFragment.GifSelectionListener {
+    private var istenen: String = ""
+    private var a: String = ""
     private var secilenGorsel: Uri? = null
+    private var gifOrImage: Boolean? = null
 
     private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
@@ -42,7 +53,12 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
         paylasButton.isClickable = true
         val paylasmaButton = findViewById<Button>(R.id.paylasButton)
         val imageSec = findViewById<ImageView>(R.id.imageView)
-        imageSec.setOnClickListener {
+        val alert = AlertDialog.Builder(this)
+        alert.setTitle("Resim veya GIF")
+        alert.setMessage("Resim veya GIF seçiniz")
+        Giphy.configure(this, "Qyq8K6rBLuR2bYRetJteXkb6k7ngKUG8")
+
+        alert.setPositiveButton("Resim", DialogInterface.OnClickListener { _, _ ->
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.READ_EXTERNAL_STORAGE
@@ -65,56 +81,151 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
 
 
             }
+        })
+        alert.setNegativeButton("GIF", DialogInterface.OnClickListener { _, _ ->
+            GiphyDialogFragment.newInstance().show(supportFragmentManager, "giphy_dialog")
+        })
+        imageSec.setOnClickListener {
+            alert.show()
         }
         paylasmaButton.setOnClickListener {
 
-
-            //depo işlemleri
-            val spinner = progress_circular
-
-
-            //UUID
+            if (gifOrImage == true) {
+                //depo işlemleri
+                val spinner = progress_circular
 
 
-            val uuid = UUID.randomUUID()
-            val gorselIsim = "${uuid}.jpg"
-            val postId = "${uuid}"
-            val reference = storage.reference
-            val gorselReference = reference.child("images").child(gorselIsim)
-
-            val kullaniciYorum = yorumText.text.toString()
-            if (secilenGorsel != null && kullaniciYorum.isNotEmpty()) {
-                paylasButton.isClickable = false
-                spinner.visibility = View.VISIBLE
-
-                yorumLayout.error = null
-
-                Toast.makeText(this, "Paylaşılıyor, Lütfen Bekleyin...", Toast.LENGTH_LONG).show()
-
-                gorselReference.putFile(secilenGorsel!!).addOnSuccessListener { _ ->
-
-                    val yuklenenGorselReference =
-                        FirebaseStorage.getInstance().reference.child("images").child(gorselIsim)
-
-                    yuklenenGorselReference.downloadUrl.addOnSuccessListener { uri ->
-
-                        val downloadUrl = uri.toString()
+                //UUID
 
 
-                        val guncelKullaniciEmail = auth.currentUser!!.email.toString()
+                val uuid = UUID.randomUUID()
+                val gorselIsim = "${uuid}.jpg"
+                val postId = "${uuid}"
+                val reference = storage.reference
+                val gorselReference = reference.child("images").child(gorselIsim)
 
-                        val tarih = Timestamp.now()
-                        //veritabanı işlemleri
-                        val postHashMap = hashMapOf<String, Any>()
-                        postHashMap["postId"] = postId
-                        postHashMap["gorselurl"] = downloadUrl
-                        postHashMap["kullaniciemail"] = guncelKullaniciEmail
-                        postHashMap["kullaniciyorum"] = kullaniciYorum
-                        postHashMap["tarih"] = tarih
+                val kullaniciYorum = yorumText.text.toString()
+                if (secilenGorsel != null && kullaniciYorum.isNotEmpty()) {
+                    paylasButton.isClickable = false
+                    spinner.visibility = View.VISIBLE
 
-                        database.collection("Post").add(postHashMap).addOnCompleteListener { task ->
+                    yorumLayout.error = null
+
+                    Toast.makeText(this, "Paylaşılıyor, Lütfen Bekleyin...", Toast.LENGTH_LONG)
+                        .show()
+
+                    gorselReference.putFile(secilenGorsel!!).addOnSuccessListener { _ ->
+
+                        val yuklenenGorselReference =
+                            FirebaseStorage.getInstance().reference.child("images")
+                                .child(gorselIsim)
+
+                        yuklenenGorselReference.downloadUrl.addOnSuccessListener { uri ->
+
+                            val downloadUrl = uri.toString()
+
+
+                            val guncelKullaniciEmail = auth.currentUser!!.email.toString()
+
+                            val tarih = Timestamp.now()
+                            //veritabanı işlemleri
+                            val postHashMap = hashMapOf<String, Any>()
+                            postHashMap["postId"] = postId
+                            postHashMap["gorselurl"] = downloadUrl
+                            postHashMap["kullaniciemail"] = guncelKullaniciEmail
+                            postHashMap["kullaniciyorum"] = kullaniciYorum
+                            postHashMap["tarih"] = tarih
+
+                            database.collection("Post").add(postHashMap)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Toast.makeText(this, "Paylaşım Yapıldı", Toast.LENGTH_LONG)
+                                            .show()
+                                        spinner.visibility = View.INVISIBLE
+                                        finish()
+                                    }
+                                }.addOnFailureListener { exception ->
+                                    Toast.makeText(
+                                        this,
+                                        exception.localizedMessage,
+                                        Toast.LENGTH_LONG
+                                    )
+                                        .show()
+
+                                    paylasButton.isClickable = true
+
+                                    spinner.visibility = View.INVISIBLE
+
+                                }
+
+
+                        }.addOnFailureListener { exception ->
+                            Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG)
+                                .show()
+
+                            paylasButton.isClickable = true
+
+                            spinner.visibility = View.INVISIBLE
+
+
+                        }
+                    }.addOnFailureListener { exception ->
+                        Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
+
+                        paylasButton.isClickable = true
+
+                        spinner.visibility = View.INVISIBLE
+                    }
+                } else if (secilenGorsel == null) {
+                    paylasButton.isClickable = true
+
+                    Toast.makeText(this, "Lütfen Bir Görsel Seçiniz", Toast.LENGTH_SHORT).show()
+                } else if (kullaniciYorum.isEmpty()) {
+                    paylasButton.isClickable = true
+                    yorumLayout.error = "Bu Alanı Boş Bırakamazsınız"
+                }
+
+
+            } else {
+                val spinner = progress_circular
+
+
+                //UUID
+
+
+                val uuid = UUID.randomUUID()
+                val postId = "${uuid}"
+
+                val kullaniciYorum = yorumText.text.toString()
+                if (kullaniciYorum.isNotEmpty()) {
+                    paylasButton.isClickable = false
+                    spinner.visibility = View.VISIBLE
+
+                    yorumLayout.error = null
+
+                    Toast.makeText(this, "Paylaşılıyor, Lütfen Bekleyin...", Toast.LENGTH_LONG)
+                        .show()
+
+
+                    val downloadUrl = a
+
+
+                    val guncelKullaniciEmail = auth.currentUser!!.email.toString()
+
+                    val tarih = Timestamp.now()
+                    //veritabanı işlemleri
+                    val postHashMap = hashMapOf<String, Any>()
+                    postHashMap["postId"] = postId
+                    postHashMap["gorselurl"] = downloadUrl
+                    postHashMap["kullaniciemail"] = guncelKullaniciEmail
+                    postHashMap["kullaniciyorum"] = kullaniciYorum
+                    postHashMap["tarih"] = tarih
+
+                    database.collection("Post").add(postHashMap)
+                        .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                Toast.makeText(this, "Paylaşım Yapıldı", Toast.LENGTH_LONG).show()
+                                Toast.makeText(this, "Paylaşım Yapıldı", Toast.LENGTH_LONG)
+                                    .show()
                                 spinner.visibility = View.INVISIBLE
                                 finish()
                             }
@@ -129,32 +240,11 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
                         }
 
 
-                    }.addOnFailureListener { exception ->
-                        Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
-
-                        paylasButton.isClickable = true
-
-                        spinner.visibility = View.INVISIBLE
-
-
-                    }
-                }.addOnFailureListener { exception ->
-                    Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
-
+                } else if (kullaniciYorum.isEmpty()) {
                     paylasButton.isClickable = true
-
-                    spinner.visibility = View.INVISIBLE
+                    yorumLayout.error = "Bu Alanı Boş Bırakamazsınız"
                 }
-            } else if (secilenGorsel == null) {
-                paylasButton.isClickable = true
-
-                Toast.makeText(this, "Lütfen Bir Görsel Seçiniz", Toast.LENGTH_SHORT).show()
-            } else if (kullaniciYorum.isEmpty()) {
-                paylasButton.isClickable = true
-                yorumLayout.error = "Bu Alanı Boş Bırakamazsınız"
             }
-
-
         }
 
     }
@@ -182,8 +272,7 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
 
             if (resultCode == RESULT_OK) {
                 secilenGorsel = result.uri
-
-
+                gifOrImage = true
                 imageView.setImageURI(secilenGorsel)
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
@@ -195,6 +284,31 @@ open class FotografPaylasmaActivity : AppCompatActivity() {
 
 
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun didSearchTerm(term: String) {
+
+    }
+
+    override fun onDismissed(selectedContentType: GPHContentType) {
+
+    }
+
+    override fun onGifSelected(
+        media: Media,
+        searchTerm: String?,
+        selectedContentType: GPHContentType
+    ) {
+        val url = media.embedUrl!!
+
+        val hepsi: List<String>
+        hepsi = url.split('/')
+
+        istenen = hepsi[hepsi.size - 1]
+        a = "https://media.giphy.com/media/$istenen/giphy.gif"
+
+        imageView.glide(a, placeHolderYap(applicationContext))
+        gifOrImage = false
     }
 
 }

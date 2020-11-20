@@ -4,9 +4,6 @@
         android:id="@+id/fotograf_paylas"
         android:title="@string/foto_raf_payla" />
     <item
-        android:id="@+id/gif_paylas"
-        android:title="@string/gif_payla" />
-    <item
         android:id="@+id/temaDegistir"
         android:title="@string/tema_de_i_tir" />
     <item

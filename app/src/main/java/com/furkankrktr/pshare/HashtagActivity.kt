@@ -55,14 +55,23 @@ class HashtagActivity : AppCompatActivity() {
                             postList.clear()
 
                             for (document in documents) {
-                                val kullaniciEmail = document.get("kullaniciemail") as String
-                                val kullaniciYorum = document.get("kullaniciyorum") as String
-                                val gorselUrl = document.get("gorselurl") as String
-                                val postId = document.get("postId") as String
-                                val indirilenPost =
-                                    Post(kullaniciEmail, kullaniciYorum, gorselUrl, postId)
-                                postList.add(indirilenPost)
-
+                                try {
+                                    val kullaniciEmail = document.get("kullaniciemail") as String
+                                    val kullaniciYorum = document.get("kullaniciyorum") as String
+                                    val gorselUrl = document.get("gorselurl") as String
+                                    val postId = document.get("postId") as String
+                                    val indirilenPost =
+                                        Post(kullaniciEmail, kullaniciYorum, gorselUrl, postId)
+                                    postList.add(indirilenPost)
+                                }catch (e: Exception){
+                                    val kullaniciEmail = document.get("kullaniciemail") as String
+                                    val kullaniciYorum = document.get("kullaniciyorum") as String
+                                    val gorselUrl = ""
+                                    val postId = document.get("postId") as String
+                                    val indirilenPost =
+                                        Post(kullaniciEmail, kullaniciYorum, gorselUrl, postId)
+                                    postList.add(indirilenPost)
+                                }
 
                             }
 

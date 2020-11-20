@@ -9,9 +9,10 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.furkankrktr.pshare.R
 import com.furkankrktr.pshare.model.Reply
+import com.furkankrktr.pshare.service.glide
+import com.furkankrktr.pshare.service.placeHolderYap
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.recycler_comment.view.*
 import kotlinx.android.synthetic.main.recycler_reply.view.*
 
 class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
@@ -35,7 +36,15 @@ class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
         if (auth.currentUser != null) {
             guncelKullanici = auth.currentUser!!.email.toString()
         }
-
+        if (replyList[position].replyAttachment == "") {
+            holder.itemView.replyImage.visibility = View.GONE
+        } else {
+            holder.itemView.replyImage.visibility = View.VISIBLE
+            holder.itemView.replyImage.glide(
+                replyList[position].replyAttachment,
+                placeHolderYap(holder.itemView.context)
+            )
+        }
         holder.itemView.replyEmail.text = replyList[position].kullaniciEmail
         holder.itemView.replyText.text = replyList[position].kullaniciReply
 
