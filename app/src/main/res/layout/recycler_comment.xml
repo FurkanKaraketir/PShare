@@ -27,7 +27,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="7dp"
                     android:text=""
-                    android:textColor="@color/mavi"
+                    style="@style/TextAppearance.AppCompat.Title"
                     android:textSize="12sp" />
 
                 <ImageView
@@ -43,7 +43,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="10dp"
                     android:text=""
-                    android:textColor="@color/gri"
+                    style="@style/TextAppearance.AppCompat.Body1"
                     android:textSize="18sp" />
 
                 <TextView
@@ -52,24 +52,22 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="@string/_0_yan_t"
-                    android:textColor="@color/mavi"
+                    style="@style/TextAppearance.AppCompat.Title"
                     android:textSize="18sp" />
             </LinearLayout>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/replyYorumButton"
-                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="5"
                 android:src="@drawable/ic_yorum_white" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/deleteYorumButton"
-                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="35dp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="5dp"
                 android:layout_weight="5"

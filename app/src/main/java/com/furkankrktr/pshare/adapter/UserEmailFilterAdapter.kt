@@ -73,84 +73,67 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
         }
 
 
-        if (holder.itemView.recycler_row_kullanici_yorum.text[0] == "#"[0]) {
-            holder.itemView.recycler_row_kullanici_yorum.setTextColor(Color.parseColor("#00DCC7"))
+        if (postList[position].kullaniciEmail == guncelKullanici) {
+            holder.itemView.deleteButton.visibility = View.VISIBLE
         } else {
-            holder.itemView.recycler_row_kullanici_yorum.setTextColor(Color.parseColor("#888888"))
+            holder.itemView.deleteButton.visibility = View.GONE
         }
-
-
-        if (holder.itemView.recycler_row_kullanici_email.text == guncelKullanici) {
-            holder.itemView.recycler_row_kullanici_email.setTextColor(Color.parseColor("#00DCC7"))
-        } else {
-            holder.itemView.recycler_row_kullanici_email.setTextColor(Color.parseColor("#888888"))
-        }
-
-
-
 
         holder.itemView.deleteButton.setOnClickListener {
-            if (postList[position].kullaniciEmail == guncelKullanici || guncelKullanici == "furkankaraketir2005@gmail.com") {
-                //dialog
+            //dialog
 
-                val alert = AlertDialog.Builder(holder.itemView.context)
+            val alert = AlertDialog.Builder(holder.itemView.context)
 
-                alert.setTitle("Post Sil")
-                alert.setMessage("Postu Silmek İstediğinize Emin misiniz?")
+            alert.setTitle("Post Sil")
+            alert.setMessage("Postu Silmek İstediğinize Emin misiniz?")
 
-                alert.setNegativeButton(
-                    "Hayır",
-                    DialogInterface.OnClickListener { _, _ ->
-                        Toast.makeText(
-                            holder.itemView.context,
-                            "İşlem iptal edildi",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    })
-                alert.setPositiveButton(
-                    "Evet",
-                    DialogInterface.OnClickListener { _, _ ->
-                        val itemsRef = database.collection("Post")
+            alert.setNegativeButton(
+                "Hayır",
+                DialogInterface.OnClickListener { _, _ ->
+                    Toast.makeText(
+                        holder.itemView.context,
+                        "İşlem iptal edildi",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
+            alert.setPositiveButton(
+                "Evet",
+                DialogInterface.OnClickListener { _, _ ->
+                    val itemsRef = database.collection("Post")
 
-                        val query = itemsRef.whereEqualTo("postId", postList[position].postId)
+                    val query = itemsRef.whereEqualTo("postId", postList[position].postId)
 
-                        query.get().addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                for (document in task.result) {
-                                    itemsRef.document(document.id).delete()
-                                    Toast.makeText(
-                                        holder.itemView.context,
-                                        "Post Silindi",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            } else {
-                                Toast.makeText(holder.itemView.context, "Hata", Toast.LENGTH_SHORT)
-                                    .show()
+                    query.get().addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            for (document in task.result) {
+                                itemsRef.document(document.id).delete()
+                                Toast.makeText(
+                                    holder.itemView.context,
+                                    "Post Silindi",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } else {
+                            Toast.makeText(holder.itemView.context, "Hata", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+
+                    val yorumsRef = database.collection("Yorumlar")
+                    val queryYorum =
+                        yorumsRef.whereEqualTo("selectedPost", postList[position].postId)
+                    queryYorum.get().addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            for (document in task.result) {
+                                yorumsRef.document(document.id).delete()
                             }
                         }
+                    }
 
-                        val yorumsRef = database.collection("Yorumlar")
-                        val queryYorum =
-                            yorumsRef.whereEqualTo("selectedPost", postList[position].postId)
-                        queryYorum.get().addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                for (document in task.result) {
-                                    yorumsRef.document(document.id).delete()
-                                }
-                            }
-                        }
+                })
+            alert.show()
 
-                    })
-                alert.show()
 
-            } else {
-                Toast.makeText(
-                    holder.itemView.context,
-                    "Yalnızca Kendi Yüklediğiniz Postları Silebilirsiniz",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
         }
 
 

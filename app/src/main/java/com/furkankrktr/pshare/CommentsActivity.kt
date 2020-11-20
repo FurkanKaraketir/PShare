@@ -10,6 +10,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -39,6 +40,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
     private lateinit var database: FirebaseFirestore
     private lateinit var selectedPost: String
     private lateinit var gifOrImageBtn: ImageView
+    private lateinit var secilenImageView: ImageView
     private var secilenGorsel: Uri? = null
     private var gifOrImage: Boolean? = null
     private var istenen: String = ""
@@ -55,10 +57,12 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
         storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
-        val sendButton = findViewById<ImageButton>(R.id.sendCButton)
+        val sendButton = findViewById<ImageView>(R.id.sendCButton)
         selectedPost = intent.getStringExtra("selectedPost").toString()
 
         gifOrImageBtn = findViewById(R.id.attachCommentButton)
+        secilenImageView = findViewById(R.id.secilenCommentResimView)
+        secilenImageView.visibility = View.GONE
         Giphy.configure(this, "Qyq8K6rBLuR2bYRetJteXkb6k7ngKUG8")
         verileriAl()
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -151,7 +155,6 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                                     if (task.isSuccessful) {
                                         Toast.makeText(this, "Yorum Yapıldı", Toast.LENGTH_LONG)
                                             .show()
-                                        gifOrImageBtn.setImageResource(R.drawable.ic_baseline_attach_file_24)
                                     }
                                 }.addOnFailureListener { exception ->
                                     Toast.makeText(
@@ -218,7 +221,6 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                     database.collection("Yorumlar").add(commentHashMap)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                gifOrImageBtn.setImageResource(R.drawable.ic_baseline_attach_file_24)
                                 commentSendEditText.text = null
                                 Toast.makeText(this, "Yorum Yapıldı", Toast.LENGTH_LONG).show()
                                 recyclerCommentViewAdapter.notifyDataSetChanged()
@@ -262,7 +264,8 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
             if (resultCode == RESULT_OK) {
                 secilenGorsel = result.uri
                 gifOrImage = true
-                gifOrImageBtn.setImageURI(secilenGorsel)
+                secilenImageView.visibility = View.VISIBLE
+                secilenImageView.setImageURI(secilenGorsel)
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val e = result.error
@@ -358,8 +361,8 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
 
         istenen = hepsi[hepsi.size - 1]
         a = "https://media.giphy.com/media/$istenen/giphy.gif"
-
-        gifOrImageBtn.glide(a, placeHolderYap(applicationContext))
+        secilenImageView.visibility = View.VISIBLE
+        secilenImageView.glide(a, placeHolderYap(applicationContext))
         gifOrImage = false
     }
 

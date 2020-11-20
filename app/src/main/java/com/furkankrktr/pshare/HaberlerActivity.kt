@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.furkankrktr.pshare.adapter.HaberRecyclerAdapter
 import com.furkankrktr.pshare.model.Post
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -21,6 +22,7 @@ import kotlinx.android.synthetic.main.activity_haberler.*
 class HaberlerActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseFirestore
+    private lateinit var postAddButton: FloatingActionButton
     private lateinit var recyclerViewAdapter: HaberRecyclerAdapter
     private var postList = ArrayList<Post>()
 
@@ -33,6 +35,11 @@ class HaberlerActivity : AppCompatActivity() {
 
         FirebaseMessaging.getInstance().subscribeToTopic("users")
         verileriAl()
+        postAddButton = findViewById(R.id.postAddBtn)
+        postAddButton.setOnClickListener {
+            val intent = Intent(this, FotografPaylasmaActivity::class.java)
+            startActivity(intent)
+        }
 
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
@@ -50,28 +57,27 @@ class HaberlerActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        if (item.itemId == R.id.fotograf_paylas) {
+        when (item.itemId) {
+            R.id.cikis_yap -> {
 
-            val intent = Intent(this, FotografPaylasmaActivity::class.java)
-            startActivity(intent)
+                auth.signOut()
+                val intent = Intent(this, KullaniciActivity::class.java)
+                startActivity(intent)
+                finish()
 
-        } else if (item.itemId == R.id.cikis_yap) {
-
-            auth.signOut()
-            val intent = Intent(this, KullaniciActivity::class.java)
-            startActivity(intent)
-            finish()
-
-        } else if (item.itemId == R.id.temaDegistir) {
-            when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-                Configuration.UI_MODE_NIGHT_YES ->
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                Configuration.UI_MODE_NIGHT_NO ->
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
-        } else if (item.itemId == R.id.WebSite) {
-            val intent = Intent(this, WebViewActivity::class.java)
-            startActivity(intent)
+            R.id.temaDegistir -> {
+                when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                    Configuration.UI_MODE_NIGHT_YES ->
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    Configuration.UI_MODE_NIGHT_NO ->
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+            }
+            R.id.WebSite -> {
+                val intent = Intent(this, WebViewActivity::class.java)
+                startActivity(intent)
+            }
         }
 
 
@@ -101,7 +107,7 @@ class HaberlerActivity : AppCompatActivity() {
                                     val indirilenPost =
                                         Post(kullaniciEmail, kullaniciYorum, gorselUrl, postId)
                                     postList.add(indirilenPost)
-                                }catch (e: Exception){
+                                } catch (e: Exception) {
                                     val kullaniciEmail = document.get("kullaniciemail") as String
                                     val kullaniciYorum = document.get("kullaniciyorum") as String
                                     val gorselUrl = ""
@@ -110,8 +116,6 @@ class HaberlerActivity : AppCompatActivity() {
                                         Post(kullaniciEmail, kullaniciYorum, gorselUrl, postId)
                                     postList.add(indirilenPost)
                                 }
-
-
 
 
                             }

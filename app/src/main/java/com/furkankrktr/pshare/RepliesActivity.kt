@@ -40,6 +40,7 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     private lateinit var selectedCommentEmail: String
     private lateinit var selectedCommentText: String
     private lateinit var replyAttachmentBtn: ImageView
+    private lateinit var secilenReplyIamgeView: ImageView
     private var secilenGorsel: Uri? = null
     private var gifOrImage: Boolean? = null
     private var istenen: String = ""
@@ -63,8 +64,10 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         recyclerReplyViewAdapter = ReplyRecyclerAdapter(replyList)
         recyclerRepliesView.adapter = recyclerReplyViewAdapter
 
-        val replySendButton = findViewById<ImageButton>(R.id.replySendButton)
+        val replySendButton = findViewById<ImageView>(R.id.replySendButton)
         replyAttachmentBtn = findViewById(R.id.attachReplyButton)
+        secilenReplyIamgeView = findViewById(R.id.secilenReplyResimView)
+        secilenReplyIamgeView.visibility = View.GONE
         selectedComment = intent.getStringExtra("selectedComment").toString()
         selectedCommentEmail = intent.getStringExtra("selectedCommentEmail").toString()
         selectedCommentText = intent.getStringExtra("selectedCommentText").toString()
@@ -160,7 +163,6 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                             database.collection("Yanıtlar").add(commentHashMap)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        replyAttachmentBtn.setImageResource(R.drawable.ic_baseline_attach_file_24)
                                         Toast.makeText(this, "Yanıt Gönderildi", Toast.LENGTH_LONG)
                                             .show()
                                     }
@@ -231,7 +233,6 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 replySendEditText.text = null
-                                replyAttachmentBtn.setImageResource(R.drawable.ic_baseline_attach_file_24)
 
                                 Toast.makeText(this, "Yanıt Yazıldı", Toast.LENGTH_LONG).show()
                                 recyclerReplyViewAdapter.notifyDataSetChanged()
@@ -326,9 +327,11 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
         istenen = hepsi[hepsi.size - 1]
         a = "https://media.giphy.com/media/$istenen/giphy.gif"
+        secilenReplyIamgeView.visibility = View.VISIBLE
 
-        replyAttachmentBtn.glide(a, placeHolderYap(applicationContext))
+        secilenReplyIamgeView.glide(a, placeHolderYap(applicationContext))
         gifOrImage = false
+
 
     }
 
@@ -353,8 +356,9 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
             if (resultCode == RESULT_OK) {
                 secilenGorsel = result.uri
+                secilenReplyIamgeView.visibility = View.VISIBLE
                 gifOrImage = true
-                replyAttachmentBtn.setImageURI(secilenGorsel)
+                secilenReplyIamgeView.setImageURI(secilenGorsel)
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val e = result.error

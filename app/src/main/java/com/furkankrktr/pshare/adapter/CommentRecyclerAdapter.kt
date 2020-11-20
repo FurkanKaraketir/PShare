@@ -51,56 +51,54 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
         holder.itemView.commentEmail.text = commentList[position].kullaniciEmail
         holder.itemView.comment.text = commentList[position].kullaniciComment
 
+        if (commentList[position].kullaniciEmail == guncelKullanici) {
+            holder.itemView.deleteYorumButton.visibility = View.VISIBLE
+        } else {
+            holder.itemView.deleteYorumButton.visibility = View.GONE
+        }
+
         holder.itemView.deleteYorumButton.setOnClickListener {
-            if (commentList[position].kullaniciEmail == guncelKullanici || guncelKullanici == "furkankaraketir2005@gmail.com") {
 
-                val alert = AlertDialog.Builder(holder.itemView.context)
+            val alert = AlertDialog.Builder(holder.itemView.context)
 
-                alert.setTitle("Yorum Sil")
-                alert.setMessage("Yorumu Silmek İstediğinize Emin misiniz?")
-                alert.setNegativeButton(
-                    "Hayır",
-                    DialogInterface.OnClickListener { _, _ ->
-                        Toast.makeText(
-                            holder.itemView.context,
-                            "İşlem iptal edildi",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    })
+            alert.setTitle("Yorum Sil")
+            alert.setMessage("Yorumu Silmek İstediğinize Emin misiniz?")
+            alert.setNegativeButton(
+                "Hayır",
+                DialogInterface.OnClickListener { _, _ ->
+                    Toast.makeText(
+                        holder.itemView.context,
+                        "İşlem iptal edildi",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
 
-                alert.setPositiveButton(
-                    "Evet",
-                    DialogInterface.OnClickListener { _, _ ->
+            alert.setPositiveButton(
+                "Evet",
+                DialogInterface.OnClickListener { _, _ ->
 
-                        val yorumsRef = database.collection("Yorumlar")
-                        val queryYorum =
-                            yorumsRef.whereEqualTo("commentId", commentList[position].commentId)
-                        queryYorum.get().addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                for (document in task.result) {
-                                    yorumsRef.document(document.id).delete()
-                                    Toast.makeText(
-                                        holder.itemView.context,
-                                        "Yorum Silindi",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            } else {
-                                Toast.makeText(holder.itemView.context, "Hata", Toast.LENGTH_SHORT)
-                                    .show()
+                    val yorumsRef = database.collection("Yorumlar")
+                    val queryYorum =
+                        yorumsRef.whereEqualTo("commentId", commentList[position].commentId)
+                    queryYorum.get().addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            for (document in task.result) {
+                                yorumsRef.document(document.id).delete()
+                                Toast.makeText(
+                                    holder.itemView.context,
+                                    "Yorum Silindi",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
+                        } else {
+                            Toast.makeText(holder.itemView.context, "Hata", Toast.LENGTH_SHORT)
+                                .show()
                         }
+                    }
 
-                    }).show()
+                }).show()
 
 
-            } else {
-                Toast.makeText(
-                    holder.itemView.context,
-                    "Yalnızca Kendi Yüklediğiniz Yorumları Silebilirsiniz",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
         }
         holder.itemView.replyYorumButton.setOnClickListener {
             replyGit(holder, position)
@@ -137,7 +135,7 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
         intent.putExtra("selectedComment", commentList[position].commentId)
         intent.putExtra("selectedCommentEmail", commentList[position].kullaniciEmail)
         intent.putExtra("selectedCommentText", commentList[position].kullaniciComment)
-        intent.putExtra("selectedCommentImage",commentList[position].commentAttach)
+        intent.putExtra("selectedCommentImage", commentList[position].commentAttach)
         holder.itemView.context.startActivity(intent)
     }
 

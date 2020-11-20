@@ -26,7 +26,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="7dp"
                     android:text=""
-                    android:textColor="@color/mavi"
+                    style="@style/TextAppearance.AppCompat.Title"
                     android:textSize="12sp" />
 
                 <ImageView
@@ -42,15 +42,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="10dp"
                     android:text=""
-                    android:textColor="@color/gri"
+                    style="@style/TextAppearance.AppCompat.Headline"
                     android:textSize="18sp" />
             </LinearLayout>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/deleteReplyButton"
-                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="5dp"
                 android:layout_weight="5"

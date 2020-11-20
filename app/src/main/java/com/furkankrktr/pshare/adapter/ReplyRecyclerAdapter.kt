@@ -14,6 +14,7 @@ import com.furkankrktr.pshare.service.placeHolderYap
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.recycler_reply.view.*
+import kotlinx.android.synthetic.main.recycler_row.view.*
 
 class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
     RecyclerView.Adapter<ReplyRecyclerAdapter.ReplyHolder>() {
@@ -47,57 +48,52 @@ class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
         }
         holder.itemView.replyEmail.text = replyList[position].kullaniciEmail
         holder.itemView.replyText.text = replyList[position].kullaniciReply
-
+        if (replyList[position].kullaniciEmail == guncelKullanici) {
+            holder.itemView.deleteReplyButton.visibility = View.VISIBLE
+        } else {
+            holder.itemView.deleteReplyButton.visibility = View.GONE
+        }
         holder.itemView.deleteReplyButton.setOnClickListener {
-            if (replyList[position].kullaniciEmail == guncelKullanici || guncelKullanici == "furkankaraketir2005@gmail.com") {
 
-                val alert = AlertDialog.Builder(holder.itemView.context)
+            val alert = AlertDialog.Builder(holder.itemView.context)
 
-                alert.setTitle("Yanıtı Sil")
-                alert.setMessage("Yanıtı Silmek İstediğinize Emin misiniz?")
-                alert.setNegativeButton(
-                    "Hayır",
-                    DialogInterface.OnClickListener { _, _ ->
-                        Toast.makeText(
-                            holder.itemView.context,
-                            "İşlem iptal edildi",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    })
+            alert.setTitle("Yanıtı Sil")
+            alert.setMessage("Yanıtı Silmek İstediğinize Emin misiniz?")
+            alert.setNegativeButton(
+                "Hayır",
+                DialogInterface.OnClickListener { _, _ ->
+                    Toast.makeText(
+                        holder.itemView.context,
+                        "İşlem iptal edildi",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
 
-                alert.setPositiveButton(
-                    "Evet",
-                    DialogInterface.OnClickListener { _, _ ->
+            alert.setPositiveButton(
+                "Evet",
+                DialogInterface.OnClickListener { _, _ ->
 
-                        val yorumsRef = database.collection("Yanıtlar")
-                        val queryYorum =
-                            yorumsRef.whereEqualTo("replyId", replyList[position].replyId)
-                        queryYorum.get().addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                for (document in task.result) {
-                                    yorumsRef.document(document.id).delete()
-                                    Toast.makeText(
-                                        holder.itemView.context,
-                                        "Yanıt Silindi",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            } else {
-                                Toast.makeText(holder.itemView.context, "Hata", Toast.LENGTH_SHORT)
-                                    .show()
+                    val yorumsRef = database.collection("Yanıtlar")
+                    val queryYorum =
+                        yorumsRef.whereEqualTo("replyId", replyList[position].replyId)
+                    queryYorum.get().addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            for (document in task.result) {
+                                yorumsRef.document(document.id).delete()
+                                Toast.makeText(
+                                    holder.itemView.context,
+                                    "Yanıt Silindi",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
+                        } else {
+                            Toast.makeText(holder.itemView.context, "Hata", Toast.LENGTH_SHORT)
+                                .show()
                         }
+                    }
 
-                    }).show()
+                }).show()
 
-
-            } else {
-                Toast.makeText(
-                    holder.itemView.context,
-                    "Yalnızca Kendi Yazdığınız Yanıtları Silebilirsiniz",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
         }
 
 
