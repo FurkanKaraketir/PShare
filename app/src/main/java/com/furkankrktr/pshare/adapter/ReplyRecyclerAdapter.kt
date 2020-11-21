@@ -60,7 +60,7 @@ class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
             alert.setTitle("Yanıtı Sil")
             alert.setMessage("Yanıtı Silmek İstediğinize Emin misiniz?")
             alert.setNegativeButton(
-                "Hayır",
+                "İptal Et",
                 DialogInterface.OnClickListener { _, _ ->
                     Toast.makeText(
                         holder.itemView.context,
@@ -70,7 +70,7 @@ class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
                 })
 
             alert.setPositiveButton(
-                "Evet",
+                "SİL",
                 DialogInterface.OnClickListener { _, _ ->
 
                     val yorumsRef = database.collection("Yanıtlar")

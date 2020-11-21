@@ -86,7 +86,7 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
             alert.setMessage("Postu Silmek İstediğinize Emin misiniz?")
 
             alert.setNegativeButton(
-                "Hayır",
+                "İptal Et",
                 DialogInterface.OnClickListener { _, _ ->
                     Toast.makeText(
                         holder.itemView.context,
@@ -95,7 +95,7 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
                     ).show()
                 })
             alert.setPositiveButton(
-                "Evet",
+                "SİL",
                 DialogInterface.OnClickListener { _, _ ->
                     val itemsRef = database.collection("Post")
 

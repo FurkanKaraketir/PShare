@@ -15,7 +15,6 @@
         android:layout_marginTop="50dp"
         android:hint="@string/kullan_c_email"
         android:textColorHint="@color/gri"
-        app:boxStrokeColor="@color/mavi"
         tools:targetApi="p">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -36,7 +35,6 @@
         android:layout_marginTop="50dp"
         android:hint="@string/kullan_c_ifre"
         android:textColorHint="@color/gri"
-        app:boxStrokeColor="@color/mavi"
         app:passwordToggleEnabled="true"
         tools:targetApi="p">
 

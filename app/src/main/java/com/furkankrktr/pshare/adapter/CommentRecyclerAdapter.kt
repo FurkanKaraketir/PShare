@@ -64,7 +64,7 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
             alert.setTitle("Yorum Sil")
             alert.setMessage("Yorumu Silmek İstediğinize Emin misiniz?")
             alert.setNegativeButton(
-                "Hayır",
+                "İptal Et",
                 DialogInterface.OnClickListener { _, _ ->
                     Toast.makeText(
                         holder.itemView.context,
@@ -74,7 +74,7 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
                 })
 
             alert.setPositiveButton(
-                "Evet",
+                "SİL",
                 DialogInterface.OnClickListener { _, _ ->
 
                     val yorumsRef = database.collection("Yorumlar")
