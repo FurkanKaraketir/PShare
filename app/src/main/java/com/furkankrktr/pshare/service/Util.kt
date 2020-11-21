@@ -8,7 +8,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.furkankrktr.pshare.R
 
 fun ImageView.glide(url: String?, placeholder: CircularProgressDrawable){
-    val options = RequestOptions().placeholder(placeholder).error(R.mipmap.ic_launcher_round)
+    val options = RequestOptions().placeholder(placeholder).error(R.drawable.ic_baseline_block_24)
 
     Glide.with(context).setDefaultRequestOptions(options).load(url).into(this)
 }

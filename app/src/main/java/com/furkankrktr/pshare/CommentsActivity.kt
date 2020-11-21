@@ -75,7 +75,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
         alert.setTitle("Resim veya GIF")
         alert.setMessage("Resim veya GIF seçiniz")
 
-        alert.setPositiveButton("Resim", DialogInterface.OnClickListener { _, _ ->
+        alert.setPositiveButton("RESİM", DialogInterface.OnClickListener { _, _ ->
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.READ_EXTERNAL_STORAGE
@@ -103,6 +103,9 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
             GiphyDialogFragment.newInstance().show(supportFragmentManager, "giphy_dialog")
         })
         gifOrImageBtn.setOnClickListener {
+            alert.show()
+        }
+        secilenImageView.setOnClickListener {
             alert.show()
         }
 

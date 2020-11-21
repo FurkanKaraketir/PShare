@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.furkankrktr.pshare.GorselActivity
 import com.furkankrktr.pshare.R
 import com.furkankrktr.pshare.RepliesActivity
 import com.furkankrktr.pshare.model.Comment
@@ -55,6 +56,12 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
             holder.itemView.deleteYorumButton.visibility = View.VISIBLE
         } else {
             holder.itemView.deleteYorumButton.visibility = View.GONE
+        }
+
+        holder.itemView.commentImageView.setOnClickListener {
+            val intent = Intent(holder.itemView.context, GorselActivity::class.java)
+            intent.putExtra("resim", commentList[position].commentAttach)
+            holder.itemView.context.startActivity(intent)
         }
 
         holder.itemView.deleteYorumButton.setOnClickListener {

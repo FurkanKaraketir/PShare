@@ -2,11 +2,13 @@ package com.furkankrktr.pshare.adapter
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.furkankrktr.pshare.GorselActivity
 import com.furkankrktr.pshare.R
 import com.furkankrktr.pshare.model.Reply
 import com.furkankrktr.pshare.service.glide
@@ -48,6 +50,13 @@ class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
         }
         holder.itemView.replyEmail.text = replyList[position].kullaniciEmail
         holder.itemView.replyText.text = replyList[position].kullaniciReply
+
+        holder.itemView.replyImage.setOnClickListener {
+            val intent = Intent(holder.itemView.context, GorselActivity::class.java)
+            intent.putExtra("resim", replyList[position].replyAttachment)
+            holder.itemView.context.startActivity(intent)
+        }
+
         if (replyList[position].kullaniciEmail == guncelKullanici) {
             holder.itemView.deleteReplyButton.visibility = View.VISIBLE
         } else {

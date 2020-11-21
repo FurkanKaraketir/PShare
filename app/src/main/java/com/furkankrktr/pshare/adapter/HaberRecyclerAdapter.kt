@@ -55,6 +55,7 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
         if (postList[position].gorselUrl == "") {
             holder.itemView.recycler_row_imageview.visibility = View.GONE
         } else {
+            holder.itemView.recycler_row_imageview.visibility = View.VISIBLE
             holder.itemView.recycler_row_imageview.glide(
                 postList[position].gorselUrl,
                 placeHolderYap(holder.itemView.context)

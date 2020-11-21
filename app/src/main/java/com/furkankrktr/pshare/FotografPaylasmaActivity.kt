@@ -34,6 +34,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
     private var a: String = ""
     private var secilenGorsel: Uri? = null
     private var gifOrImage: Boolean? = null
+    private lateinit var secilenPostImageView: ImageView
 
     private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
@@ -51,14 +52,16 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
         paylasButton.isClickable = true
-        val paylasmaButton = findViewById<Button>(R.id.paylasButton)
+        val paylasmaButton = findViewById<ImageView>(R.id.paylasButton)
         val imageSec = findViewById<ImageView>(R.id.imageView)
+        secilenPostImageView = findViewById(R.id.secilenPostResimView)
+        secilenPostImageView.visibility = View.GONE
         val alert = AlertDialog.Builder(this)
         alert.setTitle("Resim veya GIF")
         alert.setMessage("Resim veya GIF seçiniz")
         Giphy.configure(this, "Qyq8K6rBLuR2bYRetJteXkb6k7ngKUG8")
 
-        alert.setPositiveButton("Resim", DialogInterface.OnClickListener { _, _ ->
+        alert.setPositiveButton("RESİM", DialogInterface.OnClickListener { _, _ ->
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.READ_EXTERNAL_STORAGE
@@ -88,167 +91,174 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
         imageSec.setOnClickListener {
             alert.show()
         }
+        secilenPostImageView.setOnClickListener {
+            alert.show()
+        }
         paylasmaButton.setOnClickListener {
+            paylas()
+        }
+        postPaylasTextView.setOnClickListener {
+            paylas()
+        }
+    }
 
-            if (gifOrImage == true) {
-                //depo işlemleri
-                val spinner = progress_circular
-
-
-                //UUID
-
-
-                val uuid = UUID.randomUUID()
-                val gorselIsim = "${uuid}.jpg"
-                val postId = "${uuid}"
-                val reference = storage.reference
-                val gorselReference = reference.child("images").child(gorselIsim)
-
-                val kullaniciYorum = yorumText.text.toString()
-                if (secilenGorsel != null && kullaniciYorum.isNotEmpty()) {
-                    paylasButton.isClickable = false
-                    spinner.visibility = View.VISIBLE
-
-                    yorumLayout.error = null
-
-                    Toast.makeText(this, "Paylaşılıyor, Lütfen Bekleyin...", Toast.LENGTH_LONG)
-                        .show()
-
-                    gorselReference.putFile(secilenGorsel!!).addOnSuccessListener { _ ->
-
-                        val yuklenenGorselReference =
-                            FirebaseStorage.getInstance().reference.child("images")
-                                .child(gorselIsim)
-
-                        yuklenenGorselReference.downloadUrl.addOnSuccessListener { uri ->
-
-                            val downloadUrl = uri.toString()
+    private fun paylas() {
+        if (gifOrImage == true) {
+            //depo işlemleri
+            val spinner = progress_circular
 
 
-                            val guncelKullaniciEmail = auth.currentUser!!.email.toString()
+            //UUID
 
-                            val tarih = Timestamp.now()
-                            //veritabanı işlemleri
-                            val postHashMap = hashMapOf<String, Any>()
-                            postHashMap["postId"] = postId
-                            postHashMap["gorselurl"] = downloadUrl
-                            postHashMap["kullaniciemail"] = guncelKullaniciEmail
-                            postHashMap["kullaniciyorum"] = kullaniciYorum
-                            postHashMap["tarih"] = tarih
 
-                            database.collection("Post").add(postHashMap)
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        Toast.makeText(this, "Paylaşım Yapıldı", Toast.LENGTH_LONG)
-                                            .show()
-                                        spinner.visibility = View.INVISIBLE
-                                        finish()
-                                    }
-                                }.addOnFailureListener { exception ->
-                                    Toast.makeText(
-                                        this,
-                                        exception.localizedMessage,
-                                        Toast.LENGTH_LONG
-                                    )
+            val uuid = UUID.randomUUID()
+            val gorselIsim = "${uuid}.jpg"
+            val postId = "${uuid}"
+            val reference = storage.reference
+            val gorselReference = reference.child("images").child(gorselIsim)
+
+            val kullaniciYorum = yorumText.text.toString()
+            if (secilenGorsel != null && kullaniciYorum.isNotEmpty()) {
+                paylasButton.isClickable = false
+                spinner.visibility = View.VISIBLE
+
+                yorumText.error = null
+
+                Toast.makeText(this, "Paylaşılıyor, Lütfen Bekleyin...", Toast.LENGTH_LONG)
+                    .show()
+
+                gorselReference.putFile(secilenGorsel!!).addOnSuccessListener { _ ->
+
+                    val yuklenenGorselReference =
+                        FirebaseStorage.getInstance().reference.child("images")
+                            .child(gorselIsim)
+
+                    yuklenenGorselReference.downloadUrl.addOnSuccessListener { uri ->
+
+                        val downloadUrl = uri.toString()
+
+
+                        val guncelKullaniciEmail = auth.currentUser!!.email.toString()
+
+                        val tarih = Timestamp.now()
+                        //veritabanı işlemleri
+                        val postHashMap = hashMapOf<String, Any>()
+                        postHashMap["postId"] = postId
+                        postHashMap["gorselurl"] = downloadUrl
+                        postHashMap["kullaniciemail"] = guncelKullaniciEmail
+                        postHashMap["kullaniciyorum"] = kullaniciYorum
+                        postHashMap["tarih"] = tarih
+
+                        database.collection("Post").add(postHashMap)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Toast.makeText(this, "Paylaşım Yapıldı", Toast.LENGTH_LONG)
                                         .show()
-
-                                    paylasButton.isClickable = true
-
                                     spinner.visibility = View.INVISIBLE
-
+                                    finish()
                                 }
+                            }.addOnFailureListener { exception ->
+                                Toast.makeText(
+                                    this,
+                                    exception.localizedMessage,
+                                    Toast.LENGTH_LONG
+                                )
+                                    .show()
+
+                                paylasButton.isClickable = true
+
+                                spinner.visibility = View.INVISIBLE
+
+                            }
 
 
-                        }.addOnFailureListener { exception ->
-                            Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG)
-                                .show()
-
-                            paylasButton.isClickable = true
-
-                            spinner.visibility = View.INVISIBLE
-
-
-                        }
                     }.addOnFailureListener { exception ->
-                        Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG)
+                            .show()
 
                         paylasButton.isClickable = true
 
                         spinner.visibility = View.INVISIBLE
+
+
                     }
-                } else if (secilenGorsel == null) {
+                }.addOnFailureListener { exception ->
+                    Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
+
                     paylasButton.isClickable = true
 
-                    Toast.makeText(this, "Lütfen Bir Görsel Seçiniz", Toast.LENGTH_SHORT).show()
-                } else if (kullaniciYorum.isEmpty()) {
-                    paylasButton.isClickable = true
-                    yorumLayout.error = "Bu Alanı Boş Bırakamazsınız"
+                    spinner.visibility = View.INVISIBLE
                 }
+            } else if (secilenGorsel == null) {
+                paylasButton.isClickable = true
+
+                Toast.makeText(this, "Lütfen Bir Görsel Seçiniz", Toast.LENGTH_SHORT).show()
+            } else if (kullaniciYorum.isEmpty()) {
+                paylasButton.isClickable = true
+                yorumText.error = "Bu Alanı Boş Bırakamazsınız"
+            }
 
 
-            } else {
-                val spinner = progress_circular
+        } else {
+            val spinner = progress_circular
 
 
-                //UUID
+            //UUID
 
 
-                val uuid = UUID.randomUUID()
-                val postId = "${uuid}"
+            val uuid = UUID.randomUUID()
+            val postId = "${uuid}"
 
-                val kullaniciYorum = yorumText.text.toString()
-                if (kullaniciYorum.isNotEmpty()) {
-                    paylasButton.isClickable = false
-                    spinner.visibility = View.VISIBLE
+            val kullaniciYorum = yorumText.text.toString()
+            if (kullaniciYorum.isNotEmpty()) {
+                paylasButton.isClickable = false
+                spinner.visibility = View.VISIBLE
 
-                    yorumLayout.error = null
+                yorumText.error = null
 
-                    Toast.makeText(this, "Paylaşılıyor, Lütfen Bekleyin...", Toast.LENGTH_LONG)
-                        .show()
-
-
-                    val downloadUrl = a
+                Toast.makeText(this, "Paylaşılıyor, Lütfen Bekleyin...", Toast.LENGTH_LONG)
+                    .show()
 
 
-                    val guncelKullaniciEmail = auth.currentUser!!.email.toString()
+                val downloadUrl = a
 
-                    val tarih = Timestamp.now()
-                    //veritabanı işlemleri
-                    val postHashMap = hashMapOf<String, Any>()
-                    postHashMap["postId"] = postId
-                    postHashMap["gorselurl"] = downloadUrl
-                    postHashMap["kullaniciemail"] = guncelKullaniciEmail
-                    postHashMap["kullaniciyorum"] = kullaniciYorum
-                    postHashMap["tarih"] = tarih
 
-                    database.collection("Post").add(postHashMap)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                Toast.makeText(this, "Paylaşım Yapıldı", Toast.LENGTH_LONG)
-                                    .show()
-                                spinner.visibility = View.INVISIBLE
-                                finish()
-                            }
-                        }.addOnFailureListener { exception ->
-                            Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG)
+                val guncelKullaniciEmail = auth.currentUser!!.email.toString()
+
+                val tarih = Timestamp.now()
+                //veritabanı işlemleri
+                val postHashMap = hashMapOf<String, Any>()
+                postHashMap["postId"] = postId
+                postHashMap["gorselurl"] = downloadUrl
+                postHashMap["kullaniciemail"] = guncelKullaniciEmail
+                postHashMap["kullaniciyorum"] = kullaniciYorum
+                postHashMap["tarih"] = tarih
+
+                database.collection("Post").add(postHashMap)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(this, "Paylaşım Yapıldı", Toast.LENGTH_LONG)
                                 .show()
-
-                            paylasButton.isClickable = true
-
                             spinner.visibility = View.INVISIBLE
-
+                            finish()
                         }
+                    }.addOnFailureListener { exception ->
+                        Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG)
+                            .show()
+
+                        paylasButton.isClickable = true
+
+                        spinner.visibility = View.INVISIBLE
+
+                    }
 
 
-                } else if (kullaniciYorum.isEmpty()) {
-                    paylasButton.isClickable = true
-                    yorumLayout.error = "Bu Alanı Boş Bırakamazsınız"
-                }
+            } else if (kullaniciYorum.isEmpty()) {
+                paylasButton.isClickable = true
+                yorumText.error = "Bu Alanı Boş Bırakamazsınız"
             }
         }
-
     }
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -273,7 +283,8 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
             if (resultCode == RESULT_OK) {
                 secilenGorsel = result.uri
                 gifOrImage = true
-                imageView.setImageURI(secilenGorsel)
+                secilenPostImageView.visibility = View.VISIBLE
+                secilenPostImageView.setImageURI(secilenGorsel)
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val e = result.error
@@ -306,8 +317,8 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
 
         istenen = hepsi[hepsi.size - 1]
         a = "https://media.giphy.com/media/$istenen/giphy.gif"
-
-        imageView.glide(a, placeHolderYap(applicationContext))
+        secilenPostImageView.visibility = View.VISIBLE
+        secilenPostImageView.glide(a, placeHolderYap(applicationContext))
         gifOrImage = false
     }
 
