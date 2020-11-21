@@ -1,7 +1,7 @@
 package com.furkankrktr.pshare.adapter
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +33,7 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
         return CommentHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: CommentHolder, position: Int) {
 
         database = FirebaseFirestore.getInstance()
@@ -71,39 +72,39 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
             alert.setTitle("Yorum Sil")
             alert.setMessage("Yorumu Silmek İstediğinize Emin misiniz?")
             alert.setNegativeButton(
-                "İptal Et",
-                DialogInterface.OnClickListener { _, _ ->
-                    Toast.makeText(
-                        holder.itemView.context,
-                        "İşlem iptal edildi",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                })
+                "İptal Et"
+            ) { _, _ ->
+                Toast.makeText(
+                    holder.itemView.context,
+                    "İşlem iptal edildi",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
 
             alert.setPositiveButton(
-                "SİL",
-                DialogInterface.OnClickListener { _, _ ->
+                "SİL"
+            ) { _, _ ->
 
-                    val yorumsRef = database.collection("Yorumlar")
-                    val queryYorum =
-                        yorumsRef.whereEqualTo("commentId", commentList[position].commentId)
-                    queryYorum.get().addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            for (document in task.result) {
-                                yorumsRef.document(document.id).delete()
-                                Toast.makeText(
-                                    holder.itemView.context,
-                                    "Yorum Silindi",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        } else {
-                            Toast.makeText(holder.itemView.context, "Hata", Toast.LENGTH_SHORT)
-                                .show()
+                val yorumsRef = database.collection("Yorumlar")
+                val queryYorum =
+                    yorumsRef.whereEqualTo("commentId", commentList[position].commentId)
+                queryYorum.get().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        for (document in task.result) {
+                            yorumsRef.document(document.id).delete()
+                            Toast.makeText(
+                                holder.itemView.context,
+                                "Yorum Silindi",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
+                    } else {
+                        Toast.makeText(holder.itemView.context, "Hata", Toast.LENGTH_SHORT)
+                            .show()
                     }
+                }
 
-                }).show()
+            }.show()
 
 
         }

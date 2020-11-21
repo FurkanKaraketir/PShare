@@ -1,16 +1,15 @@
 package com.furkankrktr.pshare
 
 import android.Manifest
-import android.os.Bundle
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.Toast
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat

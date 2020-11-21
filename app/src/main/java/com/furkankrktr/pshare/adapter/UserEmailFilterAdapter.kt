@@ -1,15 +1,16 @@
 package com.furkankrktr.pshare.adapter
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.furkankrktr.pshare.*
+import com.furkankrktr.pshare.CommentsActivity
+import com.furkankrktr.pshare.GorselActivity
+import com.furkankrktr.pshare.R
 import com.furkankrktr.pshare.model.Post
 import com.furkankrktr.pshare.service.glide
 import com.furkankrktr.pshare.service.placeHolderYap
@@ -38,6 +39,7 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
         return postList.size
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: PostHolder, position: Int) {
         database = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
@@ -89,49 +91,49 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
             alert.setMessage("Postu Silmek İstediğinize Emin misiniz?")
 
             alert.setNegativeButton(
-                "İptal Et",
-                DialogInterface.OnClickListener { _, _ ->
-                    Toast.makeText(
-                        holder.itemView.context,
-                        "İşlem iptal edildi",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                })
+                "İptal Et"
+            ) { _, _ ->
+                Toast.makeText(
+                    holder.itemView.context,
+                    "İşlem iptal edildi",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
             alert.setPositiveButton(
-                "SİL",
-                DialogInterface.OnClickListener { _, _ ->
-                    val itemsRef = database.collection("Post")
+                "SİL"
+            ) { _, _ ->
+                val itemsRef = database.collection("Post")
 
-                    val query = itemsRef.whereEqualTo("postId", postList[position].postId)
+                val query = itemsRef.whereEqualTo("postId", postList[position].postId)
 
-                    query.get().addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            for (document in task.result) {
-                                itemsRef.document(document.id).delete()
-                                Toast.makeText(
-                                    holder.itemView.context,
-                                    "Post Silindi",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        } else {
-                            Toast.makeText(holder.itemView.context, "Hata", Toast.LENGTH_SHORT)
-                                .show()
+                query.get().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        for (document in task.result) {
+                            itemsRef.document(document.id).delete()
+                            Toast.makeText(
+                                holder.itemView.context,
+                                "Post Silindi",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    } else {
+                        Toast.makeText(holder.itemView.context, "Hata", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+
+                val yorumsRef = database.collection("Yorumlar")
+                val queryYorum =
+                    yorumsRef.whereEqualTo("selectedPost", postList[position].postId)
+                queryYorum.get().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        for (document in task.result) {
+                            yorumsRef.document(document.id).delete()
                         }
                     }
+                }
 
-                    val yorumsRef = database.collection("Yorumlar")
-                    val queryYorum =
-                        yorumsRef.whereEqualTo("selectedPost", postList[position].postId)
-                    queryYorum.get().addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            for (document in task.result) {
-                                yorumsRef.document(document.id).delete()
-                            }
-                        }
-                    }
-
-                })
+            }
             alert.show()
 
 

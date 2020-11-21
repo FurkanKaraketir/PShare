@@ -6,12 +6,11 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,6 +34,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionListener {
+
+
     private lateinit var storage: FirebaseStorage
     private lateinit var selectedComment: String
     private lateinit var selectedCommentEmail: String
@@ -243,8 +244,9 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
                             }
                         }.addOnFailureListener { exception ->
-                        Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
-                    }
+                            Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG)
+                                .show()
+                        }
 
                 } else {
                     replySendButton.isClickable = true

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class WebViewActivity : AppCompatActivity() {
     private lateinit var webView: WebView
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +23,7 @@ class WebViewActivity : AppCompatActivity() {
                 settings.javaScriptEnabled = true
                 settings.safeBrowsingEnabled = true
             }
-        }else{
+        } else {
             webView.loadUrl("https://furkankrktr.wordpress.com/")
         }
 

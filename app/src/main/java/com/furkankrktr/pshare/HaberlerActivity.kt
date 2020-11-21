@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.furkankrktr.pshare
 
 import android.content.Intent
@@ -18,6 +20,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_haberler.*
+
 
 class HaberlerActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth

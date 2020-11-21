@@ -5,15 +5,15 @@
     android:layout_height="match_parent"
     android:background="#000000"
     android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-    tools:context=".GorselActivity"
-    >
+    tools:context=".GorselActivity">
 
-  <ImageView
-      android:id="@+id/resimTamEkran"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:scaleType="fitCenter"
-      android:src="@drawable/ic_baseline_block_24"/>
+    <ImageView
+        android:id="@+id/resimTamEkran"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/title_activity_gorsel"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_baseline_block_24" />
 
 
 </FrameLayout>

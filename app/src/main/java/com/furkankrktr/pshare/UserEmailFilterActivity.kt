@@ -65,7 +65,7 @@ class UserEmailFilterActivity : AppCompatActivity() {
                                     val indirilenPost =
                                         Post(kullaniciEmail, kullaniciYorum, gorselUrl, postId)
                                     postList.add(indirilenPost)
-                                }catch (e: Exception){
+                                } catch (e: Exception) {
                                     val kullaniciEmail = document.get("kullaniciemail") as String
                                     val kullaniciYorum = document.get("kullaniciyorum") as String
                                     val gorselUrl = ""

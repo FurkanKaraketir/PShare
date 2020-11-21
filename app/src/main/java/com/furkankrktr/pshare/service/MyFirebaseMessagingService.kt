@@ -31,7 +31,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
             val builder = it.channelId?.let { it1 ->
                 NotificationCompat.Builder(this, it1)
-                    .setSmallIcon(R.drawable.ic_photo_black)
+                    .setSmallIcon(R.drawable.ic_baseline_attach_file_24)
                     .setContentTitle(it.title)
                     .setContentText(it.body)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
