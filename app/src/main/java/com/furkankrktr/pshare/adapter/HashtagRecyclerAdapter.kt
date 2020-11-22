@@ -194,6 +194,8 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
     private fun commentGit(holder: PostHolder, position: Int) {
         val intent = Intent(holder.itemView.context, CommentsActivity::class.java)
         intent.putExtra("selectedPost", postList[position].postId)
+        intent.putExtra("selectedPostEmail", postList[position].kullaniciUID)
+        intent.putExtra("selectedPostText",postList[position].kullaniciYorum)
         holder.itemView.context.startActivity(intent)
     }
 

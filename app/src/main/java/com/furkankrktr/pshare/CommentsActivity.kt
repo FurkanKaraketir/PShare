@@ -1,3 +1,6 @@
+@file:Suppress("DEPRECATION", "DEPRECATED_IDENTITY_EQUALS")
+
+
 package com.furkankrktr.pshare
 
 import android.Manifest
@@ -16,6 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.furkankrktr.pshare.adapter.CommentRecyclerAdapter
 import com.furkankrktr.pshare.model.Comment
+import com.furkankrktr.pshare.send_notification_pack.*
 import com.furkankrktr.pshare.service.glide
 import com.furkankrktr.pshare.service.placeHolderYap
 import com.giphy.sdk.core.models.Media
@@ -24,11 +28,19 @@ import com.giphy.sdk.ui.Giphy
 import com.giphy.sdk.ui.views.GiphyDialogFragment
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_comments.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -38,6 +50,8 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseFirestore
     private lateinit var selectedPost: String
+    private lateinit var selectedPostEmail: String
+    private lateinit var selectedPostText: String
     private lateinit var gifOrImageBtn: ImageView
     private lateinit var secilenImageView: ImageView
     private var secilenGorsel: Uri? = null
@@ -48,6 +62,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
     //true Image       false GIF
     private lateinit var recyclerCommentViewAdapter: CommentRecyclerAdapter
     private var commentList = ArrayList<Comment>()
+    private lateinit var apiService: APIService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,11 +73,14 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
         database = FirebaseFirestore.getInstance()
         val sendButton = findViewById<ImageView>(R.id.sendCButton)
         selectedPost = intent.getStringExtra("selectedPost").toString()
-
+        selectedPostEmail = intent.getStringExtra("selectedPostEmail").toString()
+        selectedPostText = intent.getStringExtra("selectedPostText").toString()
         gifOrImageBtn = findViewById(R.id.attachCommentButton)
         secilenImageView = findViewById(R.id.secilenCommentResimView)
         secilenImageView.visibility = View.GONE
         Giphy.configure(this, "Qyq8K6rBLuR2bYRetJteXkb6k7ngKUG8")
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService::class.java)
+
         verileriAl()
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -116,12 +134,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                 val gorselIsim = "${uuid}.jpg"
                 val reference = storage.reference
                 val gorselReference = reference.child("images").child(gorselIsim)
-                Toast.makeText(
-                    this,
-                    "Tek Seferde Yalnızca 1 Yorum Yapabilirsin",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
+
                 if (secilenGorsel != null && commentText.isNotEmpty()) {
                     sendButton.isClickable = false
                     gorselReference.putFile(secilenGorsel!!).addOnSuccessListener { _ ->
@@ -131,11 +144,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                                 .child(gorselIsim)
 
                         yuklenenGorselReference.downloadUrl.addOnSuccessListener { uri ->
-                            Toast.makeText(
-                                this,
-                                "Paylaşılıyor, lütfen bekleyiniz...",
-                                Toast.LENGTH_SHORT
-                            ).show()
+
                             val downloadUrl = uri.toString()
 
 
@@ -155,8 +164,30 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                             database.collection("Yorumlar").add(commentHashMap)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        Toast.makeText(this, "Yorum Yapıldı", Toast.LENGTH_LONG)
-                                            .show()
+
+                                        try {
+                                            FirebaseDatabase.getInstance().reference.child("Tokens")
+                                                .child(selectedPostEmail.trim()).child("token")
+                                                .addListenerForSingleValueEvent(object :
+                                                    ValueEventListener {
+                                                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                                        val usertoken: String =
+                                                            dataSnapshot.getValue(String::class.java)
+                                                                .toString()
+                                                        sendNotification(
+                                                            usertoken,
+                                                            "${selectedPostText} İsimli Postunuza Yeni Yorum",
+                                                            commentText,
+                                                        )
+                                                    }
+
+                                                    override fun onCancelled(databaseError: DatabaseError) {
+
+                                                    }
+                                                })
+                                        } catch (e: Exception) {
+                                            println(e.localizedMessage)
+                                        }
                                     }
                                 }.addOnFailureListener { exception ->
                                     Toast.makeText(
@@ -195,21 +226,12 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
 
                 val commentText = commentSendEditText.text.toString()
                 val uuid = UUID.randomUUID()
-                Toast.makeText(
-                    this,
-                    "Tek Seferde Yalnızca 1 Yorum Yapabilirsin",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
+
                 if (commentText.isNotEmpty()) {
-                    Toast.makeText(
-                        this,
-                        "Paylaşılıyor, lütfen bekleyiniz...",
-                        Toast.LENGTH_SHORT
-                    ).show()
+
                     sendButton.isClickable = false
                     val guncelKullaniciEmail = auth.currentUser!!.email.toString()
-
+                    val guncelKullaniciUID = auth.currentUser!!.uid.toString()
                     val tarih = Timestamp.now()
 
                     val commentHashMap = hashMapOf<String, Any>()
@@ -219,15 +241,38 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                     commentHashMap["selectedPost"] = selectedPost
                     commentHashMap["commentId"] = uuid.toString()
                     commentHashMap["tarih"] = tarih
+                    commentHashMap["userID"] = guncelKullaniciUID
+
 
                     database.collection("Yorumlar").add(commentHashMap)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 commentSendEditText.text = null
-                                Toast.makeText(this, "Yorum Yapıldı", Toast.LENGTH_LONG).show()
                                 recyclerCommentViewAdapter.notifyDataSetChanged()
                                 verileriAl()
+                                try {
+                                    FirebaseDatabase.getInstance().reference.child("Tokens")
+                                        .child(selectedPostEmail.trim()).child("token")
+                                        .addListenerForSingleValueEvent(object :
+                                            ValueEventListener {
+                                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                                val usertoken: String =
+                                                    dataSnapshot.getValue(String::class.java)
+                                                        .toString()
+                                                sendNotification(
+                                                    usertoken,
+                                                    "${selectedPostText} İsimli Postunuza Yeni Yorum",
+                                                    commentText,
+                                                )
+                                            }
 
+                                            override fun onCancelled(databaseError: DatabaseError) {
+
+                                            }
+                                        })
+                                } catch (e: Exception) {
+                                    println(e.localizedMessage)
+                                }
                             }
                         }.addOnFailureListener { exception ->
                             Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG)
@@ -242,6 +287,9 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
 
 
         }
+
+        updateToken()
+
     }
 
     override fun onRequestPermissionsResult(
@@ -304,30 +352,53 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                                     val kullaniciEmail = document.get("kullaniciemail") as String
                                     val commentId = document.get("commentId") as String
                                     val commentAttach = document.get("commentAttach") as String
+                                    val userID = document.get("userID") as String
                                     val indirilenComment =
                                         Comment(
                                             kullaniciEmail,
                                             kullaniciComment,
                                             commentId,
-                                            commentAttach
+                                            commentAttach,
+                                            userID
                                         )
                                     commentList.add(indirilenComment)
                                 } catch (e: Exception) {
+                                    try {
+                                        val kullaniciComment =
+                                            document.get("kullanicicomment") as String
+                                        val kullaniciEmail =
+                                            document.get("kullaniciemail") as String
+                                        val commentId = document.get("commentId") as String
+                                        val commentAttach = document.get("commentAttach") as String
+                                        val userID = "M6OZguiPKVQs6Z2qfh9HCntoKQi2"
+                                        val indirilenComment =
+                                            Comment(
+                                                kullaniciEmail,
+                                                kullaniciComment,
+                                                commentId,
+                                                commentAttach,
+                                                userID
+                                            )
+                                        commentList.add(indirilenComment)
+                                    } catch (e: Exception) {
+                                        val kullaniciComment =
+                                            document.get("kullanicicomment") as String
+                                        val kullaniciEmail =
+                                            document.get("kullaniciemail") as String
+                                        val commentId = document.get("commentId") as String
+                                        val commentAttach = ""
+                                        val userID = "M6OZguiPKVQs6Z2qfh9HCntoKQi2"
+                                        val indirilenComment =
+                                            Comment(
+                                                kullaniciEmail,
+                                                kullaniciComment,
+                                                commentId,
+                                                commentAttach,
+                                                userID
+                                            )
+                                        commentList.add(indirilenComment)
+                                    }
 
-
-                                    val kullaniciComment =
-                                        document.get("kullanicicomment") as String
-                                    val kullaniciEmail = document.get("kullaniciemail") as String
-                                    val commentId = document.get("commentId") as String
-                                    val commentAttach = ""
-                                    val indirilenComment =
-                                        Comment(
-                                            kullaniciEmail,
-                                            kullaniciComment,
-                                            commentId,
-                                            commentAttach
-                                        )
-                                    commentList.add(indirilenComment)
                                 }
 
 
@@ -366,6 +437,32 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
         secilenImageView.visibility = View.VISIBLE
         secilenImageView.glide(a, placeHolderYap(applicationContext))
         gifOrImage = false
+    }
+
+    private fun updateToken() {
+        val refreshToken: String = FirebaseInstanceId.getInstance().getToken().toString()
+        val token: Token = Token(refreshToken)
+        FirebaseDatabase.getInstance().getReference("Tokens")
+            .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(token)
+    }
+
+    private fun sendNotification(usertoken: String, title: String, message: String) {
+        val data = Data(title, message)
+        val sender = NotificationSender(data, usertoken)
+        apiService.sendNotifcation(sender)!!.enqueue(object : Callback<MyResponse?> {
+
+            override fun onResponse(call: Call<MyResponse?>, response: Response<MyResponse?>) {
+                if (response.code() === 200) {
+                    if (response.body()!!.success !== 1) {
+                        Toast.makeText(this@CommentsActivity, "Failed ", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<MyResponse?>, t: Throwable?) {
+
+            }
+        })
     }
 
 

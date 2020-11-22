@@ -52,25 +52,25 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
         }
         database.collection("Users").whereEqualTo("useremail", commentList[position].kullaniciEmail)
             .addSnapshotListener { snapshot, exception ->
-                if (exception != null) {
-                    Toast.makeText(
-                        holder.itemView.context,
-                        exception.localizedMessage,
-                        Toast.LENGTH_LONG
-                    ).show()
-                } else {
-                    if (snapshot != null) {
-                        if (!snapshot.isEmpty) {
-                            val documents = snapshot.documents
-                            for (document in documents) {
+                when {
+                    exception != null -> {
+
+                    }
+                    else -> {
+                        if (snapshot != null) {
+                            if (!snapshot.isEmpty) {
+                                val documents = snapshot.documents
+                                for (document in documents) {
+                                    holder.itemView.commentEmail.text =
+                                        document.get("username") as String
+                                }
+                            } else {
                                 holder.itemView.commentEmail.text =
-                                    document.get("username") as String
+                                    commentList[position].kullaniciEmail
                             }
                         } else {
                             holder.itemView.commentEmail.text = commentList[position].kullaniciEmail
                         }
-                    } else {
-                        holder.itemView.commentEmail.text = commentList[position].kullaniciEmail
                     }
                 }
             }
@@ -167,6 +167,7 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
         intent.putExtra("selectedCommentEmail", commentList[position].kullaniciEmail)
         intent.putExtra("selectedCommentText", commentList[position].kullaniciComment)
         intent.putExtra("selectedCommentImage", commentList[position].commentAttach)
+        intent.putExtra("selectedCommentUID", commentList[position].kullaniciUID)
         holder.itemView.context.startActivity(intent)
     }
 

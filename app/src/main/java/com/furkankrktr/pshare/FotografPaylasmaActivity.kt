@@ -138,7 +138,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
 
 
                         val guncelKullaniciEmail = auth.currentUser!!.email.toString()
-
+                        val guncelKullaniciUID = auth.currentUser!!.uid.toString()
                         val tarih = Timestamp.now()
                         //veritabanı işlemleri
                         val postHashMap = hashMapOf<String, Any>()
@@ -147,6 +147,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
                         postHashMap["kullaniciemail"] = guncelKullaniciEmail
                         postHashMap["kullaniciyorum"] = kullaniciYorum
                         postHashMap["tarih"] = tarih
+                        postHashMap["userID"] = guncelKullaniciUID
 
                         database.collection("Post").add(postHashMap)
                             .addOnCompleteListener { task ->
