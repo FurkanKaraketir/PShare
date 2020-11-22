@@ -80,8 +80,36 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                 placeHolderYap(this)
             )
         }
+
+        database.collection("Users").whereEqualTo("useremail", selectedCommentEmail)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Toast.makeText(
+                        this,
+                        exception.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    if (snapshot != null) {
+                        if (!snapshot.isEmpty) {
+                            val documents = snapshot.documents
+                            for (document in documents) {
+                                replyToEmailText.text =
+                                    document.get("username") as String
+                            }
+                        } else {
+                            replyToEmailText.text =
+                                selectedCommentEmail
+                        }
+                    } else {
+                        replyToEmailText.text =
+                            selectedCommentEmail
+                    }
+                }
+            }
+
         replyToCommentText.text = selectedCommentText
-        replyToEmailText.text = selectedCommentEmail
+
         Giphy.configure(this, "Qyq8K6rBLuR2bYRetJteXkb6k7ngKUG8")
         val alert = AlertDialog.Builder(this)
         alert.setTitle("Resim veya GIF")

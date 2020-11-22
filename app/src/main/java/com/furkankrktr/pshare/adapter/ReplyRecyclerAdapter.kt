@@ -15,6 +15,7 @@ import com.furkankrktr.pshare.service.placeHolderYap
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.recycler_reply.view.*
+import kotlinx.android.synthetic.main.recycler_row.view.*
 
 class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
     RecyclerView.Adapter<ReplyRecyclerAdapter.ReplyHolder>() {
@@ -46,7 +47,29 @@ class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
                 placeHolderYap(holder.itemView.context)
             )
         }
-        holder.itemView.replyEmail.text = replyList[position].kullaniciEmail
+        database.collection("Users").whereEqualTo("useremail", replyList[position].kullaniciEmail)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Toast.makeText(
+                        holder.itemView.context,
+                        exception.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    if (snapshot != null) {
+                        if (!snapshot.isEmpty) {
+                            val documents = snapshot.documents
+                            for (document in documents) {
+                                holder.itemView.replyEmail.text = document.get("username") as String
+                            }
+                        } else {
+                            holder.itemView.replyEmail.text = replyList[position].kullaniciEmail
+                        }
+                    } else {
+                        holder.itemView.replyEmail.text = replyList[position].kullaniciEmail
+                    }
+                }
+            }
         holder.itemView.replyText.text = replyList[position].kullaniciReply
 
         holder.itemView.replyImage.setOnClickListener {

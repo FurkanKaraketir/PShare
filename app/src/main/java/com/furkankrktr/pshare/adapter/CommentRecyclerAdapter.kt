@@ -50,7 +50,30 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
                 placeHolderYap(holder.itemView.context)
             )
         }
-        holder.itemView.commentEmail.text = commentList[position].kullaniciEmail
+        database.collection("Users").whereEqualTo("useremail", commentList[position].kullaniciEmail)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Toast.makeText(
+                        holder.itemView.context,
+                        exception.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    if (snapshot != null) {
+                        if (!snapshot.isEmpty) {
+                            val documents = snapshot.documents
+                            for (document in documents) {
+                                holder.itemView.commentEmail.text =
+                                    document.get("username") as String
+                            }
+                        } else {
+                            holder.itemView.commentEmail.text = commentList[position].kullaniciEmail
+                        }
+                    } else {
+                        holder.itemView.commentEmail.text = commentList[position].kullaniciEmail
+                    }
+                }
+            }
         holder.itemView.comment.text = commentList[position].kullaniciComment
 
         if (commentList[position].kullaniciEmail == guncelKullanici) {

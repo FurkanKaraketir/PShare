@@ -20,6 +20,17 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
         <activity
+            android:name=".AddUserNameActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RegisterActivity"
+            android:parentActivityName=".KullaniciActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LoginActivity"
+            android:parentActivityName=".KullaniciActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".WebViewActivity"
             android:parentActivityName=".HaberlerActivity"
             android:screenOrientation="portrait" />
@@ -79,7 +90,6 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_baseline_attach_file_24" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />

@@ -49,6 +49,29 @@ class HaberlerActivity : AppCompatActivity() {
         recyclerViewAdapter = HaberRecyclerAdapter(postList)
         recyclerView.adapter = recyclerViewAdapter
 
+        database.collection("Users").whereEqualTo("useremail", auth.currentUser!!.email.toString())
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Toast.makeText(
+                        this,
+                        exception.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    if (snapshot != null) {
+                        if (snapshot.isEmpty) {
+                            val intent = Intent(this, AddUserNameActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                    } else {
+                        val intent = Intent(this, AddUserNameActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+            }
+
 
     }
 
@@ -81,6 +104,7 @@ class HaberlerActivity : AppCompatActivity() {
                 val intent = Intent(this, WebViewActivity::class.java)
                 startActivity(intent)
             }
+
         }
 
 

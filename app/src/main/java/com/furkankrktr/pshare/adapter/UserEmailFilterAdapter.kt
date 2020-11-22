@@ -48,7 +48,32 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
             guncelKullanici = auth.currentUser!!.email.toString()
         }
 
-        holder.itemView.recycler_row_kullanici_email.text = postList[position].kullaniciEmail
+        database.collection("Users").whereEqualTo("useremail", postList[position].kullaniciEmail)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Toast.makeText(
+                        holder.itemView.context,
+                        exception.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    if (snapshot != null) {
+                        if (!snapshot.isEmpty) {
+                            val documents = snapshot.documents
+                            for (document in documents) {
+                                holder.itemView.recycler_row_kullanici_email.text =
+                                    document.get("username") as String
+                            }
+                        } else {
+                            holder.itemView.recycler_row_kullanici_email.text =
+                                postList[position].kullaniciEmail
+                        }
+                    } else {
+                        holder.itemView.recycler_row_kullanici_email.text =
+                            postList[position].kullaniciEmail
+                    }
+                }
+            }
         holder.itemView.recycler_row_kullanici_yorum.text = postList[position].kullaniciYorum
 
         if (postList[position].gorselUrl == "") {

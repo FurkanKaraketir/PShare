@@ -22,4 +22,11 @@
     <string name="payla_m_yap">Paylaşım Yap</string>
     <string name="post_payla">Post Paylaş</string>
     <string name="attach">attach</string>
+    <string name="kullan_c_ad">Kullanıcı Adı</string>
+    <string name="icapp">icApp</string>
+    <string name="kullan_c_ad_de_i_tir">Kullanıcı Adı Değiştir</string>
+    <string name="de_t_r">DEĞİŞTİR</string>
+    <string name="ekle">Ekle</string>
+    <string name="devam_et">Devam Et</string>
+    <string name="kullan_c_ad_ekle">Kullanıcı Adı Ekle</string>
 </resources>
