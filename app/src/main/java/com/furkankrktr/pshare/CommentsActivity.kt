@@ -176,7 +176,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                                                                 .toString()
                                                         sendNotification(
                                                             usertoken,
-                                                            "${selectedPostText} İsimli Postunuza Yeni Yorum",
+                                                            "Postunuza Yeni Yorum",
                                                             commentText,
                                                         )
                                                     }
@@ -261,7 +261,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                                                         .toString()
                                                 sendNotification(
                                                     usertoken,
-                                                    "${selectedPostText} İsimli Postunuza Yeni Yorum",
+                                                    "Postunuza Yeni Yorum",
                                                     commentText,
                                                 )
                                             }
@@ -447,7 +447,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
     }
 
     private fun sendNotification(usertoken: String, title: String, message: String) {
-        val data = Data(title, message)
+        val data = Data(title, message, selectedPost, selectedPostEmail, selectedPostText,"","")
         val sender = NotificationSender(data, usertoken)
         apiService.sendNotifcation(sender)!!.enqueue(object : Callback<MyResponse?> {
 

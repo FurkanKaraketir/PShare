@@ -29,7 +29,7 @@
                 android:textSize="17sp" />
 
             <ImageView
-                android:id="@+id/selectedCommentImage"
+                android:id="@+id/selectedCommentImageView"
                 android:layout_width="100dp"
                 android:layout_height="75dp"
                 android:layout_gravity="center_horizontal"

@@ -53,6 +53,7 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     private lateinit var replyAttachmentBtn: ImageView
     private lateinit var secilenReplyIamgeView: ImageView
     private lateinit var selectedCommentUID: String
+    private lateinit var selectedCommentImage: String
     private var secilenGorsel: Uri? = null
     private var gifOrImage: Boolean? = null
     private var istenen: String = ""
@@ -86,11 +87,12 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         selectedCommentEmail = intent.getStringExtra("selectedCommentEmail").toString()
         selectedCommentText = intent.getStringExtra("selectedCommentText").toString()
         selectedCommentUID = intent.getStringExtra("selectedCommentUID").toString()
-        if (intent.getStringExtra("selectedCommentImage").toString() == "") {
-            selectedCommentImage.visibility = View.GONE
+        selectedCommentImage = intent.getStringExtra("selectedCommentImage").toString()
+        if (selectedCommentImage == "") {
+            selectedCommentImageView.visibility = View.GONE
         } else {
-            selectedCommentImage.glide(
-                intent.getStringExtra("selectedCommentImage").toString(),
+            selectedCommentImageView.glide(
+                selectedCommentImage,
                 placeHolderYap(this)
             )
         }
@@ -211,7 +213,7 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                                                             .toString()
                                                     sendNotification(
                                                         usertoken,
-                                                        "${selectedCommentText} Yorumunuza Yeni Yanıt",
+                                                        "Yorumunuza Yeni Yanıt",
                                                         replyText,
                                                     )
                                                 }
@@ -290,7 +292,7 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                                                 dataSnapshot.getValue(String::class.java).toString()
                                             sendNotification(
                                                 usertoken,
-                                                "${selectedCommentText} Yorumunuza Yeni Yanıt",
+                                                "Yorumunuza Yeni Yanıt",
                                                 replyText
                                             )
                                         }
@@ -329,7 +331,15 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     }
 
     private fun sendNotification(usertoken: String, title: String, message: String) {
-        val data = Data(title, message)
+        val data = Data(
+            title,
+            message,
+            selectedComment,
+            selectedCommentEmail,
+            selectedCommentText,
+            selectedCommentUID,
+            selectedCommentImage
+        )
         val sender = NotificationSender(data, usertoken)
         apiService.sendNotifcation(sender)!!.enqueue(object : Callback<MyResponse?> {
 
