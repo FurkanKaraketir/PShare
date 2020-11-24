@@ -15,7 +15,6 @@ import com.furkankrktr.pshare.service.placeHolderYap
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.recycler_reply.view.*
-import kotlinx.android.synthetic.main.recycler_row.view.*
 
 class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
     RecyclerView.Adapter<ReplyRecyclerAdapter.ReplyHolder>() {

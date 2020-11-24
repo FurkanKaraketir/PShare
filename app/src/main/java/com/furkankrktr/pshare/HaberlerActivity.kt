@@ -4,17 +4,21 @@ package com.furkankrktr.pshare
 
 import android.content.Intent
 import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.furkankrktr.pshare.adapter.HaberRecyclerAdapter
 import com.furkankrktr.pshare.model.Post
+import com.furkankrktr.pshare.send_notification_pack.APIService
+import com.furkankrktr.pshare.send_notification_pack.Client
+import com.furkankrktr.pshare.send_notification_pack.Token
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.iid.FirebaseInstanceId
@@ -28,6 +32,7 @@ class HaberlerActivity : AppCompatActivity() {
     private lateinit var postAddButton: FloatingActionButton
     private lateinit var recyclerViewAdapter: HaberRecyclerAdapter
     private var postList = ArrayList<Post>()
+    private lateinit var apiService: APIService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +48,7 @@ class HaberlerActivity : AppCompatActivity() {
             val intent = Intent(this, FotografPaylasmaActivity::class.java)
             startActivity(intent)
         }
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService::class.java)
 
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
@@ -72,6 +78,7 @@ class HaberlerActivity : AppCompatActivity() {
                 }
             }
 
+        updateToken()
 
     }
 
@@ -94,10 +101,12 @@ class HaberlerActivity : AppCompatActivity() {
             }
             R.id.temaDegistir -> {
                 when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-                    Configuration.UI_MODE_NIGHT_YES ->
+                    Configuration.UI_MODE_NIGHT_YES ->{
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    Configuration.UI_MODE_NIGHT_NO ->
+                    }
+                    Configuration.UI_MODE_NIGHT_NO ->{
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    }
                 }
             }
             R.id.WebSite -> {
@@ -192,6 +201,14 @@ class HaberlerActivity : AppCompatActivity() {
                     }
                 }
             }
+    }
+
+
+    private fun updateToken() {
+        val refreshToken: String = FirebaseInstanceId.getInstance().token.toString()
+        val token = Token(refreshToken)
+        FirebaseDatabase.getInstance().getReference("Tokens")
+            .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(token)
     }
 
 

@@ -52,6 +52,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
     private lateinit var selectedPost: String
     private lateinit var selectedPostEmail: String
     private lateinit var selectedPostText: String
+    private lateinit var selectedPostUID: String
     private lateinit var gifOrImageBtn: ImageView
     private lateinit var secilenImageView: ImageView
     private var secilenGorsel: Uri? = null
@@ -75,6 +76,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
         selectedPost = intent.getStringExtra("selectedPost").toString()
         selectedPostEmail = intent.getStringExtra("selectedPostEmail").toString()
         selectedPostText = intent.getStringExtra("selectedPostText").toString()
+        selectedPostUID = intent.getStringExtra("selectedPostUID").toString()
         gifOrImageBtn = findViewById(R.id.attachCommentButton)
         secilenImageView = findViewById(R.id.secilenCommentResimView)
         secilenImageView.visibility = View.GONE
@@ -165,29 +167,33 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
 
-                                        try {
-                                            FirebaseDatabase.getInstance().reference.child("Tokens")
-                                                .child(selectedPostEmail.trim()).child("token")
-                                                .addListenerForSingleValueEvent(object :
-                                                    ValueEventListener {
-                                                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                                        val usertoken: String =
-                                                            dataSnapshot.getValue(String::class.java)
-                                                                .toString()
-                                                        sendNotification(
-                                                            usertoken,
-                                                            "Postunuza Yeni Yorum",
-                                                            commentText,
-                                                        )
-                                                    }
+                                        if (guncelKullaniciEmail != selectedPostEmail) {
+                                            try {
+                                                FirebaseDatabase.getInstance().reference.child("Tokens")
+                                                    .child(selectedPostUID.trim()).child("token")
+                                                    .addListenerForSingleValueEvent(object :
+                                                        ValueEventListener {
+                                                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                                            val usertoken: String =
+                                                                dataSnapshot.getValue(String::class.java)
+                                                                    .toString()
+                                                            sendNotification(
+                                                                usertoken,
+                                                                "Postunuza Yeni Yorum",
+                                                                commentText,
+                                                            )
+                                                        }
 
-                                                    override fun onCancelled(databaseError: DatabaseError) {
+                                                        override fun onCancelled(databaseError: DatabaseError) {
 
-                                                    }
-                                                })
-                                        } catch (e: Exception) {
-                                            println(e.localizedMessage)
+                                                        }
+                                                    })
+                                            } catch (e: Exception) {
+                                                println(e.localizedMessage)
+                                            }
                                         }
+
+
                                     }
                                 }.addOnFailureListener { exception ->
                                     Toast.makeText(
@@ -250,28 +256,30 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                                 commentSendEditText.text = null
                                 recyclerCommentViewAdapter.notifyDataSetChanged()
                                 verileriAl()
-                                try {
-                                    FirebaseDatabase.getInstance().reference.child("Tokens")
-                                        .child(selectedPostEmail.trim()).child("token")
-                                        .addListenerForSingleValueEvent(object :
-                                            ValueEventListener {
-                                            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                                val usertoken: String =
-                                                    dataSnapshot.getValue(String::class.java)
-                                                        .toString()
-                                                sendNotification(
-                                                    usertoken,
-                                                    "Postunuza Yeni Yorum",
-                                                    commentText,
-                                                )
-                                            }
+                                if (guncelKullaniciEmail != selectedPostEmail) {
+                                    try {
+                                        FirebaseDatabase.getInstance().reference.child("Tokens")
+                                            .child(selectedPostUID.trim()).child("token")
+                                            .addListenerForSingleValueEvent(object :
+                                                ValueEventListener {
+                                                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                                    val usertoken: String =
+                                                        dataSnapshot.getValue(String::class.java)
+                                                            .toString()
+                                                    sendNotification(
+                                                        usertoken,
+                                                        "Postunuza Yeni Yorum",
+                                                        commentText,
+                                                    )
+                                                }
 
-                                            override fun onCancelled(databaseError: DatabaseError) {
+                                                override fun onCancelled(databaseError: DatabaseError) {
 
-                                            }
-                                        })
-                                } catch (e: Exception) {
-                                    println(e.localizedMessage)
+                                                }
+                                            })
+                                    } catch (e: Exception) {
+                                        println(e.localizedMessage)
+                                    }
                                 }
                             }
                         }.addOnFailureListener { exception ->
@@ -440,14 +448,23 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
     }
 
     private fun updateToken() {
-        val refreshToken: String = FirebaseInstanceId.getInstance().getToken().toString()
-        val token: Token = Token(refreshToken)
+        val refreshToken: String = FirebaseInstanceId.getInstance().token.toString()
+        val token = Token(refreshToken)
         FirebaseDatabase.getInstance().getReference("Tokens")
             .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(token)
     }
 
     private fun sendNotification(usertoken: String, title: String, message: String) {
-        val data = Data(title, message, selectedPost, selectedPostEmail, selectedPostText,"","")
+        val data = Data(
+            title,
+            message,
+            selectedPost,
+            selectedPostEmail,
+            selectedPostText,
+            "",
+            "",
+            selectedPostUID
+        )
         val sender = NotificationSender(data, usertoken)
         apiService.sendNotifcation(sender)!!.enqueue(object : Callback<MyResponse?> {
 

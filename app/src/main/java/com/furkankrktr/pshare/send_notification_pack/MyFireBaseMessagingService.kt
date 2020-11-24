@@ -1,6 +1,7 @@
 package com.furkankrktr.pshare.send_notification_pack
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.TaskStackBuilder
@@ -8,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.media.RingtoneManager
+import android.os.Build
 import androidx.annotation.NonNull
 import androidx.core.app.NotificationCompat
 import com.furkankrktr.pshare.CommentsActivity
@@ -28,6 +30,7 @@ class MyFireBaseMessagingService : FirebaseMessagingService() {
     private lateinit var intentText: String
     private lateinit var intentImage: String
     private lateinit var intentUID: String
+    private lateinit var selectedPostUID: String
     override fun onMessageReceived(@NonNull remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
@@ -38,28 +41,43 @@ class MyFireBaseMessagingService : FirebaseMessagingService() {
         intentText = remoteMessage.data["IntentText"].toString()
         intentImage = remoteMessage.data["selectedCommentImage"].toString()
         intentUID = remoteMessage.data["selectedCommentUID"].toString()
+        selectedPostUID = remoteMessage.data["selectedPostUID"].toString()
 
-        if (title == "Postunuza Yeni Yorum") {
-            resultIntent = Intent(this, CommentsActivity::class.java)
-            resultIntent.putExtra("selectedPost", intentID)
-            resultIntent.putExtra("selectedPostEmail", intentEmail)
-            resultIntent.putExtra("selectedPostText", intentText)
-        } else if (title == "Yorumunuza Yeni Yanıt") {
-            resultIntent = Intent(this, RepliesActivity::class.java)
-            resultIntent.putExtra("selectedComment", intentID)
-            resultIntent.putExtra("selectedCommentEmail", intentEmail)
-            resultIntent.putExtra("selectedCommentText", intentText)
-            resultIntent.putExtra("selectedCommentImage", intentImage)
-            resultIntent.putExtra("selectedCommentUID", intentUID)
-        } else {
-            resultIntent = Intent(this, HaberlerActivity::class.java)
+        when (title) {
+            "Postunuza Yeni Yorum" -> {
+                resultIntent = Intent(this, CommentsActivity::class.java)
+                resultIntent.putExtra("selectedPost", intentID)
+                resultIntent.putExtra("selectedPostEmail", intentEmail)
+                resultIntent.putExtra("selectedPostUID", selectedPostUID)
+                resultIntent.putExtra("selectedPostText", intentText)
+
+            }
+            "Yorumunuza Yeni Yanıt" -> {
+                resultIntent = Intent(this, RepliesActivity::class.java)
+                resultIntent.putExtra("selectedComment", intentID)
+                resultIntent.putExtra("selectedCommentEmail", intentEmail)
+                resultIntent.putExtra("selectedCommentText", intentText)
+                resultIntent.putExtra("selectedCommentImage", intentImage)
+                resultIntent.putExtra("selectedCommentUID", intentUID)
+            }
+            else -> {
+                resultIntent = Intent(this, HaberlerActivity::class.java)
+            }
         }
 
         val resultPendingIntent: PendingIntent? = TaskStackBuilder.create(this).run {
             addNextIntentWithParentStack(resultIntent)
             getPendingIntent(50, PendingIntent.FLAG_UPDATE_CURRENT)
         }
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Bildirimler"
+            val descriptionText = "Yorum ve Yanıt Bildirimleri"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val mChannel = NotificationChannel(212121.toString(), name, importance)
+            mChannel.description = descriptionText
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(mChannel)
+        }
 
         val builder = NotificationCompat.Builder(applicationContext)
             .setSmallIcon(R.drawable.ic_baseline_attach_file_24)

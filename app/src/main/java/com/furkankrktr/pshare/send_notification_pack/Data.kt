@@ -7,7 +7,8 @@ class Data(
     val IntentEmail: String,
     val IntentText: String,
     val selectedCommentUID: String,
-    val selectedCommentImage: String
+    val selectedCommentImage: String,
+    val selectedPostUID: String
 ) {
-    constructor() : this("", "", "", "", "", "", "")
+    constructor() : this("", "", "", "", "", "", "", "")
 }

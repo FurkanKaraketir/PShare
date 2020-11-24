@@ -81,7 +81,7 @@
         <service
             android:name=".send_notification_pack.MyFireBaseMessagingService"
             android:enabled="true"
-            android:exported="true"
+            android:exported="false"
             tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -91,7 +91,7 @@
         <service
             android:name=".send_notification_pack.MyFirebaseIdService"
             android:enabled="true"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

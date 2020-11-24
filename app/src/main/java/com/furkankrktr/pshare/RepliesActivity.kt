@@ -203,25 +203,28 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
 
-                                        FirebaseDatabase.getInstance().reference.child("Tokens")
-                                            .child(selectedCommentUID.trim()).child("token")
-                                            .addListenerForSingleValueEvent(object :
-                                                ValueEventListener {
-                                                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                                    val usertoken: String =
-                                                        dataSnapshot.getValue(String::class.java)
-                                                            .toString()
-                                                    sendNotification(
-                                                        usertoken,
-                                                        "Yorumunuza Yeni Yanıt",
-                                                        replyText,
-                                                    )
-                                                }
+                                        if (guncelKullaniciEmail != selectedCommentEmail) {
+                                            FirebaseDatabase.getInstance().reference.child("Tokens")
+                                                .child(selectedCommentUID.trim()).child("token")
+                                                .addListenerForSingleValueEvent(object :
+                                                    ValueEventListener {
+                                                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                                        val usertoken: String =
+                                                            dataSnapshot.getValue(String::class.java)
+                                                                .toString()
+                                                        sendNotification(
+                                                            usertoken,
+                                                            "Yorumunuza Yeni Yanıt",
+                                                            replyText,
+                                                        )
+                                                    }
 
-                                                override fun onCancelled(databaseError: DatabaseError) {
+                                                    override fun onCancelled(databaseError: DatabaseError) {
 
-                                                }
-                                            })
+                                                    }
+                                                })
+                                        }
+
 
                                     }
                                 }.addOnFailureListener { exception ->
@@ -283,24 +286,28 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                             if (task.isSuccessful) {
                                 replySendEditText.text = null
 
-                                FirebaseDatabase.getInstance().reference.child("Tokens")
-                                    .child(selectedCommentUID.trim()).child("token")
-                                    .addListenerForSingleValueEvent(object :
-                                        ValueEventListener {
-                                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                            val usertoken: String =
-                                                dataSnapshot.getValue(String::class.java).toString()
-                                            sendNotification(
-                                                usertoken,
-                                                "Yorumunuza Yeni Yanıt",
-                                                replyText
-                                            )
-                                        }
+                                if (guncelKullaniciEmail != selectedCommentEmail) {
+                                    FirebaseDatabase.getInstance().reference.child("Tokens")
+                                        .child(selectedCommentUID.trim()).child("token")
+                                        .addListenerForSingleValueEvent(object :
+                                            ValueEventListener {
+                                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                                val usertoken: String =
+                                                    dataSnapshot.getValue(String::class.java)
+                                                        .toString()
+                                                sendNotification(
+                                                    usertoken,
+                                                    "Yorumunuza Yeni Yanıt",
+                                                    replyText
+                                                )
+                                            }
 
-                                        override fun onCancelled(databaseError: DatabaseError) {
+                                            override fun onCancelled(databaseError: DatabaseError) {
 
-                                        }
-                                    })
+                                            }
+                                        })
+                                }
+
 
                                 recyclerReplyViewAdapter.notifyDataSetChanged()
                                 verileriAl()
@@ -324,8 +331,8 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
 
     private fun updateToken() {
-        val refreshToken: String = FirebaseInstanceId.getInstance().getToken().toString()
-        val token: Token = Token(refreshToken)
+        val refreshToken: String = FirebaseInstanceId.getInstance().token.toString()
+        val token = Token(refreshToken)
         FirebaseDatabase.getInstance().getReference("Tokens")
             .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(token)
     }
@@ -338,7 +345,8 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
             selectedCommentEmail,
             selectedCommentText,
             selectedCommentUID,
-            selectedCommentImage
+            selectedCommentImage,
+            ""
         )
         val sender = NotificationSender(data, usertoken)
         apiService.sendNotifcation(sender)!!.enqueue(object : Callback<MyResponse?> {
