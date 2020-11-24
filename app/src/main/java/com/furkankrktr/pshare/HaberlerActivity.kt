@@ -31,15 +31,22 @@ class HaberlerActivity : AppCompatActivity() {
     private lateinit var database: FirebaseFirestore
     private lateinit var postAddButton: FloatingActionButton
     private lateinit var recyclerViewAdapter: HaberRecyclerAdapter
+    private lateinit var guncelKullaniciEmail: String
+    private lateinit var theme: String
     private var postList = ArrayList<Post>()
     private lateinit var apiService: APIService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_haberler)
+
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
         FirebaseInstanceId.getInstance().instanceId
+        guncelKullaniciEmail = auth.currentUser!!.email.toString()
+
+
+
 
         FirebaseMessaging.getInstance().subscribeToTopic("users")
         verileriAl()
@@ -101,11 +108,41 @@ class HaberlerActivity : AppCompatActivity() {
             }
             R.id.temaDegistir -> {
                 when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-                    Configuration.UI_MODE_NIGHT_YES ->{
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    Configuration.UI_MODE_NIGHT_YES -> {
+                        database.collection("Users").whereEqualTo("useremail", guncelKullaniciEmail)
+                            .addSnapshotListener { snapshot, exception ->
+                                if (exception == null) {
+
+                                    if (snapshot != null) {
+                                        if (!snapshot.isEmpty) {
+                                            val documents = snapshot.documents
+                                            for (document in documents) {
+                                                database.collection("Users")
+                                                    .document(document.id)
+                                                    .update("theme", "light")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                     }
-                    Configuration.UI_MODE_NIGHT_NO ->{
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    Configuration.UI_MODE_NIGHT_NO -> {
+                        database.collection("Users").whereEqualTo("useremail", guncelKullaniciEmail)
+                            .addSnapshotListener { snapshot, exception ->
+                                if (exception == null) {
+
+                                    if (snapshot != null) {
+                                        if (!snapshot.isEmpty) {
+                                            val documents = snapshot.documents
+                                            for (document in documents) {
+                                                database.collection("Users")
+                                                    .document(document.id)
+                                                    .update("theme", "dark")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                     }
                 }
             }
@@ -121,8 +158,28 @@ class HaberlerActivity : AppCompatActivity() {
     }
 
 
-    private fun verileriAl() {
 
+    private fun verileriAl() {
+        database.collection("Users").whereEqualTo("useremail", guncelKullaniciEmail)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    theme = "dark"
+                } else {
+                    if (snapshot != null) {
+                        if (!snapshot.isEmpty) {
+                            val documents = snapshot.documents
+                            for (document in documents) {
+                                theme = document.get("theme") as String
+                                if (theme == "dark") {
+                                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                                } else if (theme == "light") {
+                                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         database.collection("Post").orderBy("tarih", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, exception ->
                 if (exception != null) {

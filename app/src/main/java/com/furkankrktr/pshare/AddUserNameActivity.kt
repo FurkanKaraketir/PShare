@@ -64,6 +64,7 @@ class AddUserNameActivity : AppCompatActivity() {
                 userHashMap["username"] = userName
                 userHashMap["useremail"] = auth.currentUser!!.email.toString()
                 userHashMap["userId"] = uuid.toString()
+                userHashMap["theme"] = "dark"
                 database.collection("Users").add(userHashMap)
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
