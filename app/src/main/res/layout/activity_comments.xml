@@ -57,14 +57,13 @@
                     android:inputType="text"
                     tools:ignore="NestedWeights" />
 
-                <ImageView
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/sendCButton"
-                    android:layout_width="40dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_margin="2dp"
-                    android:contentDescription="@string/payla"
-                    android:src="@drawable/ic_send_white" />
+                    android:contentDescription="@string/commentbutton"
+                    android:src="@drawable/ic_send_black"/>
 
 
             </LinearLayout>

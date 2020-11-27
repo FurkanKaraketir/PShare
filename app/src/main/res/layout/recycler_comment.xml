@@ -67,16 +67,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
                         android:layout_margin="10dp"
                         android:text="@string/_0_yan_t"
-                        android:textSize="18sp"
+                        android:textSize="12sp"
                         tools:ignore="RelativeOverlap" />
 
                     <ImageView
                         android:id="@+id/replyYorumButton"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
                         android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
                         android:layout_gravity="center_vertical"
                         android:layout_margin="5dp"
                         android:contentDescription="@string/yorum_yap"
@@ -84,8 +86,9 @@
 
                     <ImageView
                         android:id="@+id/deleteYorumButton"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_centerVertical="true"
                         android:layout_gravity="center_vertical"
                         android:layout_margin="5dp"
                         android:contentDescription="@string/_0_yorum"

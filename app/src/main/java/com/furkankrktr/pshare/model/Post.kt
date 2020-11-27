@@ -6,6 +6,4 @@ class Post(
     var gorselUrl: String,
     var postId: String,
     var kullaniciUID: String
-) {
-
-}
+)

@@ -29,4 +29,8 @@
     <string name="ekle">Ekle</string>
     <string name="devam_et">Devam Et</string>
     <string name="kullan_c_ad_ekle">Kullanıcı Adı Ekle</string>
+    <string name="image">Image</string>
+    <string name="commentbutton">CommentButton</string>
+    <string name="deletebutton">DeleteButton</string>
+    <string name="action_search">Ara</string>
 </resources>

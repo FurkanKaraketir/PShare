@@ -50,8 +50,8 @@
 
             <ImageView
                 android:id="@+id/deleteReplyButton"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="5dp"
                 android:contentDescription="@string/_0_yan_t"
