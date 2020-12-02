@@ -29,6 +29,7 @@ class HashtagActivity : AppCompatActivity() {
 
         selectedHashtag = intent.getStringExtra("selectedHashtag").toString()
 
+        supportActionBar?.title = selectedHashtag
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
@@ -40,7 +41,6 @@ class HashtagActivity : AppCompatActivity() {
     }
 
     private fun verileriAl() {
-
         database.collection("Post").whereEqualTo("kullaniciyorum", selectedHashtag)
             .orderBy("tarih", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, exception ->

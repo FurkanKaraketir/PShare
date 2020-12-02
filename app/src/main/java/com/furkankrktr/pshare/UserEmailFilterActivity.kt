@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_haberler.*
+import kotlinx.android.synthetic.main.recycler_row.view.*
 
 class UserEmailFilterActivity : AppCompatActivity() {
 
@@ -17,6 +18,7 @@ class UserEmailFilterActivity : AppCompatActivity() {
     private lateinit var database: FirebaseFirestore
     private lateinit var recyclerViewAdapter: UserEmailFilterAdapter
     private lateinit var selectedEmail: String
+    private lateinit var title: String
 
     private var postList = ArrayList<Post>()
 
@@ -28,12 +30,13 @@ class UserEmailFilterActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+
         selectedEmail = intent.getStringExtra("selectedEmail").toString()
-
-
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
         verileriAl()
+
+
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
         recyclerViewAdapter = UserEmailFilterAdapter(postList)
@@ -43,7 +46,29 @@ class UserEmailFilterActivity : AppCompatActivity() {
     }
 
     private fun verileriAl() {
-
+        database.collection("Users").whereEqualTo("useremail", selectedEmail)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Toast.makeText(
+                        this,
+                        exception.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    if (snapshot != null) {
+                        if (!snapshot.isEmpty) {
+                            val documents = snapshot.documents
+                            for (document in documents) {
+                                supportActionBar?.title = document.get("username") as String
+                            }
+                        } else {
+                            supportActionBar?.title = selectedEmail
+                        }
+                    } else {
+                        supportActionBar?.title = selectedEmail
+                    }
+                }
+            }
         database.collection("Post").whereEqualTo("kullaniciemail", selectedEmail)
             .orderBy("tarih", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, exception ->
