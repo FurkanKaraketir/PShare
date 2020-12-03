@@ -65,6 +65,7 @@ class AddUserNameActivity : AppCompatActivity() {
                 userHashMap["useremail"] = auth.currentUser!!.email.toString()
                 userHashMap["userId"] = uuid.toString()
                 userHashMap["theme"] = "dark"
+                userHashMap["takipEdilenEmailler"] = arrayListOf(auth.currentUser!!.email.toString())
                 database.collection("Users").add(userHashMap)
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
@@ -83,6 +84,7 @@ class AddUserNameActivity : AppCompatActivity() {
                         ekleButton.isClickable = true
 
                     }
+
             }
         }
     }

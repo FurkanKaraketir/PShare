@@ -150,6 +150,10 @@ class HaberlerActivity : AppCompatActivity() {
                 val intent = Intent(this, WebViewActivity::class.java)
                 startActivity(intent)
             }
+            R.id.search -> {
+                val intent = Intent(this, KesfetActivity::class.java)
+                startActivity(intent)
+            }
 
         }
 

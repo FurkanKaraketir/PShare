@@ -33,4 +33,8 @@
     <string name="commentbutton">CommentButton</string>
     <string name="deletebutton">DeleteButton</string>
     <string name="action_search">Ara</string>
+    <string name="ke_fet">Keşfet</string>
+    <string name="ana_men">Ana Menü</string>
+    <string name="tak_p_et">TAKİP ET</string>
+    <string name="tak_b_birak">TAKİBİ BIRAK</string>
 </resources>

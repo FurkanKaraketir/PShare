@@ -20,6 +20,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
         <activity
+            android:name=".KesfetActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".HaberlerActivity"/>
+        <activity
             android:name=".AddUserNameActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -87,7 +91,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service
             android:name=".send_notification_pack.MyFirebaseIdService"
             android:enabled="true"

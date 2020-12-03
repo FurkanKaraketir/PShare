@@ -13,6 +13,7 @@ import com.furkankrktr.pshare.model.Post
 import com.furkankrktr.pshare.service.glide
 import com.furkankrktr.pshare.service.placeHolderYap
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.recycler_row.view.*
 
@@ -24,7 +25,8 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
     private lateinit var database: FirebaseFirestore
     lateinit var auth: FirebaseAuth
     private lateinit var guncelKullanici: String
-
+    private lateinit var documentName: String
+    private lateinit var takipArray: ArrayList<String>
     class PostHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 
@@ -75,7 +77,82 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
                     }
                 }
             }
+        database.collection("Users").whereEqualTo("useremail", guncelKullanici)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Toast.makeText(
+                        holder.itemView.context,
+                        exception.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    if (snapshot != null) {
+                        if (!snapshot.isEmpty) {
+                            val documents = snapshot.documents
+                            for (document in documents) {
+                                documentName = document.id
+                            }
+                        }
+                    }
+                }
+            }
 
+        if (guncelKullanici == postList[position].kullaniciEmail) {
+            holder.itemView.followButton.visibility = View.GONE
+            holder.itemView.unFollowButton.visibility = View.GONE
+        } else {
+            database.collection("Users").whereEqualTo("useremail", guncelKullanici)
+                .addSnapshotListener { snapshot, exception ->
+                    if (exception != null) {
+                        Toast.makeText(
+                            holder.itemView.context,
+                            exception.localizedMessage,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        if (snapshot != null) {
+                            if (!snapshot.isEmpty) {
+                                val documents = snapshot.documents
+                                for (document in documents){
+                                    takipArray = document.get("takipEdilenEmailler") as ArrayList<String>
+                                }
+                                if(takipArray.contains(postList[position].kullaniciEmail)){
+
+                                    holder.itemView.followButton.visibility = View.GONE
+                                    holder.itemView.unFollowButton.visibility = View.VISIBLE
+                                }else{
+                                    holder.itemView.followButton.visibility = View.VISIBLE
+                                    holder.itemView.unFollowButton.visibility = View.GONE
+                                }
+
+                            } else {
+                                holder.itemView.followButton.visibility = View.VISIBLE
+                                holder.itemView.unFollowButton.visibility = View.GONE
+
+                            }
+                        } else {
+                            holder.itemView.followButton.visibility = View.VISIBLE
+                            holder.itemView.unFollowButton.visibility = View.GONE
+                        }
+                    }
+                }
+        }
+
+
+        holder.itemView.followButton.setOnClickListener {
+            database.collection("Users").document(documentName)
+                .update(
+                    "takipEdilenEmailler",
+                    FieldValue.arrayUnion(postList[position].kullaniciEmail)
+                )
+        }
+        holder.itemView.unFollowButton.setOnClickListener {
+            database.collection("Users").document(documentName)
+                .update(
+                    "takipEdilenEmailler",
+                    FieldValue.arrayRemove(postList[position].kullaniciEmail)
+                )
+        }
         holder.itemView.recycler_row_kullanici_yorum.text = postList[position].kullaniciYorum
 
 
@@ -216,8 +293,8 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
         val intent = Intent(holder.itemView.context, CommentsActivity::class.java)
         intent.putExtra("selectedPost", postList[position].postId)
         intent.putExtra("selectedPostEmail", postList[position].kullaniciEmail)
-        intent.putExtra("selectedPostUID",postList[position].kullaniciUID)
-        intent.putExtra("selectedPostText",postList[position].kullaniciYorum)
+        intent.putExtra("selectedPostUID", postList[position].kullaniciUID)
+        intent.putExtra("selectedPostText", postList[position].kullaniciYorum)
         holder.itemView.context.startActivity(intent)
     }
 
