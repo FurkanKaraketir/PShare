@@ -27,6 +27,7 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
     private lateinit var guncelKullanici: String
     private lateinit var documentName: String
     private lateinit var takipArray: ArrayList<String>
+
     class PostHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 
@@ -113,14 +114,15 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
                         if (snapshot != null) {
                             if (!snapshot.isEmpty) {
                                 val documents = snapshot.documents
-                                for (document in documents){
-                                    takipArray = document.get("takipEdilenEmailler") as ArrayList<String>
+                                for (document in documents) {
+                                    takipArray =
+                                        document.get("takipEdilenEmailler") as ArrayList<String>
                                 }
-                                if(takipArray.contains(postList[position].kullaniciEmail)){
+                                if (takipArray.contains(postList[position].kullaniciEmail)) {
 
                                     holder.itemView.followButton.visibility = View.GONE
                                     holder.itemView.unFollowButton.visibility = View.VISIBLE
-                                }else{
+                                } else {
                                     holder.itemView.followButton.visibility = View.VISIBLE
                                     holder.itemView.unFollowButton.visibility = View.GONE
                                 }

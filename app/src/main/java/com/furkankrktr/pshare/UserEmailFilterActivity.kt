@@ -1,8 +1,8 @@
 package com.furkankrktr.pshare
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.furkankrktr.pshare.adapter.UserEmailFilterAdapter
 import com.furkankrktr.pshare.model.Post
@@ -10,7 +10,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_haberler.*
-import kotlinx.android.synthetic.main.recycler_row.view.*
 
 class UserEmailFilterActivity : AppCompatActivity() {
 
@@ -18,7 +17,6 @@ class UserEmailFilterActivity : AppCompatActivity() {
     private lateinit var database: FirebaseFirestore
     private lateinit var recyclerViewAdapter: UserEmailFilterAdapter
     private lateinit var selectedEmail: String
-    private lateinit var title: String
 
     private var postList = ArrayList<Post>()
 
@@ -34,13 +32,15 @@ class UserEmailFilterActivity : AppCompatActivity() {
         selectedEmail = intent.getStringExtra("selectedEmail").toString()
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
-        verileriAl()
 
 
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
         recyclerViewAdapter = UserEmailFilterAdapter(postList)
         recyclerView.adapter = recyclerViewAdapter
+
+        verileriAl()
+
 
 
     }

@@ -72,6 +72,7 @@ class RegisterActivity : AppCompatActivity() {
                                 userHashMap["username"] = userName
                                 userHashMap["useremail"] = email
                                 userHashMap["userId"] = uuid.toString()
+                                userHashMap["takipEdilenEmailler"] = arrayListOf(email)
                                 database.collection("Users").add(userHashMap)
                                     .addOnCompleteListener {
                                         if (task.isSuccessful) {

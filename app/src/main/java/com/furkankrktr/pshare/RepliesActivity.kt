@@ -4,7 +4,6 @@ package com.furkankrktr.pshare
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -130,8 +129,7 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         val alert = AlertDialog.Builder(this)
         alert.setTitle("Resim veya GIF")
         alert.setMessage("Resim veya GIF seçiniz")
-        verileriAl()
-        alert.setPositiveButton("RESİM", DialogInterface.OnClickListener { _, _ ->
+        alert.setPositiveButton("RESİM") { _, _ ->
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.READ_EXTERNAL_STORAGE
@@ -154,10 +152,10 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
 
             }
-        })
-        alert.setNegativeButton("GIF", DialogInterface.OnClickListener { _, _ ->
+        }
+        alert.setNegativeButton("GIF") { _, _ ->
             GiphyDialogFragment.newInstance().show(supportFragmentManager, "giphy_dialog")
-        })
+        }
         replyAttachmentBtn.setOnClickListener {
             alert.show()
         }
@@ -324,7 +322,7 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                 }
             }
         }
-
+        verileriAl()
         updateToken()
 
     }

@@ -24,6 +24,8 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
     private lateinit var database: FirebaseFirestore
     lateinit var auth: FirebaseAuth
     private lateinit var guncelKullanici: String
+    private lateinit var documentName: String
+    private lateinit var takipArray: ArrayList<String>
 
     class PostHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
@@ -74,6 +76,67 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
                     }
                 }
             }
+        database.collection("Users").whereEqualTo("useremail", guncelKullanici)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Toast.makeText(
+                        holder.itemView.context,
+                        exception.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    if (snapshot != null) {
+                        if (!snapshot.isEmpty) {
+                            val documents = snapshot.documents
+                            for (document in documents) {
+                                documentName = document.id
+                            }
+                        }
+                    }
+                }
+            }
+
+        if (guncelKullanici == postList[position].kullaniciEmail) {
+            holder.itemView.followButton.visibility = View.GONE
+            holder.itemView.unFollowButton.visibility = View.GONE
+        } else {
+            database.collection("Users").whereEqualTo("useremail", guncelKullanici)
+                .addSnapshotListener { snapshot, exception ->
+                    if (exception != null) {
+                        Toast.makeText(
+                            holder.itemView.context,
+                            exception.localizedMessage,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        if (snapshot != null) {
+                            if (!snapshot.isEmpty) {
+                                val documents = snapshot.documents
+                                for (document in documents) {
+                                    takipArray =
+                                        document.get("takipEdilenEmailler") as ArrayList<String>
+                                }
+                                if (takipArray.contains(postList[position].kullaniciEmail)) {
+
+                                    holder.itemView.followButton.visibility = View.GONE
+                                    holder.itemView.unFollowButton.visibility = View.VISIBLE
+                                } else {
+                                    holder.itemView.followButton.visibility = View.VISIBLE
+                                    holder.itemView.unFollowButton.visibility = View.GONE
+                                }
+
+                            } else {
+                                holder.itemView.followButton.visibility = View.VISIBLE
+                                holder.itemView.unFollowButton.visibility = View.GONE
+
+                            }
+                        } else {
+                            holder.itemView.followButton.visibility = View.VISIBLE
+                            holder.itemView.unFollowButton.visibility = View.GONE
+                        }
+                    }
+                }
+        }
         holder.itemView.recycler_row_kullanici_yorum.text = postList[position].kullaniciYorum
 
         if (postList[position].gorselUrl == "") {

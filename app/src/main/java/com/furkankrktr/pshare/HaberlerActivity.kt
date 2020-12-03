@@ -33,6 +33,7 @@ class HaberlerActivity : AppCompatActivity() {
     private lateinit var recyclerViewAdapter: HaberRecyclerAdapter
     private lateinit var guncelKullaniciEmail: String
     private lateinit var theme: String
+    private lateinit var takipArray: ArrayList<String>
     private var postList = ArrayList<Post>()
     private lateinit var apiService: APIService
 
@@ -46,15 +47,13 @@ class HaberlerActivity : AppCompatActivity() {
         guncelKullaniciEmail = auth.currentUser!!.email.toString()
 
 
-
-
         FirebaseMessaging.getInstance().subscribeToTopic("users")
-        verileriAl()
         postAddButton = findViewById(R.id.postAddBtn)
         postAddButton.setOnClickListener {
             val intent = Intent(this, FotografPaylasmaActivity::class.java)
             startActivity(intent)
         }
+
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService::class.java)
 
         val layoutManager = LinearLayoutManager(this)
@@ -62,30 +61,10 @@ class HaberlerActivity : AppCompatActivity() {
         recyclerViewAdapter = HaberRecyclerAdapter(postList)
         recyclerView.adapter = recyclerViewAdapter
 
-        database.collection("Users").whereEqualTo("useremail", auth.currentUser!!.email.toString())
-            .addSnapshotListener { snapshot, exception ->
-                if (exception != null) {
-                    Toast.makeText(
-                        this,
-                        exception.localizedMessage,
-                        Toast.LENGTH_LONG
-                    ).show()
-                } else {
-                    if (snapshot != null) {
-                        if (snapshot.isEmpty) {
-                            val intent = Intent(this, AddUserNameActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        }
-                    } else {
-                        val intent = Intent(this, AddUserNameActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    }
-                }
-            }
+
 
         updateToken()
+        verileriAl()
 
     }
 
@@ -162,7 +141,6 @@ class HaberlerActivity : AppCompatActivity() {
     }
 
 
-
     private fun verileriAl() {
         database.collection("Users").whereEqualTo("useremail", guncelKullaniciEmail)
             .addSnapshotListener { snapshot, exception ->
@@ -174,6 +152,102 @@ class HaberlerActivity : AppCompatActivity() {
                             val documents = snapshot.documents
                             for (document in documents) {
                                 theme = document.get("theme") as String
+                                takipArray =
+                                    document.get("takipEdilenEmailler") as ArrayList<String>
+
+
+                                database.collection("Post")
+                                    .whereIn("kullaniciemail", takipArray)
+                                    .orderBy("tarih", Query.Direction.DESCENDING)
+                                    .addSnapshotListener { snapshot2, exception2 ->
+                                        if (exception2 != null) {
+                                            println(exception2)
+                                        } else {
+                                            if (snapshot2 != null) {
+                                                if (!snapshot2.isEmpty) {
+                                                    val documents2 = snapshot2.documents
+
+                                                    postList.clear()
+
+                                                    for (document2 in documents2) {
+                                                        try {
+                                                            val kullaniciEmail =
+                                                                document2.get("kullaniciemail") as String
+                                                            val kullaniciYorum =
+                                                                document2.get("kullaniciyorum") as String
+                                                            val gorselUrl =
+                                                                document2.get("gorselurl") as String
+                                                            val postId =
+                                                                document2.get("postId") as String
+                                                            val kullaniciUID =
+                                                                document2.get("userID") as String
+                                                            val indirilenPost =
+                                                                Post(
+                                                                    kullaniciEmail,
+                                                                    kullaniciYorum,
+                                                                    gorselUrl,
+                                                                    postId,
+                                                                    kullaniciUID
+                                                                )
+                                                            postList.add(indirilenPost)
+                                                        } catch (e: Exception) {
+                                                            try {
+
+                                                                val kullaniciEmail =
+                                                                    document2.get("kullaniciemail") as String
+                                                                val kullaniciYorum =
+                                                                    document2.get("kullaniciyorum") as String
+                                                                val gorselUrl =
+                                                                    document2.get("gorselurl") as String
+                                                                val postId =
+                                                                    document2.get("postId") as String
+                                                                val kullaniciUID =
+                                                                    "M6OZguiPKVQs6Z2qfh9HCntoKQi2"
+                                                                val indirilenPost =
+                                                                    Post(
+                                                                        kullaniciEmail,
+                                                                        kullaniciYorum,
+                                                                        gorselUrl,
+                                                                        postId,
+                                                                        kullaniciUID
+                                                                    )
+
+                                                                postList.add(indirilenPost)
+                                                            } catch (e: Exception) {
+                                                                val kullaniciEmail =
+                                                                    document2.get("kullaniciemail") as String
+                                                                val kullaniciYorum =
+                                                                    document2.get("kullaniciyorum") as String
+                                                                val gorselUrl = ""
+                                                                val postId =
+                                                                    document2.get("postId") as String
+                                                                val kullaniciUID =
+                                                                    "M6OZguiPKVQs6Z2qfh9HCntoKQi2"
+                                                                val indirilenPost =
+                                                                    Post(
+                                                                        kullaniciEmail,
+                                                                        kullaniciYorum,
+                                                                        gorselUrl,
+                                                                        postId,
+                                                                        kullaniciUID
+                                                                    )
+
+                                                                postList.add(indirilenPost)
+                                                            }
+
+                                                        }
+
+
+                                                    }
+                                                    recyclerViewAdapter.notifyDataSetChanged()
+
+
+                                                }
+                                            }
+                                        }
+                                    }
+
+
                                 if (theme == "dark") {
                                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                                 } else if (theme == "light") {
@@ -184,84 +258,30 @@ class HaberlerActivity : AppCompatActivity() {
                     }
                 }
             }
-        database.collection("Post").orderBy("tarih", Query.Direction.DESCENDING)
+        database.collection("Users").whereEqualTo("useremail", auth.currentUser!!.email.toString())
             .addSnapshotListener { snapshot, exception ->
                 if (exception != null) {
-                    Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this,
+                        exception.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
                 } else {
                     if (snapshot != null) {
-                        if (!snapshot.isEmpty) {
-                            val documents = snapshot.documents
-
-                            postList.clear()
-
-                            for (document in documents) {
-                                try {
-                                    val kullaniciEmail = document.get("kullaniciemail") as String
-                                    val kullaniciYorum = document.get("kullaniciyorum") as String
-                                    val gorselUrl = document.get("gorselurl") as String
-                                    val postId = document.get("postId") as String
-                                    val kullaniciUID = document.get("userID") as String
-                                    val indirilenPost =
-                                        Post(
-                                            kullaniciEmail,
-                                            kullaniciYorum,
-                                            gorselUrl,
-                                            postId,
-                                            kullaniciUID
-                                        )
-                                    postList.add(indirilenPost)
-                                } catch (e: Exception) {
-                                    try {
-
-                                        val kullaniciEmail =
-                                            document.get("kullaniciemail") as String
-                                        val kullaniciYorum =
-                                            document.get("kullaniciyorum") as String
-                                        val gorselUrl = document.get("gorselurl") as String
-                                        val postId = document.get("postId") as String
-                                        val kullaniciUID = "M6OZguiPKVQs6Z2qfh9HCntoKQi2"
-                                        val indirilenPost =
-                                            Post(
-                                                kullaniciEmail,
-                                                kullaniciYorum,
-                                                gorselUrl,
-                                                postId,
-                                                kullaniciUID
-                                            )
-
-                                        postList.add(indirilenPost)
-                                    } catch (e: Exception) {
-                                        val kullaniciEmail =
-                                            document.get("kullaniciemail") as String
-                                        val kullaniciYorum =
-                                            document.get("kullaniciyorum") as String
-                                        val gorselUrl = ""
-                                        val postId = document.get("postId") as String
-                                        val kullaniciUID = "M6OZguiPKVQs6Z2qfh9HCntoKQi2"
-                                        val indirilenPost =
-                                            Post(
-                                                kullaniciEmail,
-                                                kullaniciYorum,
-                                                gorselUrl,
-                                                postId,
-                                                kullaniciUID
-                                            )
-
-                                        postList.add(indirilenPost)
-                                    }
-
-                                }
-
-
-                            }
-
-                            recyclerViewAdapter.notifyDataSetChanged()
-
+                        if (snapshot.isEmpty) {
+                            val intent = Intent(this, AddUserNameActivity::class.java)
+                            startActivity(intent)
+                            finish()
                         }
+                    } else {
+                        val intent = Intent(this, AddUserNameActivity::class.java)
+                        startActivity(intent)
+                        finish()
                     }
                 }
             }
+
+
     }
 
 

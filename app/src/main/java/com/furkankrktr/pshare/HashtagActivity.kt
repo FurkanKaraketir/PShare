@@ -33,11 +33,11 @@ class HashtagActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
-        verileriAl()
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
         recyclerViewAdapter = HashtagRecyclerAdapter(postList)
         recyclerView.adapter = recyclerViewAdapter
+        verileriAl()
     }
 
     private fun verileriAl() {
