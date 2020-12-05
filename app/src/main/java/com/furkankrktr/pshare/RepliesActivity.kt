@@ -19,6 +19,7 @@ import com.furkankrktr.pshare.adapter.ReplyRecyclerAdapter
 import com.furkankrktr.pshare.model.Reply
 import com.furkankrktr.pshare.send_notification_pack.*
 import com.furkankrktr.pshare.service.glide
+import com.furkankrktr.pshare.service.glider
 import com.furkankrktr.pshare.service.placeHolderYap
 import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.ui.GPHContentType
@@ -111,6 +112,8 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                             for (document in documents) {
                                 replyToEmailText.text =
                                     document.get("username") as String
+                                val profile = document.get("profileImage") as String
+                                profileImageReplyActivity.glider(profile, placeHolderYap(this))
                             }
                         } else {
                             replyToEmailText.text =

@@ -190,6 +190,10 @@ class KesfetActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }
+            R.id.profile -> {
+                val intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
+            }
 
         }
 

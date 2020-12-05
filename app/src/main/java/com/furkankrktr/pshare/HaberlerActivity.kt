@@ -133,6 +133,10 @@ class HaberlerActivity : AppCompatActivity() {
                 val intent = Intent(this, KesfetActivity::class.java)
                 startActivity(intent)
             }
+            R.id.profil -> {
+                val intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
+            }
 
         }
 

@@ -20,9 +20,13 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
         <activity
+            android:name=".ProfileActivity"
+            android:parentActivityName=".HaberlerActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".KesfetActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".HaberlerActivity"/>
+            android:parentActivityName=".HaberlerActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AddUserNameActivity"
             android:screenOrientation="portrait" />

@@ -73,6 +73,8 @@ class RegisterActivity : AppCompatActivity() {
                                 userHashMap["useremail"] = email
                                 userHashMap["userId"] = uuid.toString()
                                 userHashMap["takipEdilenEmailler"] = arrayListOf(email)
+                                userHashMap["profileImage"] =
+                                    "https://media.giphy.com/media/VBfFv9oOZAvvi/giphy.gif"
                                 database.collection("Users").add(userHashMap)
                                     .addOnCompleteListener {
                                         if (task.isSuccessful) {

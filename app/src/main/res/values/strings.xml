@@ -37,4 +37,8 @@
     <string name="ana_men">Ana Menü</string>
     <string name="tak_p_et">TAKİP ET</string>
     <string name="tak_b_birak">TAKİBİ BIRAK</string>
+    <string name="profileimage">ProfileImage</string>
+    <string name="yeni_kullan_c_ad">Yeni Kullanıcı Adı</string>
+    <string name="profil">Profil</string>
+    <string name="kaydet">Kaydet</string>
 </resources>

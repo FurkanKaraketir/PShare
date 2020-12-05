@@ -13,6 +13,7 @@ import com.furkankrktr.pshare.R
 import com.furkankrktr.pshare.RepliesActivity
 import com.furkankrktr.pshare.model.Comment
 import com.furkankrktr.pshare.service.glide
+import com.furkankrktr.pshare.service.glider
 import com.furkankrktr.pshare.service.placeHolderYap
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -63,6 +64,11 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
                                 for (document in documents) {
                                     holder.itemView.commentEmail.text =
                                         document.get("username") as String
+                                    val profile = document.get("profileImage") as String
+                                    holder.itemView.profileImageComment.glider(
+                                        profile,
+                                        placeHolderYap(holder.itemView.context)
+                                    )
                                 }
                             } else {
                                 holder.itemView.commentEmail.text =

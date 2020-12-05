@@ -11,6 +11,7 @@ import com.furkankrktr.pshare.GorselActivity
 import com.furkankrktr.pshare.R
 import com.furkankrktr.pshare.model.Reply
 import com.furkankrktr.pshare.service.glide
+import com.furkankrktr.pshare.service.glider
 import com.furkankrktr.pshare.service.placeHolderYap
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -60,6 +61,11 @@ class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
                             val documents = snapshot.documents
                             for (document in documents) {
                                 holder.itemView.replyEmail.text = document.get("username") as String
+                                val profile = document.get("profileImage") as String
+                                holder.itemView.profileImageReply.glider(
+                                    profile,
+                                    placeHolderYap(holder.itemView.context)
+                                )
                             }
                         } else {
                             holder.itemView.replyEmail.text = replyList[position].kullaniciEmail

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ProfileActivity">
+
+
+    <ImageView
+        android:id="@+id/profileImageAdd"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="25dp"
+        android:contentDescription="@string/profileimage"
+        android:src="@drawable/ic_baseline_add_a_photo_24" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/userNameView"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text=""
+            android:textSize="17sp" />
+
+        <ImageButton
+            android:id="@+id/userNameEditButton"
+            style="@style/Widget.Design.FloatingActionButton"
+            android:layout_width="37dp"
+            android:layout_height="37dp"
+            android:layout_marginStart="50dp"
+            android:contentDescription="@string/tema_de_i_tir"
+            android:src="@drawable/ic_baseline_edit_24" />
+    </LinearLayout>
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/userNameChangeLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:hint="@string/yeni_kullan_c_ad"
+        android:textColorHint="@color/gri"
+        tools:targetApi="p">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/userNameChangeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/kaydetBtn"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
+        android:text="@string/kaydet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+    <ProgressBar
+        android:id="@+id/progress_circular_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="15dp"
+        android:visibility="gone" />
+
+</LinearLayout>

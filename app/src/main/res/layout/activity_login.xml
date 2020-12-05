@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:hint="@string/kullan_c_email"
+        android:hint="@string/kullan_c_ad"
         android:textColorHint="@color/gri"
         tools:targetApi="p">
 

@@ -13,6 +13,7 @@ import com.furkankrktr.pshare.GorselActivity
 import com.furkankrktr.pshare.R
 import com.furkankrktr.pshare.model.Post
 import com.furkankrktr.pshare.service.glide
+import com.furkankrktr.pshare.service.glider
 import com.furkankrktr.pshare.service.placeHolderYap
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -65,6 +66,11 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
                             for (document in documents) {
                                 holder.itemView.recycler_row_kullanici_email.text =
                                     document.get("username") as String
+                                val profile = document.get("profileImage") as String
+                                holder.itemView.profileImage.glider(
+                                    profile,
+                                    placeHolderYap(holder.itemView.context)
+                                )
                             }
                         } else {
                             holder.itemView.recycler_row_kullanici_email.text =
@@ -138,6 +144,32 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
                 }
         }
         holder.itemView.recycler_row_kullanici_yorum.text = postList[position].kullaniciYorum
+        holder.itemView.profileImage.setOnClickListener {
+            val intent = Intent(holder.itemView.context, GorselActivity::class.java)
+            database.collection("Users")
+                .whereEqualTo("useremail", postList[position].kullaniciEmail)
+                .addSnapshotListener { snapshot, exception ->
+                    if (exception != null) {
+                        Toast.makeText(
+                            holder.itemView.context,
+                            exception.localizedMessage,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        if (snapshot != null) {
+                            if (!snapshot.isEmpty) {
+                                val documents = snapshot.documents
+                                for (document in documents) {
+                                    val profile = document.get("profileImage") as String
+                                    intent.putExtra("resim", profile)
+                                    holder.itemView.context.startActivity(intent)
+                                }
+                            }
+                        }
+                    }
+                }
+
+        }
 
         if (postList[position].gorselUrl == "") {
             holder.itemView.recycler_row_imageview.visibility = View.GONE
