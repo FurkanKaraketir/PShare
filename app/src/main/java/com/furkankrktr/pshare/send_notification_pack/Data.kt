@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.furkankrktr.pshare.send_notification_pack
 
 class Data(

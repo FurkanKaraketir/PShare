@@ -9,7 +9,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="7dp">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,7 +19,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="horizontal">
-
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profileImageReply"
@@ -41,7 +39,6 @@
                     android:text=""
                     android:textAlignment="center"
                     android:textSize="12sp" />
-
 
             </LinearLayout>
 
@@ -79,7 +76,5 @@
                 android:contentDescription="@string/_0_yan_t"
                 android:src="@drawable/ic_baseline_cancel_24" />
         </LinearLayout>
-
-
     </androidx.cardview.widget.CardView>
 </LinearLayout>

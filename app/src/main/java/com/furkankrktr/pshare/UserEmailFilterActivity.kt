@@ -42,7 +42,6 @@ class UserEmailFilterActivity : AppCompatActivity() {
         verileriAl()
 
 
-
     }
 
     private fun verileriAl() {

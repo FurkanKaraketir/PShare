@@ -42,7 +42,6 @@
     </LinearLayout>
 
 
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/userNameChangeLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -63,11 +62,11 @@
     <Button
         android:id="@+id/kaydetBtn"
         style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="20dp"
-        android:text="@string/kaydet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:text="@string/kaydet" />
 
 
     <ProgressBar

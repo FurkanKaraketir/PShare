@@ -66,12 +66,12 @@ class LoginActivity : AppCompatActivity() {
                                                         finish()
                                                     }
                                                 }.addOnFailureListener { exception ->
-                                                Toast.makeText(
-                                                    this,
-                                                    exception.localizedMessage,
-                                                    Toast.LENGTH_LONG
-                                                ).show()
-                                            }
+                                                    Toast.makeText(
+                                                        this,
+                                                        exception.localizedMessage,
+                                                        Toast.LENGTH_LONG
+                                                    ).show()
+                                                }
                                         }
                                     }
                                 }

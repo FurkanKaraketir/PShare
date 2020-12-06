@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION")
+@file:Suppress("DEPRECATION", "UNCHECKED_CAST")
 
 package com.furkankrktr.pshare
 

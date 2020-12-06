@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.furkankrktr.pshare.adapter
 
 import android.annotation.SuppressLint
@@ -16,6 +18,7 @@ import com.furkankrktr.pshare.service.glide
 import com.furkankrktr.pshare.service.glider
 import com.furkankrktr.pshare.service.placeHolderYap
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.recycler_row.view.*
 
@@ -99,6 +102,28 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
                     }
                 }
             }
+
+        holder.itemView.followButton.setOnClickListener {
+            database.collection("Users").document(documentName)
+                .update(
+                    "takipEdilenEmailler",
+                    FieldValue.arrayUnion(postList[position].kullaniciEmail)
+                ).addOnSuccessListener {
+                    holder.itemView.followButton.visibility = View.GONE
+                    holder.itemView.unFollowButton.visibility = View.VISIBLE
+                }
+        }
+        holder.itemView.unFollowButton.setOnClickListener {
+            database.collection("Users").document(documentName)
+                .update(
+                    "takipEdilenEmailler",
+                    FieldValue.arrayRemove(postList[position].kullaniciEmail)
+                ).addOnSuccessListener {
+                    holder.itemView.followButton.visibility = View.VISIBLE
+                    holder.itemView.unFollowButton.visibility = View.GONE
+                }
+        }
+
 
         if (guncelKullanici == postList[position].kullaniciEmail) {
             holder.itemView.followButton.visibility = View.GONE

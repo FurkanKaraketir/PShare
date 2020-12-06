@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.furkankrktr.pshare.adapter
 
 import android.annotation.SuppressLint
@@ -55,13 +57,8 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
 
         database.collection("Users").whereEqualTo("useremail", postList[position].kullaniciEmail)
             .addSnapshotListener { snapshot, exception ->
-                if (exception != null) {
-                    Toast.makeText(
-                        holder.itemView.context,
-                        exception.localizedMessage,
-                        Toast.LENGTH_LONG
-                    ).show()
-                } else {
+
+                if (exception == null) {
                     if (snapshot != null) {
                         if (!snapshot.isEmpty) {
                             val documents = snapshot.documents
@@ -111,11 +108,8 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
             database.collection("Users").whereEqualTo("useremail", guncelKullanici)
                 .addSnapshotListener { snapshot, exception ->
                     if (exception != null) {
-                        Toast.makeText(
-                            holder.itemView.context,
-                            exception.localizedMessage,
-                            Toast.LENGTH_LONG
-                        ).show()
+                        holder.itemView.followButton.visibility = View.VISIBLE
+                        holder.itemView.unFollowButton.visibility = View.GONE
                     } else {
                         if (snapshot != null) {
                             if (!snapshot.isEmpty) {
@@ -152,14 +146,20 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
                 .update(
                     "takipEdilenEmailler",
                     FieldValue.arrayUnion(postList[position].kullaniciEmail)
-                )
+                ).addOnSuccessListener {
+                    holder.itemView.followButton.visibility = View.GONE
+                    holder.itemView.unFollowButton.visibility = View.VISIBLE
+                }
         }
         holder.itemView.unFollowButton.setOnClickListener {
             database.collection("Users").document(documentName)
                 .update(
                     "takipEdilenEmailler",
                     FieldValue.arrayRemove(postList[position].kullaniciEmail)
-                )
+                ).addOnSuccessListener {
+                    holder.itemView.followButton.visibility = View.VISIBLE
+                    holder.itemView.unFollowButton.visibility = View.GONE
+                }
         }
         holder.itemView.recycler_row_kullanici_yorum.text = postList[position].kullaniciYorum
 
