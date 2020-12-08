@@ -5,19 +5,21 @@ package com.furkankrktr.pshare
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.furkankrktr.pshare.adapter.CommentRecyclerAdapter
+import com.furkankrktr.pshare.databinding.ActivityCommentsBinding
 import com.furkankrktr.pshare.model.Comment
 import com.furkankrktr.pshare.send_notification_pack.*
 import com.furkankrktr.pshare.service.glide
@@ -26,6 +28,7 @@ import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.ui.GPHContentType
 import com.giphy.sdk.ui.Giphy
 import com.giphy.sdk.ui.views.GiphyDialogFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -37,7 +40,6 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_comments.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -55,6 +57,9 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
     private lateinit var selectedPostUID: String
     private lateinit var gifOrImageBtn: ImageView
     private lateinit var secilenImageView: ImageView
+    private lateinit var recyclerCommentsView: RecyclerView
+    private lateinit var sendButton: FloatingActionButton
+    private lateinit var commentSendEditText: EditText
     private var secilenGorsel: Uri? = null
     private var gifOrImage: Boolean? = null
     private var istenen: String = ""
@@ -67,23 +72,28 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_comments)
+        val binding = ActivityCommentsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
-        val sendButton = findViewById<ImageView>(R.id.sendCButton)
+
         selectedPost = intent.getStringExtra("selectedPost").toString()
         selectedPostEmail = intent.getStringExtra("selectedPostEmail").toString()
         selectedPostText = intent.getStringExtra("selectedPostText").toString()
         selectedPostUID = intent.getStringExtra("selectedPostUID").toString()
-        gifOrImageBtn = findViewById(R.id.attachCommentButton)
-        secilenImageView = findViewById(R.id.secilenCommentResimView)
+
+        gifOrImageBtn = binding.attachCommentButton
+        secilenImageView = binding.secilenCommentResimView
+        recyclerCommentsView = binding.recyclerCommentsView
+        commentSendEditText = binding.commentSendEditText
+        sendButton = binding.sendCButton
+
         secilenImageView.visibility = View.GONE
         Giphy.configure(this, "Qyq8K6rBLuR2bYRetJteXkb6k7ngKUG8")
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService::class.java)
 
-        verileriAl()
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val layoutManager = LinearLayoutManager(this)
@@ -94,7 +104,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
         alert.setTitle("Resim veya GIF")
         alert.setMessage("Resim veya GIF seçiniz")
 
-        alert.setPositiveButton("RESİM", DialogInterface.OnClickListener { _, _ ->
+        alert.setPositiveButton("RESİM") { _, _ ->
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.READ_EXTERNAL_STORAGE
@@ -117,10 +127,10 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
 
 
             }
-        })
-        alert.setNegativeButton("GIF", DialogInterface.OnClickListener { _, _ ->
+        }
+        alert.setNegativeButton("GIF") { _, _ ->
             GiphyDialogFragment.newInstance().show(supportFragmentManager, "giphy_dialog")
-        })
+        }
         gifOrImageBtn.setOnClickListener {
             alert.show()
         }
@@ -139,7 +149,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
 
                 if (secilenGorsel != null && commentText.isNotEmpty()) {
                     sendButton.isClickable = false
-                    gorselReference.putFile(secilenGorsel!!).addOnSuccessListener { _ ->
+                    gorselReference.putFile(secilenGorsel!!).addOnSuccessListener {
 
                         val yuklenenGorselReference =
                             FirebaseStorage.getInstance().reference.child("images")
@@ -236,7 +246,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
 
                     sendButton.isClickable = false
                     val guncelKullaniciEmail = auth.currentUser!!.email.toString()
-                    val guncelKullaniciUID = auth.currentUser!!.uid.toString()
+                    val guncelKullaniciUID = auth.currentUser!!.uid
                     val tarih = Timestamp.now()
 
                     val commentHashMap = hashMapOf<String, Any>()
@@ -295,6 +305,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
         }
 
         updateToken()
+        verileriAl()
 
     }
 

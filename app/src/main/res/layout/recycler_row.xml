@@ -26,14 +26,13 @@
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:layout_margin="5dp"
-                    android:layout_toStartOf="@id/recycler_row_kullanici_email"
+                    android:layout_toStartOf="@id/recyclerRowKullaniciEmail"
                     android:contentDescription="@string/image"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_baseline_attach_file_24"
                     app:civ_border_overlay="false" />
 
                 <TextView
-                    android:id="@+id/recycler_row_kullanici_email"
+                    android:id="@+id/recyclerRowKullaniciEmail"
                     style="@style/TextAppearance.AppCompat.Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -48,7 +47,7 @@
 
 
             <ImageView
-                android:id="@+id/recycler_row_imageview"
+                android:id="@+id/recyclerRowImageView"
                 android:layout_width="300dp"
                 android:layout_height="200dp"
                 android:layout_gravity="center"
@@ -66,7 +65,7 @@
                     android:layout_weight="10">
 
                     <TextView
-                        android:id="@+id/recycler_row_kullanici_yorum"
+                        android:id="@+id/recyclerRowKullaniciYorum"
                         style="@style/TextAppearance.AppCompat.Body1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

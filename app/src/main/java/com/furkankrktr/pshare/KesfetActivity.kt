@@ -8,12 +8,13 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.furkankrktr.pshare.adapter.HaberRecyclerAdapter
+import com.furkankrktr.pshare.databinding.ActivityKesfetBinding
 import com.furkankrktr.pshare.model.Post
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import kotlinx.android.synthetic.main.activity_kesfet.*
 
 class KesfetActivity : AppCompatActivity() {
 
@@ -21,11 +22,14 @@ class KesfetActivity : AppCompatActivity() {
     private lateinit var database: FirebaseFirestore
     private lateinit var recyclerKesfetViewAdapter: HaberRecyclerAdapter
     private lateinit var guncelKullaniciEmail: String
+    private lateinit var recyclerKesfetView: RecyclerView
     private var postList = ArrayList<Post>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_kesfet)
+        val binding = ActivityKesfetBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
         guncelKullaniciEmail = auth.currentUser!!.email.toString()
@@ -33,6 +37,8 @@ class KesfetActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        recyclerKesfetView = binding.recyclerKesfetView
 
         val layoutManager = LinearLayoutManager(this)
         recyclerKesfetView.layoutManager = layoutManager

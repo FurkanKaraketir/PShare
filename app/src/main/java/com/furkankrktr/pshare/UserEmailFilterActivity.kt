@@ -4,12 +4,13 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.furkankrktr.pshare.adapter.UserEmailFilterAdapter
+import com.furkankrktr.pshare.databinding.ActivityUserEmailFilterBinding
 import com.furkankrktr.pshare.model.Post
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import kotlinx.android.synthetic.main.activity_haberler.*
 
 class UserEmailFilterActivity : AppCompatActivity() {
 
@@ -17,13 +18,17 @@ class UserEmailFilterActivity : AppCompatActivity() {
     private lateinit var database: FirebaseFirestore
     private lateinit var recyclerViewAdapter: UserEmailFilterAdapter
     private lateinit var selectedEmail: String
+    private lateinit var recyclerView: RecyclerView
 
     private var postList = ArrayList<Post>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_email_filter)
+        val binding = ActivityUserEmailFilterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        recyclerView = binding.recyclerView
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

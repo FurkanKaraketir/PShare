@@ -3,18 +3,24 @@ package com.furkankrktr.pshare
 import android.os.Bundle
 import android.view.View
 import android.view.Window
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.activity_gorsel.*
+import com.furkankrktr.pshare.databinding.ActivityGorselBinding
 
 
 @Suppress("DEPRECATION")
 class GorselActivity : AppCompatActivity() {
 
+    private lateinit var resimTamEkran: ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.activity_gorsel)
+        val binding = ActivityGorselBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        resimTamEkran = binding.resimTamEkran
         hideSystemUI()
         val resimUri = intent.getStringExtra("resim")
         Glide.with(this).load(resimUri).into(resimTamEkran)

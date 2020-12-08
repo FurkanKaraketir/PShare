@@ -9,13 +9,17 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.furkankrktr.pshare.adapter.ReplyRecyclerAdapter
+import com.furkankrktr.pshare.databinding.ActivityRepliesBinding
 import com.furkankrktr.pshare.model.Reply
 import com.furkankrktr.pshare.send_notification_pack.*
 import com.furkankrktr.pshare.service.glide
@@ -25,6 +29,7 @@ import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.ui.GPHContentType
 import com.giphy.sdk.ui.Giphy
 import com.giphy.sdk.ui.views.GiphyDialogFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -36,7 +41,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_replies.*
+import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -54,6 +59,14 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     private lateinit var secilenReplyIamgeView: ImageView
     private lateinit var selectedCommentUID: String
     private lateinit var selectedCommentImage: String
+    private lateinit var recyclerRepliesView: RecyclerView
+    private lateinit var selectedCommentImageView: ImageView
+    private lateinit var replySendButton: FloatingActionButton
+    private lateinit var replyToEmailText: TextView
+    private lateinit var replySendEditText: EditText
+    private lateinit var profileImageReplyActivity: CircleImageView
+    private lateinit var replyToCommentText: TextView
+
     private var secilenGorsel: Uri? = null
     private var gifOrImage: Boolean? = null
     private var istenen: String = ""
@@ -67,9 +80,20 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_replies)
-        storage = FirebaseStorage.getInstance()
+        val binding = ActivityRepliesBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
+        recyclerRepliesView = binding.recyclerRepliesView
+        replySendButton = binding.replySendButton
+        replyAttachmentBtn = binding.attachReplyButton
+        secilenReplyIamgeView = binding.secilenReplyResimView
+        selectedCommentImageView = binding.selectedCommentImageView
+        replyToEmailText = binding.replyToEmailText
+        replySendEditText = binding.replySendEditText
+        profileImageReplyActivity = binding.profileImageReplyActivity
+        replyToCommentText = binding.replyToCommentText
+
+        storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
 
@@ -79,15 +103,15 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         recyclerRepliesView.adapter = recyclerReplyViewAdapter
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService::class.java)
 
-        val replySendButton = findViewById<ImageView>(R.id.replySendButton)
-        replyAttachmentBtn = findViewById(R.id.attachReplyButton)
-        secilenReplyIamgeView = findViewById(R.id.secilenReplyResimView)
+
         secilenReplyIamgeView.visibility = View.GONE
+
         selectedComment = intent.getStringExtra("selectedComment").toString()
         selectedCommentEmail = intent.getStringExtra("selectedCommentEmail").toString()
         selectedCommentText = intent.getStringExtra("selectedCommentText").toString()
         selectedCommentUID = intent.getStringExtra("selectedCommentUID").toString()
         selectedCommentImage = intent.getStringExtra("selectedCommentImage").toString()
+
         if (selectedCommentImage == "") {
             selectedCommentImageView.visibility = View.GONE
         } else {
@@ -177,7 +201,7 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
                 if (secilenGorsel != null && replyText.isNotEmpty()) {
                     replySendButton.isClickable = false
-                    gorselReference.putFile(secilenGorsel!!).addOnSuccessListener { _ ->
+                    gorselReference.putFile(secilenGorsel!!).addOnSuccessListener {
 
                         val yuklenenGorselReference =
                             FirebaseStorage.getInstance().reference.child("images")

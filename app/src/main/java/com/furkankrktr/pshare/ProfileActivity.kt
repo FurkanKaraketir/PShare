@@ -7,10 +7,11 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.furkankrktr.pshare.databinding.ActivityProfileBinding
 import com.furkankrktr.pshare.service.glide
 import com.furkankrktr.pshare.service.placeHolderYap
 import com.giphy.sdk.core.models.Media
@@ -21,7 +22,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_profile.*
 import java.util.*
 
 class ProfileActivity : AppCompatActivity(),
@@ -34,6 +34,13 @@ class ProfileActivity : AppCompatActivity(),
     private lateinit var profileImageURL: String
     private lateinit var documentName: String
 
+    private lateinit var userNameChangeEditText: EditText
+    private lateinit var userNameEditButton: ImageView
+    private lateinit var profileImageAdd: ImageView
+    private lateinit var progressCircularProfile: ProgressBar
+    private lateinit var userNameView: TextView
+    private lateinit var kaydetBtn: Button
+
     private var istenen: String = ""
     private var a: String = ""
     private var secilenGorsel: Uri? = null
@@ -43,8 +50,18 @@ class ProfileActivity : AppCompatActivity(),
     private var i: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile)
-        userNameChangeLayout.visibility = View.GONE
+        val binding = ActivityProfileBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        kaydetBtn = binding.kaydetBtn
+        userNameEditButton = binding.userNameEditButton
+        profileImageAdd = binding.profileImageAdd
+        userNameChangeEditText = binding.userNameChangeEditText
+        progressCircularProfile = binding.progressCircularProfile
+        userNameView = binding.userNameView
+
+
+        userNameChangeEditText.visibility = View.GONE
         kaydetBtn.visibility = View.GONE
         storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
@@ -57,7 +74,7 @@ class ProfileActivity : AppCompatActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         userNameEditButton.setOnClickListener {
-            userNameChangeLayout.visibility = View.VISIBLE
+            userNameChangeEditText.visibility = View.VISIBLE
             kaydetBtn.visibility = View.VISIBLE
             i = 1
         }
@@ -113,10 +130,10 @@ class ProfileActivity : AppCompatActivity(),
             userName = userNameChangeEditText.text.toString()
 
             if (userName.isNotEmpty()) {
-                userNameChangeLayout.error = null
+                userNameChangeEditText.error = null
                 send()
             } else {
-                userNameChangeLayout.error = "Bu Alanı Boş Bırakamazsın"
+                userNameChangeEditText.error = "Bu Alanı Boş Bırakamazsın"
             }
 
         } else {
@@ -143,7 +160,7 @@ class ProfileActivity : AppCompatActivity(),
                 kaydetBtn.isClickable = false
 
 
-                progress_circular_profile.visibility = View.VISIBLE
+                progressCircularProfile.visibility = View.VISIBLE
                 gorselReference.putFile(secilenGorsel!!).addOnSuccessListener {
 
                     val yuklenenGorselReference =
@@ -157,14 +174,14 @@ class ProfileActivity : AppCompatActivity(),
                             .update("profileImage", a).addOnSuccessListener {
                                 database.collection("Users").document(documentName)
                                     .update("username", userName).addOnSuccessListener {
-                                        progress_circular_profile.visibility = View.GONE
+                                        progressCircularProfile.visibility = View.GONE
                                         finish()
                                     }
                             }
                     }.addOnFailureListener { exception ->
                         Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG)
                             .show()
-                        progress_circular_profile.visibility = View.GONE
+                        progressCircularProfile.visibility = View.GONE
 
                         kaydetBtn.isClickable = true
 
@@ -172,27 +189,27 @@ class ProfileActivity : AppCompatActivity(),
                     }
                 }.addOnFailureListener { exception ->
                     Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
-                    progress_circular_profile.visibility = View.GONE
+                    progressCircularProfile.visibility = View.GONE
 
                     kaydetBtn.isClickable = true
 
                 }
             } else if (secilenGorsel == null) {
                 kaydetBtn.isClickable = true
-                progress_circular_profile.visibility = View.GONE
+                progressCircularProfile.visibility = View.GONE
 
                 Toast.makeText(this, "Lütfen Bir Görsel Seçiniz", Toast.LENGTH_SHORT).show()
             }
 
 
         } else {
-            progress_circular_profile.visibility = View.VISIBLE
+            progressCircularProfile.visibility = View.VISIBLE
 
             database.collection("Users").document(documentName).update("profileImage", a)
                 .addOnSuccessListener {
                     database.collection("Users").document(documentName).update("username", userName)
                         .addOnSuccessListener {
-                            progress_circular_profile.visibility = View.GONE
+                            progressCircularProfile.visibility = View.GONE
                             finish()
                         }
                 }

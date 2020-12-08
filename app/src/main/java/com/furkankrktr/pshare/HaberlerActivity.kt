@@ -11,7 +11,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.furkankrktr.pshare.adapter.HaberRecyclerAdapter
+import com.furkankrktr.pshare.databinding.ActivityHaberlerBinding
 import com.furkankrktr.pshare.model.Post
 import com.furkankrktr.pshare.send_notification_pack.APIService
 import com.furkankrktr.pshare.send_notification_pack.Client
@@ -23,7 +25,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
-import kotlinx.android.synthetic.main.activity_haberler.*
 
 
 class HaberlerActivity : AppCompatActivity() {
@@ -31,15 +32,18 @@ class HaberlerActivity : AppCompatActivity() {
     private lateinit var database: FirebaseFirestore
     private lateinit var postAddButton: FloatingActionButton
     private lateinit var recyclerViewAdapter: HaberRecyclerAdapter
+    private lateinit var recyclerView: RecyclerView
     private lateinit var guncelKullaniciEmail: String
     private lateinit var theme: String
     private lateinit var takipArray: ArrayList<String>
     private var postList = ArrayList<Post>()
     private lateinit var apiService: APIService
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_haberler)
+        val binding = ActivityHaberlerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
@@ -48,7 +52,7 @@ class HaberlerActivity : AppCompatActivity() {
 
 
         FirebaseMessaging.getInstance().subscribeToTopic("users")
-        postAddButton = findViewById(R.id.postAddBtn)
+        postAddButton = binding.postAddBtn
         postAddButton.setOnClickListener {
             val intent = Intent(this, FotografPaylasmaActivity::class.java)
             startActivity(intent)
@@ -56,6 +60,7 @@ class HaberlerActivity : AppCompatActivity() {
 
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService::class.java)
 
+        recyclerView = binding.recyclerView
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
         recyclerViewAdapter = HaberRecyclerAdapter(postList)
@@ -75,7 +80,6 @@ class HaberlerActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         when (item.itemId) {
             R.id.cikis_yap -> {
 

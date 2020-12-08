@@ -2,28 +2,30 @@ package com.furkankrktr.pshare
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-
+import com.furkankrktr.pshare.databinding.ActivityKullaniciBinding
 
 class KullaniciActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        auth = FirebaseAuth.getInstance()
-        val girisYapMain = findViewById<Button>(R.id.mainGirisYap)
-        val kayitOlMain = findViewById<Button>(R.id.mainKayitOl)
+        val binding = ActivityKullaniciBinding.inflate(layoutInflater)
 
-        girisYapMain.setOnClickListener {
+        auth = FirebaseAuth.getInstance()
+
+
+        binding.mainGirisYap.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+            finish()
         }
-        kayitOlMain.setOnClickListener {
+        binding.mainKayitOl.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
+            finish()
 
         }
         val guncelKullanici = auth.currentUser
@@ -32,6 +34,7 @@ class KullaniciActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        setContentView(binding.root)
 
 
     }

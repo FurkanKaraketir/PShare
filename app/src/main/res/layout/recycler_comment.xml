@@ -36,7 +36,6 @@
                         android:layout_margin="5dp"
                         android:contentDescription="@string/image"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_baseline_attach_file_24"
                         app:civ_border_overlay="false" />
 
                     <TextView

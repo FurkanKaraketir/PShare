@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.furkankrktr.pshare.*
+import com.furkankrktr.pshare.databinding.RecyclerRowBinding
 import com.furkankrktr.pshare.model.Post
 import com.furkankrktr.pshare.service.glide
 import com.furkankrktr.pshare.service.glider
@@ -18,7 +19,6 @@ import com.furkankrktr.pshare.service.placeHolderYap
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.recycler_row.view.*
 
 open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
 
@@ -31,7 +31,9 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
     private lateinit var documentName: String
     private lateinit var takipArray: ArrayList<String>
 
-    class PostHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class PostHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val binding = RecyclerRowBinding.bind(itemView)
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostHolder {
@@ -47,148 +49,43 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: PostHolder, position: Int) {
-        database = FirebaseFirestore.getInstance()
-        auth = FirebaseAuth.getInstance()
-        if (auth.currentUser != null) {
-            guncelKullanici = auth.currentUser!!.email.toString()
-        }
-
-
-
-        database.collection("Users").whereEqualTo("useremail", postList[position].kullaniciEmail)
-            .addSnapshotListener { snapshot, exception ->
-
-                if (exception == null) {
-                    if (snapshot != null) {
-                        if (!snapshot.isEmpty) {
-                            val documents = snapshot.documents
-                            for (document in documents) {
-                                holder.itemView.recycler_row_kullanici_email.text =
-                                    document.get("username") as String
-                                val profile = document.get("profileImage") as String
-                                holder.itemView.profileImage.glider(
-                                    profile,
-                                    placeHolderYap(holder.itemView.context)
-                                )
-                            }
-                        } else {
-                            holder.itemView.recycler_row_kullanici_email.text =
-                                postList[position].kullaniciEmail
-                        }
-                    } else {
-                        holder.itemView.recycler_row_kullanici_email.text =
-                            postList[position].kullaniciEmail
-                    }
-                }
-            }
-        database.collection("Users").whereEqualTo("useremail", guncelKullanici)
-            .addSnapshotListener { snapshot, exception ->
-                if (exception != null) {
-                    Toast.makeText(
-                        holder.itemView.context,
-                        exception.localizedMessage,
-                        Toast.LENGTH_LONG
-                    ).show()
-                } else {
-                    if (snapshot != null) {
-                        if (!snapshot.isEmpty) {
-                            val documents = snapshot.documents
-                            for (document in documents) {
-                                documentName = document.id
-                            }
-                        }
-                    }
-                }
+        with(holder) {
+            database = FirebaseFirestore.getInstance()
+            auth = FirebaseAuth.getInstance()
+            if (auth.currentUser != null) {
+                guncelKullanici = auth.currentUser!!.email.toString()
             }
 
-        if (guncelKullanici == postList[position].kullaniciEmail) {
-            holder.itemView.followButton.visibility = View.GONE
-            holder.itemView.unFollowButton.visibility = View.GONE
-        } else {
-            database.collection("Users").whereEqualTo("useremail", guncelKullanici)
+
+
+            database.collection("Users")
+                .whereEqualTo("useremail", postList[position].kullaniciEmail)
                 .addSnapshotListener { snapshot, exception ->
-                    if (exception != null) {
-                        holder.itemView.followButton.visibility = View.VISIBLE
-                        holder.itemView.unFollowButton.visibility = View.GONE
-                    } else {
+
+                    if (exception == null) {
                         if (snapshot != null) {
                             if (!snapshot.isEmpty) {
                                 val documents = snapshot.documents
                                 for (document in documents) {
-                                    takipArray =
-                                        document.get("takipEdilenEmailler") as ArrayList<String>
+                                    binding.recyclerRowKullaniciEmail.text =
+                                        document.get("username") as String
+                                    val profile = document.get("profileImage") as String
+                                    binding.profileImage.glider(
+                                        profile,
+                                        placeHolderYap(holder.itemView.context)
+                                    )
                                 }
-                                if (takipArray.contains(postList[position].kullaniciEmail)) {
-
-                                    holder.itemView.followButton.visibility = View.GONE
-                                    holder.itemView.unFollowButton.visibility = View.VISIBLE
-                                } else {
-                                    holder.itemView.followButton.visibility = View.VISIBLE
-                                    holder.itemView.unFollowButton.visibility = View.GONE
-                                }
-
                             } else {
-                                holder.itemView.followButton.visibility = View.VISIBLE
-                                holder.itemView.unFollowButton.visibility = View.GONE
-
+                                binding.recyclerRowKullaniciEmail.text =
+                                    postList[position].kullaniciEmail
                             }
                         } else {
-                            holder.itemView.followButton.visibility = View.VISIBLE
-                            holder.itemView.unFollowButton.visibility = View.GONE
+                            binding.recyclerRowKullaniciEmail.text =
+                                postList[position].kullaniciEmail
                         }
                     }
                 }
-        }
-
-
-        holder.itemView.followButton.setOnClickListener {
-            database.collection("Users").document(documentName)
-                .update(
-                    "takipEdilenEmailler",
-                    FieldValue.arrayUnion(postList[position].kullaniciEmail)
-                ).addOnSuccessListener {
-                    holder.itemView.followButton.visibility = View.GONE
-                    holder.itemView.unFollowButton.visibility = View.VISIBLE
-                }
-        }
-        holder.itemView.unFollowButton.setOnClickListener {
-            database.collection("Users").document(documentName)
-                .update(
-                    "takipEdilenEmailler",
-                    FieldValue.arrayRemove(postList[position].kullaniciEmail)
-                ).addOnSuccessListener {
-                    holder.itemView.followButton.visibility = View.VISIBLE
-                    holder.itemView.unFollowButton.visibility = View.GONE
-                }
-        }
-        holder.itemView.recycler_row_kullanici_yorum.text = postList[position].kullaniciYorum
-
-
-        if (postList[position].gorselUrl == "") {
-            holder.itemView.recycler_row_imageview.visibility = View.GONE
-        } else {
-            holder.itemView.recycler_row_imageview.visibility = View.VISIBLE
-            holder.itemView.recycler_row_imageview.glide(
-                postList[position].gorselUrl,
-                placeHolderYap(holder.itemView.context)
-            )
-        }
-        if (postList[position].kullaniciEmail == guncelKullanici) {
-            holder.itemView.deleteButton.visibility = View.VISIBLE
-        } else {
-            holder.itemView.deleteButton.visibility = View.GONE
-        }
-
-
-        holder.itemView.recycler_row_imageview.setOnClickListener {
-            val intent = Intent(holder.itemView.context, GorselActivity::class.java)
-            intent.putExtra("resim", postList[position].gorselUrl)
-            holder.itemView.context.startActivity(intent)
-        }
-        holder.itemView.profileImage.setOnClickListener {
-            val intent = Intent(holder.itemView.context, GorselActivity::class.java)
-            database.collection("Users")
-                .whereEqualTo("useremail", postList[position].kullaniciEmail)
+            database.collection("Users").whereEqualTo("useremail", guncelKullanici)
                 .addSnapshotListener { snapshot, exception ->
                     if (exception != null) {
                         Toast.makeText(
@@ -201,124 +98,232 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
                             if (!snapshot.isEmpty) {
                                 val documents = snapshot.documents
                                 for (document in documents) {
-                                    val profile = document.get("profileImage") as String
-                                    intent.putExtra("resim", profile)
-                                    holder.itemView.context.startActivity(intent)
+                                    documentName = document.id
                                 }
                             }
                         }
                     }
                 }
 
-        }
+            if (guncelKullanici == postList[position].kullaniciEmail) {
+                binding.followButton.visibility = View.GONE
+                binding.unFollowButton.visibility = View.GONE
+            } else {
+                database.collection("Users").whereEqualTo("useremail", guncelKullanici)
+                    .addSnapshotListener { snapshot, exception ->
+                        if (exception != null) {
+                            binding.followButton.visibility = View.VISIBLE
+                            binding.unFollowButton.visibility = View.GONE
+                        } else {
+                            if (snapshot != null) {
+                                if (!snapshot.isEmpty) {
+                                    val documents = snapshot.documents
+                                    for (document in documents) {
+                                        takipArray =
+                                            document.get("takipEdilenEmailler") as ArrayList<String>
+                                    }
+                                    if (takipArray.contains(postList[position].kullaniciEmail)) {
+
+                                        binding.followButton.visibility = View.GONE
+                                        binding.unFollowButton.visibility = View.VISIBLE
+                                    } else {
+                                        binding.followButton.visibility = View.VISIBLE
+                                        binding.unFollowButton.visibility = View.GONE
+                                    }
+
+                                } else {
+                                    binding.followButton.visibility = View.VISIBLE
+                                    binding.unFollowButton.visibility = View.GONE
+
+                                }
+                            } else {
+                                binding.followButton.visibility = View.VISIBLE
+                                binding.unFollowButton.visibility = View.GONE
+                            }
+                        }
+                    }
+            }
 
 
-        holder.itemView.commentsButton.setOnClickListener {
-            commentGit(holder, position)
-        }
-        holder.itemView.commentCountText.setOnClickListener {
-            commentGit(holder, position)
-        }
+            binding.followButton.setOnClickListener {
+                database.collection("Users").document(documentName)
+                    .update(
+                        "takipEdilenEmailler",
+                        FieldValue.arrayUnion(postList[position].kullaniciEmail)
+                    ).addOnSuccessListener {
+                        binding.followButton.visibility = View.GONE
+                        binding.unFollowButton.visibility = View.VISIBLE
+                    }
+            }
+            binding.unFollowButton.setOnClickListener {
+                database.collection("Users").document(documentName)
+                    .update(
+                        "takipEdilenEmailler",
+                        FieldValue.arrayRemove(postList[position].kullaniciEmail)
+                    ).addOnSuccessListener {
+                        binding.followButton.visibility = View.VISIBLE
+                        binding.unFollowButton.visibility = View.GONE
+                    }
+            }
+            binding.recyclerRowKullaniciYorum.text = postList[position].kullaniciYorum
 
 
+            if (postList[position].gorselUrl == "") {
+                binding.recyclerRowImageView.visibility = View.GONE
+            } else {
+                binding.recyclerRowImageView.visibility = View.VISIBLE
+                binding.recyclerRowImageView.glide(
+                    postList[position].gorselUrl,
+                    placeHolderYap(holder.itemView.context)
+                )
+            }
+            if (postList[position].kullaniciEmail == guncelKullanici) {
+                binding.deleteButton.visibility = View.VISIBLE
+            } else {
+                binding.deleteButton.visibility = View.GONE
+            }
 
-        holder.itemView.recycler_row_kullanici_yorum.setOnClickListener {
-            if (holder.itemView.recycler_row_kullanici_yorum.text[0] == "#"[0]) {
-                val intent = Intent(holder.itemView.context, HashtagActivity::class.java)
-                intent.putExtra("selectedHashtag", postList[position].kullaniciYorum)
+
+            binding.recyclerRowImageView.setOnClickListener {
+                val intent = Intent(holder.itemView.context, GorselActivity::class.java)
+                intent.putExtra("resim", postList[position].gorselUrl)
                 holder.itemView.context.startActivity(intent)
             }
-        }
-
-
-        holder.itemView.recycler_row_kullanici_email.setOnClickListener {
-
-            val intent = Intent(holder.itemView.context, UserEmailFilterActivity::class.java)
-            intent.putExtra("selectedEmail", postList[position].kullaniciEmail)
-            holder.itemView.context.startActivity(intent)
-
-        }
-
-
-
-        holder.itemView.deleteButton.setOnClickListener {
-            //dialog
-
-            val alert = AlertDialog.Builder(holder.itemView.context)
-
-            alert.setTitle("Post Sil")
-            alert.setMessage("Postu Silmek İstediğinize Emin misiniz?")
-
-            alert.setNegativeButton(
-                "İptal Et"
-            ) { _, _ ->
-                Toast.makeText(
-                    holder.itemView.context,
-                    "İşlem iptal edildi",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            alert.setPositiveButton(
-                "SİL"
-            ) { _, _ ->
-                val itemsRef = database.collection("Post")
-
-                val query = itemsRef.whereEqualTo("postId", postList[position].postId)
-
-                query.get().addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        for (document in task.result) {
-                            itemsRef.document(document.id).delete()
+            binding.profileImage.setOnClickListener {
+                val intent = Intent(holder.itemView.context, GorselActivity::class.java)
+                database.collection("Users")
+                    .whereEqualTo("useremail", postList[position].kullaniciEmail)
+                    .addSnapshotListener { snapshot, exception ->
+                        if (exception != null) {
                             Toast.makeText(
                                 holder.itemView.context,
-                                "Post Silindi",
-                                Toast.LENGTH_SHORT
+                                exception.localizedMessage,
+                                Toast.LENGTH_LONG
                             ).show()
-                        }
-                    } else {
-                        Toast.makeText(holder.itemView.context, "Hata", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
-
-                val yorumsRef = database.collection("Yorumlar")
-                val queryYorum =
-                    yorumsRef.whereEqualTo("selectedPost", postList[position].postId)
-                queryYorum.get().addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        for (document in task.result) {
-                            yorumsRef.document(document.id).delete()
-                        }
-                    }
-                }
-
-            }
-            alert.show()
-
-
-        }
-
-
-
-        database.collection("Yorumlar").whereEqualTo("selectedPost", postList[position].postId)
-            .addSnapshotListener { snapshot, exception ->
-                if (exception != null) {
-                    println(exception.localizedMessage)
-                } else {
-                    if (snapshot != null) {
-                        if (!snapshot.isEmpty) {
-                            val documents = snapshot.documents
-                            holder.itemView.commentCountText.text = "${documents.size} Yorum"
-
                         } else {
-                            holder.itemView.commentCountText.text = "0 Yorum"
+                            if (snapshot != null) {
+                                if (!snapshot.isEmpty) {
+                                    val documents = snapshot.documents
+                                    for (document in documents) {
+                                        val profile = document.get("profileImage") as String
+                                        intent.putExtra("resim", profile)
+                                        holder.itemView.context.startActivity(intent)
+                                    }
+                                }
+                            }
                         }
                     }
 
+            }
 
+
+            binding.commentsButton.setOnClickListener {
+                commentGit(holder, position)
+            }
+            binding.commentCountText.setOnClickListener {
+                commentGit(holder, position)
+            }
+
+
+
+            binding.recyclerRowKullaniciYorum.setOnClickListener {
+                if (binding.recyclerRowKullaniciYorum.text[0] == "#"[0]) {
+                    val intent = Intent(holder.itemView.context, HashtagActivity::class.java)
+                    intent.putExtra("selectedHashtag", postList[position].kullaniciYorum)
+                    holder.itemView.context.startActivity(intent)
                 }
+            }
+
+
+            binding.recyclerRowKullaniciEmail.setOnClickListener {
+
+                val intent = Intent(holder.itemView.context, UserEmailFilterActivity::class.java)
+                intent.putExtra("selectedEmail", postList[position].kullaniciEmail)
+                holder.itemView.context.startActivity(intent)
 
             }
+
+
+
+            binding.deleteButton.setOnClickListener {
+                //dialog
+
+                val alert = AlertDialog.Builder(holder.itemView.context)
+
+                alert.setTitle("Post Sil")
+                alert.setMessage("Postu Silmek İstediğinize Emin misiniz?")
+
+                alert.setNegativeButton(
+                    "İptal Et"
+                ) { _, _ ->
+                    Toast.makeText(
+                        holder.itemView.context,
+                        "İşlem iptal edildi",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                alert.setPositiveButton(
+                    "SİL"
+                ) { _, _ ->
+                    val itemsRef = database.collection("Post")
+
+                    val query = itemsRef.whereEqualTo("postId", postList[position].postId)
+
+                    query.get().addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            for (document in task.result) {
+                                itemsRef.document(document.id).delete()
+                                Toast.makeText(
+                                    holder.itemView.context,
+                                    "Post Silindi",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } else {
+                            Toast.makeText(holder.itemView.context, "Hata", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+
+                    val yorumsRef = database.collection("Yorumlar")
+                    val queryYorum =
+                        yorumsRef.whereEqualTo("selectedPost", postList[position].postId)
+                    queryYorum.get().addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            for (document in task.result) {
+                                yorumsRef.document(document.id).delete()
+                            }
+                        }
+                    }
+
+                }
+                alert.show()
+
+
+            }
+
+
+
+            database.collection("Yorumlar").whereEqualTo("selectedPost", postList[position].postId)
+                .addSnapshotListener { snapshot, exception ->
+                    if (exception != null) {
+                        println(exception.localizedMessage)
+                    } else {
+                        if (snapshot != null) {
+                            if (!snapshot.isEmpty) {
+                                val documents = snapshot.documents
+                                binding.commentCountText.text = "${documents.size} Yorum"
+
+                            } else {
+                                binding.commentCountText.text = "0 Yorum"
+                            }
+                        }
+
+
+                    }
+
+                }
+        }
 
 
     }

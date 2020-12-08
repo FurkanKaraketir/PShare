@@ -3,12 +3,12 @@ package com.furkankrktr.pshare
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.furkankrktr.pshare.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_add_user_name.*
-import kotlinx.android.synthetic.main.activity_register.*
 import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
@@ -16,15 +16,25 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseFirestore
 
+    private lateinit var userNameRegisterText: EditText
+    private lateinit var emailRegisterText: EditText
+    private lateinit var passwordRegisterText: EditText
+    private lateinit var kayitOlButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+        val binding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        userNameRegisterText = binding.userNameRegisterText
+        emailRegisterText = binding.emailRegisterText
+        passwordRegisterText = binding.passwordRegisterText
+        kayitOlButton = binding.registerKayitOl
+
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
 
-        val kayitOlButton = findViewById<Button>(R.id.registerKayitOl)
         kayitOlButton.isClickable = true
 
         kayitOlButton.setOnClickListener {
@@ -35,31 +45,31 @@ class RegisterActivity : AppCompatActivity() {
 
             when {
                 userName.isEmpty() -> {
-                    userNameRegisterLayout.error = "Bu Alanı Boş Bırakamazsın"
+                    userNameRegisterText.error = "Bu Alanı Boş Bırakamazsın"
                 }
                 email.isEmpty() -> {
-                    emailRegisterLayout.error = "Bu Alanı Boş Bırakamazsın"
-                    userNameRegisterLayout.error = null
+                    emailRegisterText.error = "Bu Alanı Boş Bırakamazsın"
+                    userNameRegisterText.error = null
                 }
                 sifre.isEmpty() -> {
-                    emailRegisterLayout.error = null
-                    userNameRegisterLayout.error = null
-                    passwordRegisterLayout.error = "Bu Alanı Boş Bırakamazsın"
+                    emailRegisterText.error = null
+                    userNameRegisterText.error = null
+                    passwordRegisterText.error = "Bu Alanı Boş Bırakamazsın"
                 }
                 sifre.length < 6 -> {
-                    userNameRegisterLayout.error = null
-                    emailRegisterLayout.error = null
-                    passwordRegisterLayout.error =
+                    userNameRegisterText.error = null
+                    emailRegisterText.error = null
+                    passwordRegisterText.error =
                         "Kullanıcı Şifresi En Az 6 Karakter İle Oluşturulmuştur"
                 }
                 userName.length < 6 -> {
-                    userNameAddLayout.error = "Kullanıcı Adı 6 Karaketerden Küçük Olamaz"
-                    emailRegisterLayout.error = null
-                    passwordRegisterLayout.error = null
+                    userNameRegisterText.error = "Kullanıcı Adı 6 Karaketerden Küçük Olamaz"
+                    emailRegisterText.error = null
+                    passwordRegisterText.error = null
                 }
                 else -> {
-                    emailRegisterLayout.error = null
-                    passwordRegisterLayout.error = null
+                    emailRegisterText.error = null
+                    passwordRegisterText.error = null
                     Toast.makeText(this, "Kullanıcı Kaydediliyor...", Toast.LENGTH_SHORT).show()
                     kayitOlButton.isClickable = false
                     auth.createUserWithEmailAndPassword(email, sifre)

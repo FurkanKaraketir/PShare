@@ -6,45 +6,31 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/emailLoginLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <EditText
+        android:id="@+id/emailLoginText"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:hint="@string/kullan_c_ad"
+        android:importantForAutofill="no"
+        android:inputType="text"
         android:textColorHint="@color/gri"
-        tools:targetApi="p">
+        tools:ignore="TextFields" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/emailLoginText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress" />
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/passwordLoginLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <EditText
+        android:id="@+id/passwordLoginText"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/emailLoginLayout"
+        android:layout_below="@id/emailLoginText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:hint="@string/kullan_c_ifre"
         android:textColorHint="@color/gri"
         app:passwordToggleEnabled="true"
-        tools:targetApi="p">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/passwordLoginText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        android:inputType="textPassword"
+        android:importantForAutofill="no" />
 
 
     <Button
@@ -52,7 +38,7 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/passwordLoginLayout"
+        android:layout_below="@id/passwordLoginText"
         android:layout_centerHorizontal="true"
         android:layout_margin="30dp"
         android:text="@string/giri_yap"

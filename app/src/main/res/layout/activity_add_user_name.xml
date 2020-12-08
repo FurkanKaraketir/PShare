@@ -15,31 +15,23 @@
         android:textAlignment="center"
         android:textSize="18sp" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/userNameAddLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <EditText
+        android:id="@+id/userNameAddText"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:hint="@string/kullan_c_ad"
         android:textColorHint="@color/gri"
-        tools:targetApi="p">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/userNameAddText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        android:inputType="text"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/addUserNameBtn"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/userNameAddLayout"
+        android:layout_below="@id/userNameAddText"
         android:layout_centerHorizontal="true"
         android:layout_margin="30dp"
         android:text="@string/devam_et"

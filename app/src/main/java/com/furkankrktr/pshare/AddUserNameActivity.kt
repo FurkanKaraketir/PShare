@@ -4,10 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import com.furkankrktr.pshare.databinding.ActivityAddUserNameBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_add_user_name.*
 import java.util.*
 
 class AddUserNameActivity : AppCompatActivity() {
@@ -17,16 +19,22 @@ class AddUserNameActivity : AppCompatActivity() {
     private lateinit var database: FirebaseFirestore
     private lateinit var ekleButton: Button
     private lateinit var userName: String
+    private lateinit var userNameAddText: EditText
+    private lateinit var addUserNameTextView: TextView
     private val uuid = UUID.randomUUID()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_user_name)
+        val binding = ActivityAddUserNameBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
 
-        ekleButton = findViewById(R.id.addUserNameBtn)
+        ekleButton = binding.addUserNameBtn
+        userNameAddText = binding.userNameAddText
+        addUserNameTextView = binding.addUserNameTextView
+
         ekleButton.isClickable = true
 
 
@@ -47,18 +55,18 @@ class AddUserNameActivity : AppCompatActivity() {
         ekleButton.isClickable = false
         when {
             userName.isEmpty() -> {
-                userNameAddLayout.error = null
-                userNameAddLayout.error = "Bu Alanı Boş Bırakamazsın"
+                userNameAddText.error = null
+                userNameAddText.error = "Bu Alanı Boş Bırakamazsın"
                 ekleButton.isClickable = true
             }
             userName.length < 6 -> {
-                userNameAddLayout.error = null
-                userNameAddLayout.error = "Kullanıcı Adı 6 Karaketerden Küçük Olamaz"
+                userNameAddText.error = null
+                userNameAddText.error = "Kullanıcı Adı 6 Karaketerden Küçük Olamaz"
                 ekleButton.isClickable = true
             }
             else -> {
                 ekleButton.isClickable = false
-                userNameAddLayout.error = null
+                userNameAddText.error = null
                 val userHashMap = hashMapOf<String, Any>()
 
                 userHashMap["username"] = userName
@@ -67,6 +75,7 @@ class AddUserNameActivity : AppCompatActivity() {
                 userHashMap["theme"] = "dark"
                 userHashMap["takipEdilenEmailler"] =
                     arrayListOf(auth.currentUser!!.email.toString())
+                userHashMap["profileImage"] = ""
                 database.collection("Users").add(userHashMap)
                     .addOnCompleteListener {
                         if (it.isSuccessful) {

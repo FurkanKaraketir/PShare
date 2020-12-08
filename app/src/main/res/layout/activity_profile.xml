@@ -20,7 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
 
         <TextView
             android:id="@+id/userNameView"
@@ -29,35 +30,30 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text=""
-            android:textSize="17sp" />
+            android:textSize="17sp" >
 
-        <ImageButton
+        </TextView>
+
+        <ImageView
             android:id="@+id/userNameEditButton"
-            style="@style/Widget.Design.FloatingActionButton"
-            android:layout_width="37dp"
-            android:layout_height="37dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="50dp"
             android:contentDescription="@string/tema_de_i_tir"
             android:src="@drawable/ic_baseline_edit_24" />
     </LinearLayout>
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/userNameChangeLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <EditText
+        android:id="@+id/userNameChangeEditText"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
         android:hint="@string/yeni_kullan_c_ad"
         android:textColorHint="@color/gri"
-        tools:targetApi="p">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/userNameChangeEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
+        android:inputType="text"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/kaydetBtn"
@@ -70,7 +66,7 @@
 
 
     <ProgressBar
-        android:id="@+id/progress_circular_profile"
+        android:id="@+id/progressCircularProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

@@ -7,11 +7,11 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.furkankrktr.pshare.databinding.ActivityFotografPaylasmaBinding
 import com.furkankrktr.pshare.service.glide
 import com.furkankrktr.pshare.service.placeHolderYap
 import com.giphy.sdk.core.models.Media
@@ -23,7 +23,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_fotograf_paylasma.*
 import java.util.*
 
 open class FotografPaylasmaActivity : AppCompatActivity(),
@@ -32,7 +31,13 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
     private var a: String = ""
     private var secilenGorsel: Uri? = null
     private var gifOrImage: Boolean? = null
+
     private lateinit var secilenPostImageView: ImageView
+    private lateinit var paylasButton: ImageView
+    private lateinit var imageSec: ImageView
+    private lateinit var postPaylasTextView: TextView
+    private lateinit var progressCircular: ProgressBar
+    private lateinit var yorumText: EditText
 
     private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
@@ -41,7 +46,8 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fotograf_paylasma)
+        val binding = ActivityFotografPaylasmaBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -49,11 +55,18 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
         storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
-        paylasButton.isClickable = true
-        val paylasmaButton = findViewById<ImageView>(R.id.paylasButton)
-        val imageSec = findViewById<ImageView>(R.id.imageView)
-        secilenPostImageView = findViewById(R.id.secilenPostResimView)
+
+        paylasButton = binding.paylasButton
+        imageSec = binding.imageView
+        secilenPostImageView = binding.secilenPostResimView
+        postPaylasTextView = binding.postPaylasTextView
+        progressCircular = binding.progressCircular
+        yorumText = binding.yorumText
+
+
         secilenPostImageView.visibility = View.GONE
+        paylasButton.isClickable = true
+
         val alert = AlertDialog.Builder(this)
         alert.setTitle("Resim veya GIF")
         alert.setMessage("Resim veya GIF seçiniz")
@@ -92,7 +105,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
         secilenPostImageView.setOnClickListener {
             alert.show()
         }
-        paylasmaButton.setOnClickListener {
+        paylasButton.setOnClickListener {
             paylas()
         }
         postPaylasTextView.setOnClickListener {
@@ -103,7 +116,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
     private fun paylas() {
         if (gifOrImage == true) {
             //depo işlemleri
-            val spinner = progress_circular
+            val spinner = progressCircular
 
 
             //UUID
@@ -111,7 +124,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
 
             val uuid = UUID.randomUUID()
             val gorselIsim = "${uuid}.jpg"
-            val postId = "${uuid}"
+            val postId = "$uuid"
             val reference = storage.reference
             val gorselReference = reference.child("images").child(gorselIsim)
 
@@ -125,7 +138,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
                 Toast.makeText(this, "Paylaşılıyor, Lütfen Bekleyin...", Toast.LENGTH_LONG)
                     .show()
 
-                gorselReference.putFile(secilenGorsel!!).addOnSuccessListener { _ ->
+                gorselReference.putFile(secilenGorsel!!).addOnSuccessListener {
 
                     val yuklenenGorselReference =
                         FirebaseStorage.getInstance().reference.child("images")
@@ -137,7 +150,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
 
 
                         val guncelKullaniciEmail = auth.currentUser!!.email.toString()
-                        val guncelKullaniciUID = auth.currentUser!!.uid.toString()
+                        val guncelKullaniciUID = auth.currentUser!!.uid
                         val tarih = Timestamp.now()
                         //veritabanı işlemleri
                         val postHashMap = hashMapOf<String, Any>()
@@ -199,14 +212,14 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
 
 
         } else {
-            val spinner = progress_circular
+            val spinner = progressCircular
 
 
             //UUID
 
 
             val uuid = UUID.randomUUID()
-            val postId = "${uuid}"
+            val postId = "$uuid"
 
             val kullaniciYorum = yorumText.text.toString()
             if (kullaniciYorum.isNotEmpty()) {

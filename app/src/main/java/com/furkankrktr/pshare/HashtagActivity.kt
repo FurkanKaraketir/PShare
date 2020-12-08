@@ -4,12 +4,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.furkankrktr.pshare.adapter.HashtagRecyclerAdapter
+import com.furkankrktr.pshare.databinding.ActivityHashtagBinding
 import com.furkankrktr.pshare.model.Post
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import kotlinx.android.synthetic.main.activity_haberler.*
 
 class HashtagActivity : AppCompatActivity() {
 
@@ -17,12 +18,14 @@ class HashtagActivity : AppCompatActivity() {
     private lateinit var database: FirebaseFirestore
     private lateinit var recyclerViewAdapter: HashtagRecyclerAdapter
     private lateinit var selectedHashtag: String
+    private lateinit var recyclerView: RecyclerView
 
     private var postList = ArrayList<Post>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_hashtag)
+        val binding = ActivityHashtagBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -33,6 +36,7 @@ class HashtagActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
+        recyclerView = binding.recyclerView
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
         recyclerViewAdapter = HashtagRecyclerAdapter(postList)
