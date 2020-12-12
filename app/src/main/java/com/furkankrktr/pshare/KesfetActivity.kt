@@ -1,10 +1,14 @@
 package com.furkankrktr.pshare
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +27,8 @@ class KesfetActivity : AppCompatActivity() {
     private lateinit var recyclerKesfetViewAdapter: HaberRecyclerAdapter
     private lateinit var guncelKullaniciEmail: String
     private lateinit var recyclerKesfetView: RecyclerView
+    private lateinit var searchEditText: EditText
+    private lateinit var filteredList: ArrayList<Post>
     private var postList = ArrayList<Post>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,19 +39,54 @@ class KesfetActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
         guncelKullaniciEmail = auth.currentUser!!.email.toString()
+
         supportActionBar?.title = "Keşfet"
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         recyclerKesfetView = binding.recyclerKesfetView
+        searchEditText = binding.searchEditText
+        setupRecyclerView(postList)
 
-        val layoutManager = LinearLayoutManager(this)
-        recyclerKesfetView.layoutManager = layoutManager
-        recyclerKesfetViewAdapter = HaberRecyclerAdapter(postList)
-        recyclerKesfetView.adapter = recyclerKesfetViewAdapter
+        searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            @SuppressLint("DefaultLocale")
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                filteredList = ArrayList()
+                if (p0.toString() != "") {
+                    for (item in postList) {
+                        if (item.kullaniciEmail.toLowerCase()
+                                .contains(p0.toString().toLowerCase())
+                        ) {
+                            filteredList.add(item)
+                        }
+                    }
+                    setupRecyclerView(filteredList)
+                } else {
+                    setupRecyclerView(postList)
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+        })
+
 
         verileriAl()
+    }
+
+    private fun setupRecyclerView(list: ArrayList<Post>) {
+        recyclerKesfetViewAdapter = HaberRecyclerAdapter(list)
+        val layoutManager = LinearLayoutManager(this)
+        recyclerKesfetView.layoutManager = layoutManager
+        recyclerKesfetViewAdapter = HaberRecyclerAdapter(list)
+        recyclerKesfetView.adapter = recyclerKesfetViewAdapter
     }
 
     private fun verileriAl() {
@@ -118,8 +159,6 @@ class KesfetActivity : AppCompatActivity() {
                                     }
 
                                 }
-
-
                             }
 
                             recyclerKesfetViewAdapter.notifyDataSetChanged()

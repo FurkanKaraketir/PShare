@@ -39,10 +39,10 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:hint="@string/kullan_c_ifre"
-        android:textColorHint="@color/gri"
-        app:passwordToggleEnabled="true"
+        android:importantForAutofill="no"
         android:inputType="textPassword"
-        android:importantForAutofill="no" />
+        android:textColorHint="@color/gri"
+        app:passwordToggleEnabled="true" />
 
     <Button
         android:id="@+id/registerKayitOl"
@@ -54,5 +54,15 @@
         android:layout_margin="30dp"
         android:text="@string/kay_t_ol"
         android:textColor="@color/gri" />
+
+    <TextView
+        android:id="@+id/registerToLoginButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/registerKayitOl"
+        android:layout_centerHorizontal="true"
+        android:text="@string/hesab_n_z_var_m_giri_yap_n"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textStyle="italic" />
 
 </RelativeLayout>

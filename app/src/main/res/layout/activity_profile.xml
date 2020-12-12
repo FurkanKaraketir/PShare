@@ -7,7 +7,7 @@
     tools:context=".ProfileActivity">
 
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImageAdd"
         android:layout_width="150dp"
         android:layout_height="150dp"
@@ -36,8 +36,8 @@
 
         <ImageView
             android:id="@+id/userNameEditButton"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginStart="50dp"
             android:contentDescription="@string/tema_de_i_tir"
             android:src="@drawable/ic_baseline_edit_24" />

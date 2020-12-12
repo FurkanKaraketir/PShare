@@ -235,7 +235,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
 
                 } else {
                     sendButton.isClickable = true
-                    Toast.makeText(this, "Boş Yorum Yapamazsınız", Toast.LENGTH_SHORT).show()
+                    commentSendEditText.error = "Boş Yorum Atamazsın"
                 }
             } else {
 
@@ -296,7 +296,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                         }
 
                 } else {
-                    Toast.makeText(this, "Boş Yorum Atamazsın", Toast.LENGTH_LONG).show()
+                    commentSendEditText.error = "Boş Yorum Atamazsın"
 
                 }
             }

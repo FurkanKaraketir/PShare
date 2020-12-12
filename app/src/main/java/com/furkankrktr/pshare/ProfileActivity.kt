@@ -1,31 +1,28 @@
 package com.furkankrktr.pshare
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.furkankrktr.pshare.databinding.ActivityProfileBinding
-import com.furkankrktr.pshare.service.glide
+import com.furkankrktr.pshare.service.glider
 import com.furkankrktr.pshare.service.placeHolderYap
-import com.giphy.sdk.core.models.Media
-import com.giphy.sdk.ui.GPHContentType
-import com.giphy.sdk.ui.Giphy
-import com.giphy.sdk.ui.views.GiphyDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
+import de.hdodenhof.circleimageview.CircleImageView
 import java.util.*
 
-class ProfileActivity : AppCompatActivity(),
-    GiphyDialogFragment.GifSelectionListener {
+class ProfileActivity : AppCompatActivity() {
 
     private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
@@ -36,12 +33,11 @@ class ProfileActivity : AppCompatActivity(),
 
     private lateinit var userNameChangeEditText: EditText
     private lateinit var userNameEditButton: ImageView
-    private lateinit var profileImageAdd: ImageView
+    private lateinit var profileImageAdd: CircleImageView
     private lateinit var progressCircularProfile: ProgressBar
     private lateinit var userNameView: TextView
     private lateinit var kaydetBtn: Button
 
-    private var istenen: String = ""
     private var a: String = ""
     private var secilenGorsel: Uri? = null
     private var gifOrImage: Boolean? = null
@@ -75,15 +71,27 @@ class ProfileActivity : AppCompatActivity(),
 
         userNameEditButton.setOnClickListener {
             userNameChangeEditText.visibility = View.VISIBLE
-            kaydetBtn.visibility = View.VISIBLE
             i = 1
         }
-        val alert = AlertDialog.Builder(this)
-        alert.setTitle("Resim veya GIF")
-        alert.setMessage("Resim veya GIF seçiniz")
-        Giphy.configure(this, "Qyq8K6rBLuR2bYRetJteXkb6k7ngKUG8")
+        userNameChangeEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-        alert.setPositiveButton("RESİM") { _, _ ->
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (p0.toString() != "") {
+                    kaydetBtn.visibility = View.VISIBLE
+                } else {
+                    kaydetBtn.visibility = View.GONE
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+        })
+        profileImageAdd.setOnClickListener {
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.READ_EXTERNAL_STORAGE
@@ -106,13 +114,6 @@ class ProfileActivity : AppCompatActivity(),
 
 
             }
-        }
-        alert.setNegativeButton("GIF") { _, _ ->
-            GiphyDialogFragment.newInstance().show(supportFragmentManager, "giphy_dialog")
-        }
-        profileImageAdd.setOnClickListener {
-            kaydetBtn.visibility = View.VISIBLE
-            alert.show()
         }
 
         kaydetBtn.setOnClickListener {
@@ -238,20 +239,12 @@ class ProfileActivity : AppCompatActivity(),
 
                                 userNameView.text = serverUserName
                                 userName = serverUserName
-                                profileImageAdd.glide(profileImageURL, placeHolderYap(this))
+                                profileImageAdd.glider(profileImageURL, placeHolderYap(this))
                             }
                         }
                     }
                 }
             }
-    }
-
-    override fun didSearchTerm(term: String) {
-
-    }
-
-    override fun onDismissed(selectedContentType: GPHContentType) {
-
     }
 
 
@@ -279,6 +272,7 @@ class ProfileActivity : AppCompatActivity(),
                 secilenGorsel = result.uri
                 gifOrImage = true
                 profileImageAdd.setImageURI(secilenGorsel)
+                kaydetBtn.visibility = View.VISIBLE
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val e = result.error
@@ -289,21 +283,5 @@ class ProfileActivity : AppCompatActivity(),
 
 
         super.onActivityResult(requestCode, resultCode, data)
-    }
-
-    override fun onGifSelected(
-        media: Media,
-        searchTerm: String?,
-        selectedContentType: GPHContentType
-    ) {
-        val url = media.embedUrl!!
-
-        val hepsi: List<String>
-        hepsi = url.split('/')
-
-        istenen = hepsi[hepsi.size - 1]
-        a = "https://media.giphy.com/media/$istenen/giphy.gif"
-        profileImageAdd.glide(a, placeHolderYap(applicationContext))
-        gifOrImage = false
     }
 }

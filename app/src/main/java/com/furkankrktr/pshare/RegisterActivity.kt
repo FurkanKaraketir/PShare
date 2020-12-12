@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.furkankrktr.pshare.databinding.ActivityRegisterBinding
@@ -20,6 +21,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var emailRegisterText: EditText
     private lateinit var passwordRegisterText: EditText
     private lateinit var kayitOlButton: Button
+    private lateinit var registerToLoginButton: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +32,7 @@ class RegisterActivity : AppCompatActivity() {
         emailRegisterText = binding.emailRegisterText
         passwordRegisterText = binding.passwordRegisterText
         kayitOlButton = binding.registerKayitOl
-
+        registerToLoginButton = binding.registerToLoginButton
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
@@ -85,6 +87,7 @@ class RegisterActivity : AppCompatActivity() {
                                 userHashMap["takipEdilenEmailler"] = arrayListOf(email)
                                 userHashMap["profileImage"] =
                                     "https://media.giphy.com/media/VBfFv9oOZAvvi/giphy.gif"
+                                userHashMap["theme"] = "dark"
                                 database.collection("Users").add(userHashMap)
                                     .addOnCompleteListener {
                                         if (task.isSuccessful) {
@@ -114,6 +117,11 @@ class RegisterActivity : AppCompatActivity() {
 
 
             }
+        }
+        registerToLoginButton.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
     }

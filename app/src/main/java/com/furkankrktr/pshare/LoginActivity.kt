@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.furkankrktr.pshare.databinding.ActivityLoginBinding
@@ -18,6 +19,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var emailLoginText: EditText
     private lateinit var passwordLoginText: EditText
     private lateinit var girisYapButton: Button
+    private lateinit var loginToRegisterButton: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +29,7 @@ class LoginActivity : AppCompatActivity() {
         girisYapButton = binding.loginGirisYap
         emailLoginText = binding.emailLoginText
         passwordLoginText = binding.passwordLoginText
+        loginToRegisterButton = binding.loginToRegisterButton
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
@@ -89,6 +92,12 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
 
+        }
+
+        loginToRegisterButton.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
     }
