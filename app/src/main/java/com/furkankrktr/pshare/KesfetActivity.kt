@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.furkankrktr.pshare.adapter.HaberRecyclerAdapter
 import com.furkankrktr.pshare.databinding.ActivityKesfetBinding
 import com.furkankrktr.pshare.model.Post
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -26,6 +27,7 @@ class KesfetActivity : AppCompatActivity() {
     private lateinit var database: FirebaseFirestore
     private lateinit var recyclerKesfetViewAdapter: HaberRecyclerAdapter
     private lateinit var guncelKullaniciEmail: String
+    private lateinit var kesfetPostAddBtn: FloatingActionButton
     private lateinit var recyclerKesfetView: RecyclerView
     private lateinit var searchEditText: EditText
     private lateinit var filteredList: ArrayList<Post>
@@ -47,6 +49,7 @@ class KesfetActivity : AppCompatActivity() {
 
         recyclerKesfetView = binding.recyclerKesfetView
         searchEditText = binding.searchEditText
+        kesfetPostAddBtn = binding.kesfetPostAddBtn
         setupRecyclerView(postList)
 
         searchEditText.addTextChangedListener(object : TextWatcher {
@@ -76,7 +79,10 @@ class KesfetActivity : AppCompatActivity() {
             }
 
         })
-
+        kesfetPostAddBtn.setOnClickListener {
+            val intent = Intent(this, FotografPaylasmaActivity::class.java)
+            startActivity(intent)
+        }
 
         verileriAl()
     }

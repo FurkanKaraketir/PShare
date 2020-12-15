@@ -11,14 +11,12 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/reply"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -56,10 +54,7 @@
                 android:layout_marginTop="10dp"
                 android:contentDescription="@string/payla" />
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp">
+
 
                 <TextView
                     android:id="@+id/replyToCommentText"
@@ -67,19 +62,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_margin="5dp"
                     android:layout_marginTop="7dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginBottom="5dp"
                     android:text=""
                     android:textSize="20sp" />
-            </androidx.cardview.widget.CardView>
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
 
             <TextView
                 android:id="@+id/toYouText"
                 style="@style/TextAppearance.AppCompat.Body1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_margin="12dp"
                 android:text="@string/i_in_cevap"
                 android:textSize="17sp" />
         </LinearLayout>

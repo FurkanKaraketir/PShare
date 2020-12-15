@@ -282,6 +282,7 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
                 } else {
                     replySendButton.isClickable = true
+                    replySendEditText
                     Toast.makeText(this, "Boş Yorum Yapamazsınız", Toast.LENGTH_SHORT).show()
                 }
 
@@ -342,8 +343,8 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                         }
 
                 } else {
+                    replySendEditText.error = "Boş Yanıt Yapamazsınız"
                     replySendButton.isClickable = true
-                    Toast.makeText(this, "Boş Yanıt Yapamazsınız", Toast.LENGTH_SHORT).show()
                 }
             }
         }

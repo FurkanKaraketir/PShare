@@ -1,5 +1,6 @@
 package com.furkankrktr.pshare
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.furkankrktr.pshare.adapter.UserEmailFilterAdapter
 import com.furkankrktr.pshare.databinding.ActivityUserEmailFilterBinding
 import com.furkankrktr.pshare.model.Post
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -18,6 +20,7 @@ class UserEmailFilterActivity : AppCompatActivity() {
     private lateinit var database: FirebaseFirestore
     private lateinit var recyclerViewAdapter: UserEmailFilterAdapter
     private lateinit var selectedEmail: String
+    private lateinit var userEmailFilterPostAddBtn: FloatingActionButton
     private lateinit var recyclerView: RecyclerView
 
     private var postList = ArrayList<Post>()
@@ -29,7 +32,7 @@ class UserEmailFilterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         recyclerView = binding.recyclerView
-
+        userEmailFilterPostAddBtn = binding.userEmailFilterPostAddBtn
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -43,7 +46,10 @@ class UserEmailFilterActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
         recyclerViewAdapter = UserEmailFilterAdapter(postList)
         recyclerView.adapter = recyclerViewAdapter
-
+        userEmailFilterPostAddBtn.setOnClickListener {
+            val intent = Intent(this, FotografPaylasmaActivity::class.java)
+            startActivity(intent)
+        }
         verileriAl()
 
 

@@ -227,9 +227,12 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
 
 
             binding.recyclerRowKullaniciYorum.setOnClickListener {
-                if (binding.recyclerRowKullaniciYorum.text[0] == "#"[0]) {
+                if (binding.recyclerRowKullaniciYorum.text.contains("#")) {
                     val intent = Intent(holder.itemView.context, HashtagActivity::class.java)
-                    intent.putExtra("selectedHashtag", postList[position].kullaniciYorum)
+                    intent.putExtra(
+                        "selectedHashtag",
+                        hestegiBul(binding.recyclerRowKullaniciYorum.text.toString())
+                    )
                     holder.itemView.context.startActivity(intent)
                 }
             }
@@ -326,6 +329,24 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
         }
 
 
+    }
+
+    private fun hestegiBul(str: String): String {
+        var hestegBulundu = false
+        var sonuc = ""
+
+        for (i in str) {
+            if (i == '#') {
+                hestegBulundu = true
+            }
+            if (hestegBulundu && i == ' ') {
+                return sonuc
+            }
+            if (hestegBulundu) {
+                sonuc += i
+            }
+        }
+        return sonuc
     }
 
     private fun commentGit(holder: PostHolder, position: Int) {
