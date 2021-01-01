@@ -72,7 +72,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
         alert.setMessage("Resim veya GIF seçiniz")
         Giphy.configure(this, "Qyq8K6rBLuR2bYRetJteXkb6k7ngKUG8")
 
-        alert.setPositiveButton("RESİM", { _, _ ->
+        alert.setPositiveButton("RESİM") { _, _ ->
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.READ_EXTERNAL_STORAGE
@@ -95,7 +95,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
 
 
             }
-        })
+        }
         alert.setNegativeButton("GIF") { _, _ ->
             GiphyDialogFragment.newInstance().show(supportFragmentManager, "giphy_dialog")
         }
