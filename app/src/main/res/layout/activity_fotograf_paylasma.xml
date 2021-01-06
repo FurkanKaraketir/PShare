@@ -31,13 +31,13 @@
                 android:id="@+id/linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp">
+                android:layout_margin="5dp">
 
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_margin="10dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
                     android:contentDescription="@string/attach"
                     android:src="@drawable/ic_baseline_attach_file_24" />
 
@@ -45,20 +45,19 @@
                     android:id="@+id/yorumText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:autofillHints=""
                     android:hint="@string/a_klama"
                     android:inputType="text"
                     android:maxLength="100" />
 
-                <ImageView
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/paylasButton"
-                    android:layout_width="40dp"
-                    android:layout_height="35dp"
-                    android:layout_margin="10dp"
-                    android:contentDescription="@string/payla"
-                    android:src="@drawable/ic_send_white" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:contentDescription="@string/commentbutton"
+                    android:src="@drawable/ic_send_black" />
             </LinearLayout>
 
             <ProgressBar

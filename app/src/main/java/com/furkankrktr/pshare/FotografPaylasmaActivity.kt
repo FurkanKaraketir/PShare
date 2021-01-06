@@ -18,6 +18,7 @@ import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.ui.GPHContentType
 import com.giphy.sdk.ui.Giphy
 import com.giphy.sdk.ui.views.GiphyDialogFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -33,7 +34,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
     private var gifOrImage: Boolean? = null
 
     private lateinit var secilenPostImageView: ImageView
-    private lateinit var paylasButton: ImageView
+    private lateinit var paylasButton: FloatingActionButton
     private lateinit var imageSec: ImageView
     private lateinit var postPaylasTextView: TextView
     private lateinit var progressCircular: ProgressBar
