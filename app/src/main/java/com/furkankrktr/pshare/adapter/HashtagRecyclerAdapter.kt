@@ -118,7 +118,13 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
                         binding.unFollowButton.visibility = View.VISIBLE
                     }
             }
-            binding.unFollowButton.setOnClickListener {
+            val unfollowAlert = AlertDialog.Builder(holder.itemView.context)
+
+            unfollowAlert.setTitle("Takibi Bırak")
+            unfollowAlert.setMessage("Takibi Bırakmak İstediğinize Emin misiniz?")
+            unfollowAlert.setPositiveButton(
+                "TAKİBİ BIRAK"
+            ) { _, _ ->
                 database.collection("Users").document(documentName)
                     .update(
                         "takipEdilenEmailler",
@@ -127,6 +133,17 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
                         binding.followButton.visibility = View.VISIBLE
                         binding.unFollowButton.visibility = View.GONE
                     }
+            }
+            unfollowAlert.setNegativeButton("İPTAL") { _, _ ->
+                Toast.makeText(
+                    holder.itemView.context,
+                    "İşlem iptal edildi",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            binding.unFollowButton.setOnClickListener {
+                unfollowAlert.show()
             }
 
 
