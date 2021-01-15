@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -23,6 +24,7 @@ import com.furkankrktr.pshare.databinding.ActivityCommentsBinding
 import com.furkankrktr.pshare.model.Comment
 import com.furkankrktr.pshare.send_notification_pack.*
 import com.furkankrktr.pshare.service.glide
+import com.furkankrktr.pshare.service.glider
 import com.furkankrktr.pshare.service.placeHolderYap
 import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.ui.GPHContentType
@@ -40,6 +42,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
+import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -55,11 +58,16 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
     private lateinit var selectedPostEmail: String
     private lateinit var selectedPostText: String
     private lateinit var selectedPostUID: String
+    private lateinit var selectedPostImage: String
     private lateinit var gifOrImageBtn: ImageView
     private lateinit var secilenImageView: ImageView
+    private lateinit var profileImageCommentActivity: CircleImageView
     private lateinit var recyclerCommentsView: RecyclerView
+    private lateinit var selectedPostImageView: ImageView
     private lateinit var sendButton: FloatingActionButton
     private lateinit var commentSendEditText: EditText
+    private lateinit var commentToPostText: TextView
+    private lateinit var commentToEmailText: TextView
     private var secilenGorsel: Uri? = null
     private var gifOrImage: Boolean? = null
     private var istenen: String = ""
@@ -83,11 +91,18 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
         selectedPostEmail = intent.getStringExtra("selectedPostEmail").toString()
         selectedPostText = intent.getStringExtra("selectedPostText").toString()
         selectedPostUID = intent.getStringExtra("selectedPostUID").toString()
+        selectedPostImage = intent.getStringExtra("selectedPostImage").toString()
+
+
 
         gifOrImageBtn = binding.attachCommentButton
         secilenImageView = binding.secilenCommentResimView
+        profileImageCommentActivity = binding.profileImageCommentActivity
+        selectedPostImageView = binding.selectedPostImageView
+        commentToPostText = binding.commentToPostText
         recyclerCommentsView = binding.recyclerCommentsView
         commentSendEditText = binding.commentSendEditText
+        commentToEmailText = binding.commentToEmailText
         sendButton = binding.sendCButton
 
         secilenImageView.visibility = View.GONE
@@ -100,6 +115,47 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
         recyclerCommentsView.layoutManager = layoutManager
         recyclerCommentViewAdapter = CommentRecyclerAdapter(commentList)
         recyclerCommentsView.adapter = recyclerCommentViewAdapter
+
+        if (selectedPostImage == "") {
+            selectedPostImageView.visibility = View.GONE
+        } else {
+            selectedPostImageView.glide(
+                selectedPostImage,
+                placeHolderYap(this)
+            )
+        }
+
+        database.collection("Users").whereEqualTo("useremail", selectedPostEmail)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    Toast.makeText(
+                        this,
+                        exception.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    if (snapshot != null) {
+                        if (!snapshot.isEmpty) {
+                            val documents = snapshot.documents
+                            for (document in documents) {
+                                commentToEmailText.text =
+                                    document.get("username") as String
+                                val profile = document.get("profileImage") as String
+                                profileImageCommentActivity.glider(profile, placeHolderYap(this))
+                            }
+                        } else {
+                            commentToEmailText.text =
+                                selectedPostEmail
+                        }
+                    } else {
+                        commentToEmailText.text =
+                            selectedPostEmail
+                    }
+                }
+            }
+
+        commentToPostText.text = selectedPostText
+
         val alert = AlertDialog.Builder(this)
         alert.setTitle("Resim veya GIF")
         alert.setMessage("Resim veya GIF seçiniz")
@@ -471,7 +527,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
             selectedPostEmail,
             selectedPostText,
             "",
-            "",
+            selectedPostImage,
             selectedPostUID
         )
         val sender = NotificationSender(data, usertoken)

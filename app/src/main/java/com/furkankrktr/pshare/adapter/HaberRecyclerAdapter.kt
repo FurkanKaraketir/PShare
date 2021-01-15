@@ -375,6 +375,7 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
         intent.putExtra("selectedPostEmail", postList[position].kullaniciEmail)
         intent.putExtra("selectedPostUID", postList[position].kullaniciUID)
         intent.putExtra("selectedPostText", postList[position].kullaniciYorum)
+        intent.putExtra("selectedPostImage", postList[position].gorselUrl)
         holder.itemView.context.startActivity(intent)
     }
 

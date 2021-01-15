@@ -49,6 +49,7 @@ class MyFireBaseMessagingService : FirebaseMessagingService() {
                 resultIntent.putExtra("selectedPost", intentID)
                 resultIntent.putExtra("selectedPostEmail", intentEmail)
                 resultIntent.putExtra("selectedPostUID", selectedPostUID)
+                resultIntent.putExtra("selectedPostImage", intentImage)
                 resultIntent.putExtra("selectedPostText", intentText)
 
             }
