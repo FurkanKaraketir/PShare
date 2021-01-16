@@ -131,6 +131,7 @@ class HaberlerActivity : AppCompatActivity() {
             }
             R.id.WebSite -> {
                 val intent = Intent(this, WebViewActivity::class.java)
+                intent.putExtra("link", "https://furkankrktr.wordpress.com/")
                 startActivity(intent)
             }
             R.id.search -> {

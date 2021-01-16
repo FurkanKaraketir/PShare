@@ -41,7 +41,6 @@
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".WebViewActivity"
-            android:parentActivityName=".HaberlerActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity

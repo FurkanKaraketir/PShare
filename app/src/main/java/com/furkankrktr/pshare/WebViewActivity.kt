@@ -16,19 +16,21 @@ class WebViewActivity : AppCompatActivity() {
         val binding = ActivityWebViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val link = intent.getStringExtra("link")
         webView = binding.webView
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             webView.webViewClient = WebViewClient()
             webView.apply {
-                loadUrl("https://furkankrktr.wordpress.com/")
+                if (link != null) {
+                    loadUrl(link)
+                }
                 settings.javaScriptEnabled = true
                 settings.safeBrowsingEnabled = true
             }
         } else {
-            webView.loadUrl("https://furkankrktr.wordpress.com/")
+            if (link != null) {
+                webView.loadUrl(link)
+            }
         }
 
     }

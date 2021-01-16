@@ -246,6 +246,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                                                             sendNotification(
                                                                 usertoken,
                                                                 commentText,
+                                                                selectedPostImage
                                                             )
                                                         }
 
@@ -334,6 +335,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                                                     sendNotification(
                                                         usertoken,
                                                         commentText,
+                                                        selectedPostImage
                                                     )
                                                 }
 
@@ -519,7 +521,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
             .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(token)
     }
 
-    private fun sendNotification(usertoken: String, message: String) {
+    private fun sendNotification(usertoken: String, message: String, selectedCommentImage: String) {
         val data = Data(
             "Postunuza Yeni Yorum",
             message,
@@ -527,7 +529,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
             selectedPostEmail,
             selectedPostText,
             "",
-            selectedPostImage,
+            selectedCommentImage,
             selectedPostUID
         )
         val sender = NotificationSender(data, usertoken)

@@ -46,4 +46,5 @@
     <string name="kullan_c_ad_le_ara">Kullanıcı Adı İle Ara...</string>
     <string name="ndir">İndir</string>
     <string name="postu_i_in_yorumlar">Postu için yorumlar</string>
+    <string name="kay_t_olarak_gizlilik_politikam_z_kabul_etmi_olursunuz">Kayıt olarak <u>gizlilik politikamızı</u> kabul etmiş olursunuz.</string>
 </resources>
