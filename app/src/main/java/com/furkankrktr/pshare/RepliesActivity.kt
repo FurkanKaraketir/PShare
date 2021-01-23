@@ -3,12 +3,18 @@
 package com.furkankrktr.pshare
 
 import android.Manifest
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -47,6 +53,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.hypot
 
 class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionListener {
 
@@ -76,8 +83,9 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     private lateinit var recyclerReplyViewAdapter: ReplyRecyclerAdapter
     private var replyList = ArrayList<Reply>()
     private lateinit var apiService: APIService
+    private var yorumYapildi: Boolean = false
 
-
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityRepliesBinding.inflate(layoutInflater)
@@ -228,6 +236,10 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
 
+                                        replySendEditText.hint =
+                                            "Tek seferde yalnızca 1 yanıt yapılabilir"
+                                        replyAttachmentBtn.visibility = View.GONE
+                                        yorumYapildi = true
                                         if (guncelKullaniciEmail != selectedCommentEmail) {
                                             FirebaseDatabase.getInstance().reference.child("Tokens")
                                                 .child(selectedCommentUID.trim()).child("token")
@@ -283,7 +295,7 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                 } else {
                     replySendButton.isClickable = true
                     replySendEditText
-                    Toast.makeText(this, "Boş Yorum Yapamazsınız", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Boş Yanıt Yapamazsınız", Toast.LENGTH_SHORT).show()
                 }
 
 
@@ -309,8 +321,11 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                     database.collection("Yanıtlar").add(commentHashMap)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
+                                yorumYapildi = true
                                 replySendEditText.text = null
-
+                                replySendEditText.hint =
+                                    "Tek seferde yalnızca 1 yanıt yapılabilir"
+                                replyAttachmentBtn.visibility = View.GONE
                                 if (guncelKullaniciEmail != selectedCommentEmail) {
                                     FirebaseDatabase.getInstance().reference.child("Tokens")
                                         .child(selectedCommentUID.trim()).child("token")
@@ -350,6 +365,78 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         }
         verileriAl()
         updateToken()
+
+
+        replySendEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            @SuppressLint("RestrictedApi")
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+
+            }
+
+            @SuppressLint("RestrictedApi")
+            override fun afterTextChanged(p0: Editable?) {
+                if (p0.toString() != "" && replySendButton.visibility == View.INVISIBLE) {
+
+                    val cx = replySendButton.width / 2
+                    val cy = replySendButton.height / 2
+
+                    // get the final radius for the clipping circle
+                    val finalRadius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+
+                    // create the animator for this view (the start radius is zero)
+                    val anim =
+                        ViewAnimationUtils.createCircularReveal(
+                            replySendButton,
+                            cx,
+                            cy,
+                            0f,
+                            finalRadius
+                        )
+                    // make the view visible and start the animation
+                    if (!yorumYapildi) {
+                        replySendButton.visibility = View.VISIBLE
+                        anim.start()
+                    }
+
+
+                    // set the view to invisible without a circular reveal animation below Lollipop
+
+                } else if (p0.toString() == "" && replySendButton.visibility == View.VISIBLE) {
+                    val cx = replySendButton.width / 2
+                    val cy = replySendButton.height / 2
+
+                    // get the initial radius for the clipping circle
+                    val initialRadius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+
+                    // create the animation (the final radius is zero)
+                    val anim = ViewAnimationUtils.createCircularReveal(
+                        replySendButton,
+                        cx,
+                        cy,
+                        initialRadius,
+                        0f
+                    )
+
+                    // make the view invisible when the animation is done
+                    anim.addListener(object : AnimatorListenerAdapter() {
+
+                        override fun onAnimationEnd(animation: Animator) {
+                            super.onAnimationEnd(animation)
+                            replySendButton.visibility = View.INVISIBLE
+                        }
+                    })
+                    anim.start()
+                }
+
+
+            }
+
+
+        })
 
     }
 

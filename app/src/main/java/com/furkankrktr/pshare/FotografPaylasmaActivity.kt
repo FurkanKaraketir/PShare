@@ -1,12 +1,18 @@
 package com.furkankrktr.pshare
 
 import android.Manifest
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -25,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
 import java.util.*
+import kotlin.math.hypot
 
 open class FotografPaylasmaActivity : AppCompatActivity(),
     GiphyDialogFragment.GifSelectionListener {
@@ -34,7 +41,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
     private var gifOrImage: Boolean? = null
 
     private lateinit var secilenPostImageView: ImageView
-    private lateinit var paylasButton: FloatingActionButton
+    private lateinit var sendButton: FloatingActionButton
     private lateinit var imageSec: ImageView
     private lateinit var postPaylasTextView: TextView
     private lateinit var progressCircular: ProgressBar
@@ -57,7 +64,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
 
-        paylasButton = binding.paylasButton
+        sendButton = binding.paylasButton
         imageSec = binding.imageView
         secilenPostImageView = binding.secilenPostResimView
         postPaylasTextView = binding.postPaylasTextView
@@ -66,7 +73,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
 
 
         secilenPostImageView.visibility = View.GONE
-        paylasButton.isClickable = true
+        sendButton.isClickable = true
 
         val alert = AlertDialog.Builder(this)
         alert.setTitle("Resim veya GIF")
@@ -106,12 +113,76 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
         secilenPostImageView.setOnClickListener {
             alert.show()
         }
-        paylasButton.setOnClickListener {
+        sendButton.setOnClickListener {
             paylas()
         }
         postPaylasTextView.setOnClickListener {
             paylas()
         }
+
+        yorumText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            @SuppressLint("RestrictedApi")
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+
+            }
+
+            @SuppressLint("RestrictedApi")
+            override fun afterTextChanged(p0: Editable?) {
+                if (p0.toString() != "" && sendButton.visibility == View.INVISIBLE) {
+
+                    val cx = sendButton.width / 2
+                    val cy = sendButton.height / 2
+
+                    // get the final radius for the clipping circle
+                    val finalRadius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+
+                    // create the animator for this view (the start radius is zero)
+                    val anim =
+                        ViewAnimationUtils.createCircularReveal(sendButton, cx, cy, 0f, finalRadius)
+                    // make the view visible and start the animation
+                    sendButton.visibility = View.VISIBLE
+                    anim.start()
+
+
+                    // set the view to invisible without a circular reveal animation below Lollipop
+
+                } else if (p0.toString() == "" && sendButton.visibility == View.VISIBLE) {
+                    val cx = sendButton.width / 2
+                    val cy = sendButton.height / 2
+
+                    // get the initial radius for the clipping circle
+                    val initialRadius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+
+                    // create the animation (the final radius is zero)
+                    val anim = ViewAnimationUtils.createCircularReveal(
+                        sendButton,
+                        cx,
+                        cy,
+                        initialRadius,
+                        0f
+                    )
+
+                    // make the view invisible when the animation is done
+                    anim.addListener(object : AnimatorListenerAdapter() {
+
+                        override fun onAnimationEnd(animation: Animator) {
+                            super.onAnimationEnd(animation)
+                            sendButton.visibility = View.INVISIBLE
+                        }
+                    })
+                    anim.start()
+                }
+
+
+            }
+
+
+        })
+
     }
 
     private fun paylas() {
@@ -131,7 +202,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
 
             val kullaniciYorum = yorumText.text.toString()
             if (secilenGorsel != null && kullaniciYorum.isNotEmpty()) {
-                paylasButton.isClickable = false
+                sendButton.isClickable = false
                 spinner.visibility = View.VISIBLE
 
                 yorumText.error = null
@@ -178,7 +249,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
                                 )
                                     .show()
 
-                                paylasButton.isClickable = true
+                                sendButton.isClickable = true
 
                                 spinner.visibility = View.INVISIBLE
 
@@ -189,7 +260,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
                         Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG)
                             .show()
 
-                        paylasButton.isClickable = true
+                        sendButton.isClickable = true
 
                         spinner.visibility = View.INVISIBLE
 
@@ -198,16 +269,16 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
                 }.addOnFailureListener { exception ->
                     Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG).show()
 
-                    paylasButton.isClickable = true
+                    sendButton.isClickable = true
 
                     spinner.visibility = View.INVISIBLE
                 }
             } else if (secilenGorsel == null) {
-                paylasButton.isClickable = true
+                sendButton.isClickable = true
 
                 Toast.makeText(this, "Lütfen Bir Görsel Seçiniz", Toast.LENGTH_SHORT).show()
             } else if (kullaniciYorum.isEmpty()) {
-                paylasButton.isClickable = true
+                sendButton.isClickable = true
                 yorumText.error = "Bu Alanı Boş Bırakamazsınız"
             }
 
@@ -224,7 +295,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
 
             val kullaniciYorum = yorumText.text.toString()
             if (kullaniciYorum.isNotEmpty()) {
-                paylasButton.isClickable = false
+                sendButton.isClickable = false
                 spinner.visibility = View.VISIBLE
 
                 yorumText.error = null
@@ -259,7 +330,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
                         Toast.makeText(this, exception.localizedMessage, Toast.LENGTH_LONG)
                             .show()
 
-                        paylasButton.isClickable = true
+                        sendButton.isClickable = true
 
                         spinner.visibility = View.INVISIBLE
 
@@ -267,7 +338,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
 
 
             } else if (kullaniciYorum.isEmpty()) {
-                paylasButton.isClickable = true
+                sendButton.isClickable = true
                 yorumText.error = "Bu Alanı Boş Bırakamazsınız"
             }
         }

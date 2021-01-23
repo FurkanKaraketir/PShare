@@ -39,7 +39,6 @@ class HaberlerActivity : AppCompatActivity() {
     private var postList = ArrayList<Post>()
     private lateinit var apiService: APIService
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityHaberlerBinding.inflate(layoutInflater)
@@ -52,7 +51,7 @@ class HaberlerActivity : AppCompatActivity() {
 
 
         FirebaseMessaging.getInstance().subscribeToTopic("users")
-        postAddButton = binding.postAddBtn
+        postAddButton = binding.postAddButton
         postAddButton.setOnClickListener {
             val intent = Intent(this, FotografPaylasmaActivity::class.java)
             startActivity(intent)
@@ -61,17 +60,16 @@ class HaberlerActivity : AppCompatActivity() {
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService::class.java)
 
         recyclerView = binding.recyclerView
-        val layoutManager = LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(applicationContext)
         recyclerView.layoutManager = layoutManager
         recyclerViewAdapter = HaberRecyclerAdapter(postList)
         recyclerView.adapter = recyclerViewAdapter
-
-
 
         updateToken()
         verileriAl()
 
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val menuInflater = menuInflater

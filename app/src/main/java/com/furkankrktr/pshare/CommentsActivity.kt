@@ -4,12 +4,18 @@
 package com.furkankrktr.pshare
 
 import android.Manifest
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -48,6 +54,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.hypot
 
 class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionListener {
 
@@ -72,12 +79,14 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
     private var gifOrImage: Boolean? = null
     private var istenen: String = ""
     private var a: String = ""
+    private var yorumYapildi: Boolean = false
 
     //true Image       false GIF
     private lateinit var recyclerCommentViewAdapter: CommentRecyclerAdapter
     private var commentList = ArrayList<Comment>()
     private lateinit var apiService: APIService
 
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityCommentsBinding.inflate(layoutInflater)
@@ -194,7 +203,70 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
             alert.show()
         }
 
+        commentSendEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
 
+            @SuppressLint("RestrictedApi")
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+
+            }
+
+            @SuppressLint("RestrictedApi")
+            override fun afterTextChanged(p0: Editable?) {
+                if (p0.toString() != "" && sendButton.visibility == View.INVISIBLE) {
+
+                    val cx = sendButton.width / 2
+                    val cy = sendButton.height / 2
+
+                    // get the final radius for the clipping circle
+                    val finalRadius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+
+                    // create the animator for this view (the start radius is zero)
+                    val anim =
+                        ViewAnimationUtils.createCircularReveal(sendButton, cx, cy, 0f, finalRadius)
+                    // make the view visible and start the animation
+                    if (!yorumYapildi) {
+                        sendButton.visibility = View.VISIBLE
+                        anim.start()
+                    }
+
+
+                    // set the view to invisible without a circular reveal animation below Lollipop
+
+                } else if (p0.toString() == "" && sendButton.visibility == View.VISIBLE) {
+                    val cx = sendButton.width / 2
+                    val cy = sendButton.height / 2
+
+                    // get the initial radius for the clipping circle
+                    val initialRadius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+
+                    // create the animation (the final radius is zero)
+                    val anim = ViewAnimationUtils.createCircularReveal(
+                        sendButton,
+                        cx,
+                        cy,
+                        initialRadius,
+                        0f
+                    )
+
+                    // make the view invisible when the animation is done
+                    anim.addListener(object : AnimatorListenerAdapter() {
+
+                        override fun onAnimationEnd(animation: Animator) {
+                            super.onAnimationEnd(animation)
+                            sendButton.visibility = View.INVISIBLE
+                        }
+                    })
+                    anim.start()
+                }
+
+
+            }
+
+
+        })
         sendButton.setOnClickListener {
             if (gifOrImage == true) {
                 val commentText = commentSendEditText.text.toString()
@@ -232,7 +304,11 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                             database.collection("Yorumlar").add(commentHashMap)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-
+                                        commentSendEditText.text = null
+                                        commentSendEditText.hint =
+                                            "Tek seferde yalnızca 1 yorum yapılabilir"
+                                        yorumYapildi = true
+                                        gifOrImageBtn.visibility = View.GONE
                                         if (guncelKullaniciEmail != selectedPostEmail) {
                                             try {
                                                 FirebaseDatabase.getInstance().reference.child("Tokens")
@@ -320,6 +396,10 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 commentSendEditText.text = null
+                                commentSendEditText.hint =
+                                    "Tek seferde yalnızca 1 yorum yapılabilir"
+                                yorumYapildi = true
+                                gifOrImageBtn.visibility = View.GONE
                                 recyclerCommentViewAdapter.notifyDataSetChanged()
                                 verileriAl()
                                 if (guncelKullaniciEmail != selectedPostEmail) {

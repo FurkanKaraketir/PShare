@@ -30,6 +30,7 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
     lateinit var auth: FirebaseAuth
     private lateinit var guncelKullanici: String
     private lateinit var documentName: String
+
     private lateinit var takipArray: ArrayList<String>
 
     class PostHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -150,6 +151,7 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
             if (guncelKullanici == postList[position].kullaniciEmail) {
                 binding.followButton.visibility = View.GONE
                 binding.unFollowButton.visibility = View.GONE
+                binding.deleteButton.visibility = View.VISIBLE
             } else {
                 database.collection("Users").whereEqualTo("useremail", guncelKullanici)
                     .addSnapshotListener { snapshot, exception ->

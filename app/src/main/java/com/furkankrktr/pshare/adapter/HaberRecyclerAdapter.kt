@@ -108,6 +108,7 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
             if (guncelKullanici == postList[position].kullaniciEmail) {
                 binding.followButton.visibility = View.GONE
                 binding.unFollowButton.visibility = View.GONE
+                binding.deleteButton.visibility = View.VISIBLE
             } else {
                 database.collection("Users").whereEqualTo("useremail", guncelKullanici)
                     .addSnapshotListener { snapshot, exception ->
