@@ -1,7 +1,10 @@
 package com.furkankrktr.pshare
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.ViewAnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlin.math.hypot
 
 class UserEmailFilterActivity : AppCompatActivity() {
 
@@ -26,6 +30,7 @@ class UserEmailFilterActivity : AppCompatActivity() {
     private var postList = ArrayList<Post>()
 
 
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityUserEmailFilterBinding.inflate(layoutInflater)
@@ -51,6 +56,26 @@ class UserEmailFilterActivity : AppCompatActivity() {
             startActivity(intent)
         }
         verileriAl()
+
+        if (userEmailFilterPostAddBtn.visibility == View.INVISIBLE) {
+
+            userEmailFilterPostAddBtn.post {
+
+                val cx = userEmailFilterPostAddBtn.width / 2
+                val cy = userEmailFilterPostAddBtn.height / 2
+
+                val finalRadius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+                val anim = ViewAnimationUtils.createCircularReveal(
+                    userEmailFilterPostAddBtn,
+                    cx,
+                    cy,
+                    0f,
+                    finalRadius
+                )
+                userEmailFilterPostAddBtn.visibility = View.VISIBLE
+                anim.start()
+            }
+        }
 
 
     }

@@ -128,6 +128,11 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                 placeHolderYap(this)
             )
         }
+        selectedCommentImageView.setOnClickListener{
+            val intent = Intent(this, GorselActivity::class.java)
+            intent.putExtra("resim", selectedCommentImage)
+            startActivity(intent)
+        }
 
         database.collection("Users").whereEqualTo("useremail", selectedCommentEmail)
             .addSnapshotListener { snapshot, exception ->
@@ -146,6 +151,11 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                                     document.get("username") as String
                                 val profile = document.get("profileImage") as String
                                 profileImageReplyActivity.glider(profile, placeHolderYap(this))
+                                profileImageReplyActivity.setOnClickListener {
+                                    val intent = Intent(this, GorselActivity::class.java)
+                                    intent.putExtra("resim", profile)
+                                    startActivity(intent)
+                                }
                             }
                         } else {
                             replyToEmailText.text =

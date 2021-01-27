@@ -2,11 +2,14 @@
 
 package com.furkankrktr.pshare
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewAnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -25,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
+import kotlin.math.hypot
 
 
 class HaberlerActivity : AppCompatActivity() {
@@ -39,6 +43,7 @@ class HaberlerActivity : AppCompatActivity() {
     private var postList = ArrayList<Post>()
     private lateinit var apiService: APIService
 
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityHaberlerBinding.inflate(layoutInflater)
@@ -67,6 +72,27 @@ class HaberlerActivity : AppCompatActivity() {
 
         updateToken()
         verileriAl()
+
+        if (postAddButton.visibility == View.INVISIBLE) {
+
+            postAddButton.post {
+
+                val cx = postAddButton.width / 2
+                val cy = postAddButton.height / 2
+
+                val finalRadius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+                val anim = ViewAnimationUtils.createCircularReveal(
+                    postAddButton,
+                    cx,
+                    cy,
+                    0f,
+                    finalRadius
+                )
+                postAddButton.visibility = View.VISIBLE
+                anim.start()
+            }
+        }
+
 
     }
 

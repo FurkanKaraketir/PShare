@@ -1,8 +1,11 @@
 package com.furkankrktr.pshare
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.ViewAnimationUtils
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlin.math.hypot
 
 class HashtagActivity : AppCompatActivity() {
 
@@ -25,6 +29,7 @@ class HashtagActivity : AppCompatActivity() {
 
     private var postList = ArrayList<Post>()
 
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityHashtagBinding.inflate(layoutInflater)
@@ -52,6 +57,26 @@ class HashtagActivity : AppCompatActivity() {
         }
 
         verileriAl()
+
+        if (hashtagPostAddBtn.visibility == View.INVISIBLE) {
+
+            hashtagPostAddBtn.post {
+
+                val cx = hashtagPostAddBtn.width / 2
+                val cy = hashtagPostAddBtn.height / 2
+
+                val finalRadius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+                val anim = ViewAnimationUtils.createCircularReveal(
+                    hashtagPostAddBtn,
+                    cx,
+                    cy,
+                    0f,
+                    finalRadius
+                )
+                hashtagPostAddBtn.visibility = View.VISIBLE
+                anim.start()
+            }
+        }
     }
 
     private fun verileriAl() {

@@ -74,6 +74,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
     private lateinit var sendButton: FloatingActionButton
     private lateinit var commentSendEditText: EditText
     private lateinit var commentToPostText: TextView
+    private lateinit var profile: String
     private lateinit var commentToEmailText: TextView
     private var secilenGorsel: Uri? = null
     private var gifOrImage: Boolean? = null
@@ -149,8 +150,13 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                             for (document in documents) {
                                 commentToEmailText.text =
                                     document.get("username") as String
-                                val profile = document.get("profileImage") as String
+                                profile = document.get("profileImage") as String
                                 profileImageCommentActivity.glider(profile, placeHolderYap(this))
+                                profileImageCommentActivity.setOnClickListener {
+                                    val intent = Intent(this, GorselActivity::class.java)
+                                    intent.putExtra("resim", profile)
+                                    startActivity(intent)
+                                }
                             }
                         } else {
                             commentToEmailText.text =
@@ -162,6 +168,12 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                     }
                 }
             }
+
+        selectedPostImageView.setOnClickListener {
+            val intent = Intent(this, GorselActivity::class.java)
+            intent.putExtra("resim", selectedPostImage)
+            startActivity(intent)
+        }
 
         commentToPostText.text = selectedPostText
 
