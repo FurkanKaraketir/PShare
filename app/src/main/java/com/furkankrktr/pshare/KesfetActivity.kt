@@ -8,6 +8,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewAnimationUtils
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlin.math.hypot
 
 class KesfetActivity : AppCompatActivity() {
 
@@ -33,6 +36,7 @@ class KesfetActivity : AppCompatActivity() {
     private lateinit var filteredList: ArrayList<Post>
     private var postList = ArrayList<Post>()
 
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityKesfetBinding.inflate(layoutInflater)
@@ -82,6 +86,26 @@ class KesfetActivity : AppCompatActivity() {
         kesfetPostAddBtn.setOnClickListener {
             val intent = Intent(this, FotografPaylasmaActivity::class.java)
             startActivity(intent)
+        }
+
+        if (kesfetPostAddBtn.visibility == View.INVISIBLE) {
+
+            kesfetPostAddBtn.post {
+
+                val cx = kesfetPostAddBtn.width / 2
+                val cy = kesfetPostAddBtn.height / 2
+
+                val finalRadius = hypot(cx.toDouble(), cy.toDouble()).toFloat()
+                val anim = ViewAnimationUtils.createCircularReveal(
+                    kesfetPostAddBtn,
+                    cx,
+                    cy,
+                    0f,
+                    finalRadius
+                )
+                kesfetPostAddBtn.visibility = View.VISIBLE
+                anim.start()
+            }
         }
 
         verileriAl()

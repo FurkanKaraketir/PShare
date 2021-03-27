@@ -35,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        android:visibility="invisible"
         android:layout_margin="12dp"
         android:contentDescription="@string/payla_m_yap"
         android:src="@drawable/ic_baseline_add_circle_outline_24" />

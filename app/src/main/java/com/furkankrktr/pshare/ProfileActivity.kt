@@ -1,6 +1,7 @@
 package com.furkankrktr.pshare
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -21,6 +22,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
 import de.hdodenhof.circleimageview.CircleImageView
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -37,6 +39,8 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var progressCircularProfile: ProgressBar
     private lateinit var userNameView: TextView
     private lateinit var kaydetBtn: Button
+    private lateinit var takipEdilenTextView: TextView
+    private lateinit var takipciTextView: TextView
 
     private var a: String = ""
     private var secilenGorsel: Uri? = null
@@ -54,6 +58,8 @@ class ProfileActivity : AppCompatActivity() {
         profileImageAdd = binding.profileImageAdd
         userNameChangeEditText = binding.userNameChangeEditText
         progressCircularProfile = binding.progressCircularProfile
+        takipEdilenTextView = binding.takipEdilenText
+        takipciTextView = binding.takipciText
         userNameView = binding.userNameView
 
 
@@ -218,6 +224,7 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun verileriAl() {
         database.collection("Users").whereEqualTo("useremail", guncelKullanici)
             .addSnapshotListener { snapshot, exception ->
@@ -236,7 +243,13 @@ class ProfileActivity : AppCompatActivity() {
                                         "https://media.giphy.com/media/VBfFv9oOZAvvi/giphy.gif"
                                 }
                                 a = profileImageURL
-
+                                val takipEdilen =
+                                    document.get("takipEdilenEmailler") as ArrayList<*>
+                                val takipciler = document.get("takipciler") as ArrayList<*>
+                                val realTakipciler = takipciler.size - 1
+                                val realTakip = takipEdilen.size - 1
+                                takipEdilenTextView.text = "Takip Edilen: " + realTakip.toString()
+                                takipciTextView.text = "Takipçiler: " + realTakipciler.toString()
                                 userNameView.text = serverUserName
                                 userName = serverUserName
                                 profileImageAdd.glider(profileImageURL, placeHolderYap(this))

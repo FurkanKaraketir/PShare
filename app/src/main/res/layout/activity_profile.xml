@@ -7,14 +7,46 @@
     tools:context=".ProfileActivity">
 
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profileImageAdd"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center_horizontal"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="25dp"
-        android:contentDescription="@string/profileimage"
-        android:src="@drawable/ic_baseline_add_a_photo_24" />
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImageAdd"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/profileimage"
+            android:src="@drawable/ic_baseline_add_a_photo_24" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/takipEdilenText"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/takipciText"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:text="" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -30,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text=""
-            android:textSize="17sp" >
+            android:textSize="17sp">
 
         </TextView>
 
@@ -51,9 +83,9 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
         android:hint="@string/yeni_kullan_c_ad"
-        android:textColorHint="@color/gri"
+        android:importantForAutofill="no"
         android:inputType="text"
-        android:importantForAutofill="no" />
+        android:textColorHint="@color/gri" />
 
     <Button
         android:id="@+id/kaydetBtn"
