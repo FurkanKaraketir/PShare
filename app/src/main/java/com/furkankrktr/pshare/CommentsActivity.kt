@@ -1,4 +1,7 @@
-@file:Suppress("DEPRECATION", "DEPRECATED_IDENTITY_EQUALS")
+@file:Suppress(
+    "DEPRECATION", "DEPRECATED_IDENTITY_EQUALS",
+    "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS"
+)
 
 
 package com.furkankrktr.pshare
@@ -496,7 +499,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
     }
 
 
-    fun verileriAl() {
+    private fun verileriAl() {
         database.collection("Yorumlar").whereEqualTo("selectedPost", selectedPost)
             .orderBy("tarih", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, exception ->
@@ -596,8 +599,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
     ) {
         val url = media.embedUrl!!
 
-        val hepsi: List<String>
-        hepsi = url.split('/')
+        val hepsi: List<String> = url.split('/')
 
         istenen = hepsi[hepsi.size - 1]
         a = "https://media.giphy.com/media/$istenen/giphy.gif"

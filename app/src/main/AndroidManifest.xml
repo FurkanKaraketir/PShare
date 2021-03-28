@@ -20,13 +20,21 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
         <activity
+            android:name=".TakipcilerActivity"
+            android:parentActivityName=".ProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TakipEdilenlerActivity"
+            android:parentActivityName=".ProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ProfileActivity"
             android:parentActivityName=".HaberlerActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".KesfetActivity"
             android:parentActivityName=".HaberlerActivity"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AddUserNameActivity"
             android:screenOrientation="portrait"

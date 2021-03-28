@@ -1,4 +1,6 @@
-@file:Suppress("DEPRECATION", "UNCHECKED_CAST")
+@file:Suppress("DEPRECATION", "UNCHECKED_CAST",
+    "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS"
+)
 
 package com.furkankrktr.pshare
 

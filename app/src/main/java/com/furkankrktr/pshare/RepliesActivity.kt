@@ -1,4 +1,6 @@
-@file:Suppress("DEPRECATION", "DEPRECATED_IDENTITY_EQUALS")
+@file:Suppress("DEPRECATION", "DEPRECATED_IDENTITY_EQUALS",
+    "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS"
+)
 
 package com.furkankrktr.pshare
 
@@ -555,8 +557,7 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
         val url = media.embedUrl!!
 
-        val hepsi: List<String>
-        hepsi = url.split('/')
+        val hepsi: List<String> = url.split('/')
 
         istenen = hepsi[hepsi.size - 1]
         a = "https://media.giphy.com/media/$istenen/giphy.gif"

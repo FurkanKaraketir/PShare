@@ -1,3 +1,5 @@
+@file:Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
 package com.furkankrktr.pshare
 
 import android.Manifest
@@ -74,6 +76,15 @@ class ProfileActivity : AppCompatActivity() {
         supportActionBar?.title = "Profil"
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        takipEdilenTextView.setOnClickListener {
+            val intent = Intent(this, TakipEdilenlerActivity::class.java)
+            startActivity(intent)
+        }
+        takipciTextView.setOnClickListener {
+            val intent = Intent(this, TakipcilerActivity::class.java)
+            startActivity(intent)
+        }
 
         userNameEditButton.setOnClickListener {
             userNameChangeEditText.visibility = View.VISIBLE
@@ -248,8 +259,8 @@ class ProfileActivity : AppCompatActivity() {
                                 val takipciler = document.get("takipciler") as ArrayList<*>
                                 val realTakipciler = takipciler.size - 1
                                 val realTakip = takipEdilen.size - 1
-                                takipEdilenTextView.text = "Takip Edilen: " + realTakip.toString()
-                                takipciTextView.text = "Takipçiler: " + realTakipciler.toString()
+                                takipEdilenTextView.text = "Takip Edilen: $realTakip"
+                                takipciTextView.text = "Takipçiler: $realTakipciler"
                                 userNameView.text = serverUserName
                                 userName = serverUserName
                                 profileImageAdd.glider(profileImageURL, placeHolderYap(this))

@@ -1,3 +1,5 @@
+@file:Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
 package com.furkankrktr.pshare
 
 import android.Manifest
@@ -396,8 +398,7 @@ open class FotografPaylasmaActivity : AppCompatActivity(),
     ) {
         val url = media.embedUrl!!
 
-        val hepsi: List<String>
-        hepsi = url.split('/')
+        val hepsi: List<String> = url.split('/')
 
         istenen = hepsi[hepsi.size - 1]
         a = "https://media.giphy.com/media/$istenen/giphy.gif"
