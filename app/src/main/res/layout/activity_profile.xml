@@ -34,15 +34,6 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="10dp"
                 android:text="" />
-
-            <TextView
-                android:id="@+id/takipciText"
-                style="@style/TextAppearance.AppCompat.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="10dp"
-                android:text="" />
         </LinearLayout>
 
     </LinearLayout>
@@ -104,5 +95,14 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="15dp"
         android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/versionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:text=""
+        android:textSize="20sp" />
 
 </LinearLayout>

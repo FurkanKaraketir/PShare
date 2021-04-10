@@ -147,13 +147,15 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
 
 
             binding.followButton.setOnClickListener {
+                val a = postList[position].kullaniciEmail
                 database.collection("Users").document(documentName)
                     .update(
                         "takipEdilenEmailler",
-                        FieldValue.arrayUnion(postList[position].kullaniciEmail)
+                        FieldValue.arrayUnion(a)
                     ).addOnSuccessListener {
                         binding.followButton.visibility = View.GONE
                         binding.unFollowButton.visibility = View.VISIBLE
+
                     }
             }
 
@@ -164,10 +166,11 @@ open class HaberRecyclerAdapter(private val postList: ArrayList<Post>) :
             unfollowAlert.setPositiveButton(
                 "TAKİBİ BIRAK"
             ) { _, _ ->
+                val a = postList[position].kullaniciEmail
                 database.collection("Users").document(documentName)
                     .update(
                         "takipEdilenEmailler",
-                        FieldValue.arrayRemove(postList[position].kullaniciEmail)
+                        FieldValue.arrayRemove(a)
                     ).addOnSuccessListener {
                         binding.followButton.visibility = View.VISIBLE
                         binding.unFollowButton.visibility = View.GONE

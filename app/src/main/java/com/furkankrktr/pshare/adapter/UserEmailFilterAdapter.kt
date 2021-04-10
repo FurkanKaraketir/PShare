@@ -153,13 +153,15 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
             }
 
             binding.followButton.setOnClickListener {
+                val a = postList[position].kullaniciEmail
                 database.collection("Users").document(documentName)
                     .update(
                         "takipEdilenEmailler",
-                        FieldValue.arrayUnion(postList[position].kullaniciEmail)
+                        FieldValue.arrayUnion(a)
                     ).addOnSuccessListener {
                         binding.followButton.visibility = View.GONE
                         binding.unFollowButton.visibility = View.VISIBLE
+
                     }
             }
             val unfollowAlert = AlertDialog.Builder(holder.itemView.context)
@@ -169,54 +171,56 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
             unfollowAlert.setPositiveButton(
                 "TAKİBİ BIRAK"
             ) { _, _ ->
+                val a = postList[position].kullaniciEmail
                 database.collection("Users").document(documentName)
                     .update(
                         "takipEdilenEmailler",
-                        FieldValue.arrayRemove(postList[position].kullaniciEmail)
+                        FieldValue.arrayRemove(a)
                     ).addOnSuccessListener {
                         binding.followButton.visibility = View.VISIBLE
                         binding.unFollowButton.visibility = View.GONE
                     }
-            }
-            unfollowAlert.setNegativeButton("İPTAL") { _, _ ->
-                Toast.makeText(
-                    holder.itemView.context,
-                    "İşlem iptal edildi",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
 
-            binding.unFollowButton.setOnClickListener {
-                unfollowAlert.show()
-            }
+                unfollowAlert.setNegativeButton("İPTAL") { _, _ ->
+                    Toast.makeText(
+                        holder.itemView.context,
+                        "İşlem iptal edildi",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                binding.unFollowButton.setOnClickListener {
+                    unfollowAlert.show()
+                }
 
 
-            binding.recyclerRowKullaniciYorum.text = postList[position].kullaniciYorum
-            binding.profileImage.setOnClickListener {
-                val intent = Intent(holder.itemView.context, GorselActivity::class.java)
-                database.collection("Users")
-                    .whereEqualTo("useremail", postList[position].kullaniciEmail)
-                    .addSnapshotListener { snapshot, exception ->
-                        if (exception != null) {
-                            Toast.makeText(
-                                holder.itemView.context,
-                                exception.localizedMessage,
-                                Toast.LENGTH_LONG
-                            ).show()
-                        } else {
-                            if (snapshot != null) {
-                                if (!snapshot.isEmpty) {
-                                    val documents = snapshot.documents
-                                    for (document in documents) {
-                                        val profile = document.get("profileImage") as String
-                                        intent.putExtra("resim", profile)
-                                        holder.itemView.context.startActivity(intent)
+                binding.recyclerRowKullaniciYorum.text = postList[position].kullaniciYorum
+                binding.profileImage.setOnClickListener {
+                    val intent = Intent(holder.itemView.context, GorselActivity::class.java)
+                    database.collection("Users")
+                        .whereEqualTo("useremail", postList[position].kullaniciEmail)
+                        .addSnapshotListener { snapshot, exception ->
+                            if (exception != null) {
+                                Toast.makeText(
+                                    holder.itemView.context,
+                                    exception.localizedMessage,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            } else {
+                                if (snapshot != null) {
+                                    if (!snapshot.isEmpty) {
+                                        val documents = snapshot.documents
+                                        for (document in documents) {
+                                            val profile = document.get("profileImage") as String
+                                            intent.putExtra("resim", profile)
+                                            holder.itemView.context.startActivity(intent)
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
 
+                }
             }
 
             if (postList[position].gorselUrl == "") {

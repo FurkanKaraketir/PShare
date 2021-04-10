@@ -1,10 +1,11 @@
-@file:Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+@file:Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "DEPRECATION")
 
 package com.furkankrktr.pshare
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -24,7 +25,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
 import de.hdodenhof.circleimageview.CircleImageView
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -40,9 +41,9 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var profileImageAdd: CircleImageView
     private lateinit var progressCircularProfile: ProgressBar
     private lateinit var userNameView: TextView
+    private lateinit var versionTextView: TextView
     private lateinit var kaydetBtn: Button
     private lateinit var takipEdilenTextView: TextView
-    private lateinit var takipciTextView: TextView
 
     private var a: String = ""
     private var secilenGorsel: Uri? = null
@@ -50,6 +51,8 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var userName: String
 
     private var i: Int = 0
+
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityProfileBinding.inflate(layoutInflater)
@@ -61,10 +64,16 @@ class ProfileActivity : AppCompatActivity() {
         userNameChangeEditText = binding.userNameChangeEditText
         progressCircularProfile = binding.progressCircularProfile
         takipEdilenTextView = binding.takipEdilenText
-        takipciTextView = binding.takipciText
         userNameView = binding.userNameView
-
-
+        versionTextView = binding.versionTextView
+        try {
+            val pInfo: PackageInfo =
+                this.packageManager.getPackageInfo(this.packageName, 0)
+            val version = pInfo.versionName
+            versionTextView.text = "v$version"
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
         userNameChangeEditText.visibility = View.GONE
         kaydetBtn.visibility = View.GONE
         storage = FirebaseStorage.getInstance()
@@ -81,10 +90,7 @@ class ProfileActivity : AppCompatActivity() {
             val intent = Intent(this, TakipEdilenlerActivity::class.java)
             startActivity(intent)
         }
-        takipciTextView.setOnClickListener {
-            val intent = Intent(this, TakipcilerActivity::class.java)
-            startActivity(intent)
-        }
+
 
         userNameEditButton.setOnClickListener {
             userNameChangeEditText.visibility = View.VISIBLE
@@ -256,11 +262,9 @@ class ProfileActivity : AppCompatActivity() {
                                 a = profileImageURL
                                 val takipEdilen =
                                     document.get("takipEdilenEmailler") as ArrayList<*>
-                                val takipciler = document.get("takipciler") as ArrayList<*>
-                                val realTakipciler = takipciler.size - 1
                                 val realTakip = takipEdilen.size - 1
                                 takipEdilenTextView.text = "Takip Edilen: $realTakip"
-                                takipciTextView.text = "Takipçiler: $realTakipciler"
+
                                 userNameView.text = serverUserName
                                 userName = serverUserName
                                 profileImageAdd.glider(profileImageURL, placeHolderYap(this))

@@ -48,8 +48,8 @@
 
             <ImageView
                 android:id="@+id/recyclerRowImageView"
-                android:layout_width="300dp"
-                android:layout_height="200dp"
+                android:layout_width="350dp"
+                android:layout_height="250dp"
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
                 android:contentDescription="@string/image" />

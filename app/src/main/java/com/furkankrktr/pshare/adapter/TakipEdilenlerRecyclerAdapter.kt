@@ -1,4 +1,4 @@
-@file:Suppress("UNCHECKED_CAST","RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+@file:Suppress("UNCHECKED_CAST", "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 
 package com.furkankrktr.pshare.adapter
 
@@ -38,7 +38,7 @@ class TakipEdilenlerRecyclerAdapter(private val userList: ArrayList<User>) :
     }
 
     override fun onBindViewHolder(holder: UserHolder, position: Int) {
-        with(holder){
+        with(holder) {
             database = FirebaseFirestore.getInstance()
             auth = FirebaseAuth.getInstance()
             if (auth.currentUser != null) {
@@ -104,7 +104,7 @@ class TakipEdilenlerRecyclerAdapter(private val userList: ArrayList<User>) :
                                     takipArray =
                                         document.get("takipEdilenEmailler") as ArrayList<String>
                                 }
-                                if (takipArray.contains(userList[position].kullaniciEmail)) {
+                                if (userList.size > 0 && takipArray.contains(userList[position].kullaniciEmail)) {
 
                                     binding.followButton.visibility = View.GONE
                                     binding.unFollowButton.visibility = View.VISIBLE
@@ -125,15 +125,17 @@ class TakipEdilenlerRecyclerAdapter(private val userList: ArrayList<User>) :
                     }
                 }
             binding.followButton.setOnClickListener {
+                val a = userList[position].kullaniciEmail
                 database.collection("Users").document(documentName)
                     .update(
                         "takipEdilenEmailler",
-                        FieldValue.arrayUnion(userList[position].kullaniciEmail)
+                        FieldValue.arrayUnion(a)
                     ).addOnSuccessListener {
                         binding.followButton.visibility = View.GONE
                         binding.unFollowButton.visibility = View.VISIBLE
-                        notifyDataSetChanged()
+
                     }
+
             }
 
             val unfollowAlert = AlertDialog.Builder(holder.itemView.context)
@@ -143,14 +145,14 @@ class TakipEdilenlerRecyclerAdapter(private val userList: ArrayList<User>) :
             unfollowAlert.setPositiveButton(
                 "TAKİBİ BIRAK"
             ) { _, _ ->
+                val a = userList[position].kullaniciEmail
                 database.collection("Users").document(documentName)
                     .update(
                         "takipEdilenEmailler",
-                        FieldValue.arrayRemove(userList[position].kullaniciEmail)
+                        FieldValue.arrayRemove(a)
                     ).addOnSuccessListener {
                         binding.followButton.visibility = View.VISIBLE
                         binding.unFollowButton.visibility = View.GONE
-                        notifyItemRemoved(position)
                     }
             }
             unfollowAlert.setNegativeButton("İPTAL") { _, _ ->

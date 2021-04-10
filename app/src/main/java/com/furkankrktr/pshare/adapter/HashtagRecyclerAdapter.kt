@@ -110,13 +110,15 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
                 }
 
             binding.followButton.setOnClickListener {
+                val a = postList[position].kullaniciEmail
                 database.collection("Users").document(documentName)
                     .update(
                         "takipEdilenEmailler",
-                        FieldValue.arrayUnion(postList[position].kullaniciEmail)
+                        FieldValue.arrayUnion(a)
                     ).addOnSuccessListener {
                         binding.followButton.visibility = View.GONE
                         binding.unFollowButton.visibility = View.VISIBLE
+
                     }
             }
             val unfollowAlert = AlertDialog.Builder(holder.itemView.context)
@@ -126,14 +128,16 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
             unfollowAlert.setPositiveButton(
                 "TAKİBİ BIRAK"
             ) { _, _ ->
+                val a = postList[position].kullaniciEmail
                 database.collection("Users").document(documentName)
                     .update(
                         "takipEdilenEmailler",
-                        FieldValue.arrayRemove(postList[position].kullaniciEmail)
+                        FieldValue.arrayRemove(a)
                     ).addOnSuccessListener {
                         binding.followButton.visibility = View.VISIBLE
                         binding.unFollowButton.visibility = View.GONE
                     }
+
             }
             unfollowAlert.setNegativeButton("İPTAL") { _, _ ->
                 Toast.makeText(

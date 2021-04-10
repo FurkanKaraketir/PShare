@@ -20,10 +20,6 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
         <activity
-            android:name=".TakipcilerActivity"
-            android:parentActivityName=".ProfileActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".TakipEdilenlerActivity"
             android:parentActivityName=".ProfileActivity"
             android:screenOrientation="portrait" />

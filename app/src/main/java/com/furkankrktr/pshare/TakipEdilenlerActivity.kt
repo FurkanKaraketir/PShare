@@ -95,17 +95,16 @@ class TakipEdilenlerActivity : AppCompatActivity() {
                                                                     userId
                                                                 )
                                                             userList.add(indirilenUser)
+                                                            recyclerUserViewAdapter.notifyDataSetChanged()
 
 
                                                         }
-                                                        recyclerUserViewAdapter.notifyDataSetChanged()
 
                                                     }
                                                 }
                                             }
                                         }
                                 }
-
                             }
                         }
                     }
