@@ -46,7 +46,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
 import de.hdodenhof.circleimageview.CircleImageView
@@ -454,7 +454,7 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
 
     private fun updateToken() {
-        val refreshToken: String = FirebaseInstanceId.getInstance().token.toString()
+        val refreshToken: String = FirebaseMessaging.getInstance().token.toString()
         val token = Token(refreshToken)
         FirebaseDatabase.getInstance().getReference("Tokens")
             .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(token)

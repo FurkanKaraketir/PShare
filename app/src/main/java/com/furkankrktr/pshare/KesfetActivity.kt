@@ -24,6 +24,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.hypot
 
 class KesfetActivity : AppCompatActivity() {
@@ -68,8 +70,8 @@ class KesfetActivity : AppCompatActivity() {
                 filteredList = ArrayList()
                 if (p0.toString() != "") {
                     for (item in postList) {
-                        if (item.kullaniciEmail.toLowerCase()
-                                .contains(p0.toString().toLowerCase())
+                        if (item.kullaniciEmail.lowercase(Locale.getDefault())
+                                .contains(p0.toString().lowercase(Locale.getDefault()))
                         ) {
                             filteredList.add(item)
                         }
