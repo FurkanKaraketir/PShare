@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">PShare</string>
     <string name="title_activity_gorsel">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
@@ -43,8 +43,9 @@
     <string name="kaydet">Kaydet</string>
     <string name="hen_z_hesab_n_z_yok_mu_kay_t_olun"><u>Henüz hesabınız yok mu? Kayıt olun.</u></string>
     <string name="hesab_n_z_var_m_giri_yap_n"><u>Hesabınız var mı? Giriş yapın.</u></string>
-    <string name="kullan_c_ad_le_ara">Kullanıcı Adı İle Ara...</string>
+    <string name="kullan_c_ad_le_ara">Kullanıcı Adı İle Ara…</string>
     <string name="ndir">İndir</string>
     <string name="postu_i_in_yorumlar">Postu için yorumlar</string>
     <string name="kay_t_olarak_gizlilik_politikam_z_kabul_etmi_olursunuz">Kayıt olarak <u>gizlilik politikamızı</u> kabul etmiş olursunuz.</string>
+    <string name="web_client_id" tools:ignore="TypographyDashes">942903515070-96c24bsqjk70rld6he6632q3sgngq6v8.apps.googleusercontent.com</string>
 </resources>

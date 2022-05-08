@@ -26,21 +26,19 @@
 
         <Button
             android:id="@+id/mainGirisYap"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="@string/giri_yap"
-            android:textColor="@color/gri" />
+            android:text="@string/giri_yap" />
 
         <Button
             android:id="@+id/mainKayitOl"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="@string/kay_t_ol"
-            android:textColor="@color/gri" />
+            android:text="@string/kay_t_ol" />
     </LinearLayout>
 
 

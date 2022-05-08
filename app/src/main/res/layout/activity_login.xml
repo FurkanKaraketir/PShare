@@ -12,8 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
+        android:autofillHints="username"
         android:hint="@string/kullan_c_ad"
-        android:importantForAutofill="no"
+        android:importantForAutofill="yes"
         android:inputType="text"
         android:textColorHint="@color/gri"
         tools:ignore="TextFields" />
@@ -26,8 +27,9 @@
         android:layout_below="@id/emailLoginText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
+        android:autofillHints="password"
         android:hint="@string/kullan_c_ifre"
-        android:importantForAutofill="no"
+        android:importantForAutofill="yes"
         android:inputType="textPassword"
         android:textColorHint="@color/gri"
         app:passwordToggleEnabled="true" />
@@ -53,5 +55,4 @@
         android:text="@string/hen_z_hesab_n_z_yok_mu_kay_t_olun"
         android:textColor="@android:color/holo_blue_dark"
         android:textStyle="italic" />
-
 </RelativeLayout>

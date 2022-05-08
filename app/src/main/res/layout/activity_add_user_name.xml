@@ -22,9 +22,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:hint="@string/kullan_c_ad"
-        android:textColorHint="@color/gri"
+        android:importantForAutofill="no"
         android:inputType="text"
-        android:importantForAutofill="no" />
+        android:textColorHint="@color/gri" />
 
     <Button
         android:id="@+id/addUserNameBtn"

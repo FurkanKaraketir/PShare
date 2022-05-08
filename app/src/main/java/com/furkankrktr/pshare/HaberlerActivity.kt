@@ -1,4 +1,5 @@
-@file:Suppress("DEPRECATION", "UNCHECKED_CAST",
+@file:Suppress(
+    "DEPRECATION", "UNCHECKED_CAST",
     "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS"
 )
 
@@ -157,7 +158,7 @@ class HaberlerActivity : AppCompatActivity() {
             }
             R.id.WebSite -> {
                 val intent = Intent(this, WebViewActivity::class.java)
-                intent.putExtra("link", "https://furkankrktr.wordpress.com/")
+                intent.putExtra("link", "https://furkankaraketir.com/")
                 startActivity(intent)
             }
             R.id.search -> {
@@ -176,6 +177,7 @@ class HaberlerActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun verileriAl() {
         database.collection("Users").whereEqualTo("useremail", guncelKullaniciEmail)
             .addSnapshotListener { snapshot, exception ->

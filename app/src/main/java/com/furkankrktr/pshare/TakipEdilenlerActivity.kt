@@ -6,6 +6,7 @@
 
 package com.furkankrktr.pshare
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -30,6 +31,7 @@ class TakipEdilenlerActivity : AppCompatActivity() {
 
     private var userList = ArrayList<User>()
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityTakipEdilenlerBinding.inflate(layoutInflater)

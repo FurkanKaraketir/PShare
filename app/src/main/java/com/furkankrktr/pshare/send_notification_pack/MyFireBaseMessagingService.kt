@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.media.RingtoneManager
-import android.os.Build
 import androidx.annotation.NonNull
 import androidx.core.app.NotificationCompat
 import com.furkankrktr.pshare.CommentsActivity
@@ -70,15 +69,13 @@ class MyFireBaseMessagingService : FirebaseMessagingService() {
             addNextIntentWithParentStack(resultIntent)
             getPendingIntent(50, PendingIntent.FLAG_UPDATE_CURRENT)
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Bildirimler"
-            val descriptionText = "Yorum ve Yanıt Bildirimleri"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val mChannel = NotificationChannel(212121.toString(), name, importance)
-            mChannel.description = descriptionText
-            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(mChannel)
-        }
+        val name = "Bildirimler"
+        val descriptionText = "Yorum ve Yanıt Bildirimleri"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val mChannel = NotificationChannel(212121.toString(), name, importance)
+        mChannel.description = descriptionText
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(mChannel)
 
         val builder = NotificationCompat.Builder(applicationContext)
             .setSmallIcon(R.drawable.ic_baseline_attach_file_24)
@@ -88,6 +85,7 @@ class MyFireBaseMessagingService : FirebaseMessagingService() {
             .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
             .setContentIntent(resultPendingIntent)
             .setAutoCancel(true)
+
         val manager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.notify(0, builder.build())

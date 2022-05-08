@@ -80,6 +80,7 @@ class UserEmailFilterActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun verileriAl() {
         database.collection("Users").whereEqualTo("useremail", selectedEmail)
             .addSnapshotListener { snapshot, exception ->

@@ -1,9 +1,9 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">#0AA1DD</item>
+        <item name="colorPrimaryDark">#2155CD</item>
+        <item name="colorAccent">#00DFFF</item>
     </style>
 
     <style name="FullscreenTheme" parent="AppTheme">

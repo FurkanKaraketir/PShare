@@ -90,7 +90,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
     private var commentList = ArrayList<Comment>()
     private lateinit var apiService: APIService
 
-    @SuppressLint("RestrictedApi")
+    @SuppressLint("RestrictedApi", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityCommentsBinding.inflate(layoutInflater)
@@ -477,6 +477,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)
@@ -499,6 +500,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun verileriAl() {
         database.collection("Yorumlar").whereEqualTo("selectedPost", selectedPost)
             .orderBy("tarih", Query.Direction.ASCENDING)
@@ -637,7 +639,7 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                 }
             }
 
-            override fun onFailure(call: Call<MyResponse?>, t: Throwable?) {
+            override fun onFailure(call: Call<MyResponse?>, t: Throwable) {
 
             }
         })

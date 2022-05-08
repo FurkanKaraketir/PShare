@@ -22,7 +22,6 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var passwordRegisterText: EditText
     private lateinit var kayitOlButton: Button
     private lateinit var registerToLoginButton: TextView
-    private lateinit var privacyAndPolicy: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +33,6 @@ class RegisterActivity : AppCompatActivity() {
         passwordRegisterText = binding.passwordRegisterText
         kayitOlButton = binding.registerKayitOl
         registerToLoginButton = binding.registerToLoginButton
-        privacyAndPolicy = binding.privacyAndPolicy
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
@@ -124,14 +122,6 @@ class RegisterActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
-        }
-        privacyAndPolicy.setOnClickListener {
-            val intent = Intent(this, WebViewActivity::class.java)
-            intent.putExtra(
-                "link",
-                "https://furkankrktr.wordpress.com/2021/01/16/pshare-gizlilik-politikasi/"
-            )
-            startActivity(intent)
         }
 
     }

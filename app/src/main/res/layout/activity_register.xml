@@ -12,8 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
+        android:autofillHints="username"
         android:hint="@string/kullan_c_ad"
-        android:importantForAutofill="no"
+        android:importantForAutofill="yes"
         android:inputType="text"
         android:textColorHint="@color/gri" />
 
@@ -25,8 +26,9 @@
         android:layout_below="@id/userNameRegisterText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
+        android:autofillHints="emailAddress"
         android:hint="@string/kullan_c_email"
-        android:importantForAutofill="no"
+        android:importantForAutofill="yes"
         android:inputType="textEmailAddress"
         android:textColorHint="@color/gri" />
 
@@ -38,22 +40,22 @@
         android:layout_below="@id/emailRegisterText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
+        android:autofillHints="password"
         android:hint="@string/kullan_c_ifre"
-        android:importantForAutofill="no"
+        android:importantForAutofill="yes"
         android:inputType="textPassword"
         android:textColorHint="@color/gri"
         app:passwordToggleEnabled="true" />
 
     <Button
         android:id="@+id/registerKayitOl"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/passwordRegisterText"
         android:layout_centerHorizontal="true"
         android:layout_margin="30dp"
-        android:text="@string/kay_t_ol"
-        android:textColor="@color/gri" />
+        android:text="@string/kay_t_ol" />
 
     <TextView
         android:id="@+id/registerToLoginButton"
@@ -65,15 +67,5 @@
         android:textColor="@android:color/holo_blue_dark"
         android:textStyle="italic" />
 
-    <TextView
-        android:id="@+id/privacyAndPolicy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/registerToLoginButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:text="@string/kay_t_olarak_gizlilik_politikam_z_kabul_etmi_olursunuz"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textStyle="italic" />
 
 </RelativeLayout>

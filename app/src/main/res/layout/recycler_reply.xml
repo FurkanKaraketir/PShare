@@ -46,8 +46,11 @@
                 android:id="@+id/replyImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:contentDescription="@string/gif_payla" />
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/image"
+                android:maxHeight="200dp"
+                android:scaleType="fitCenter" />
 
 
             <TextView

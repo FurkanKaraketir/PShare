@@ -1,4 +1,5 @@
-@file:Suppress("DEPRECATION", "DEPRECATED_IDENTITY_EQUALS",
+@file:Suppress(
+    "DEPRECATION", "DEPRECATED_IDENTITY_EQUALS",
     "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS"
 )
 
@@ -87,7 +88,7 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     private lateinit var apiService: APIService
     private var yorumYapildi: Boolean = false
 
-    @SuppressLint("RestrictedApi")
+    @SuppressLint("RestrictedApi", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityRepliesBinding.inflate(layoutInflater)
@@ -130,7 +131,7 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                 placeHolderYap(this)
             )
         }
-        selectedCommentImageView.setOnClickListener{
+        selectedCommentImageView.setOnClickListener {
             val intent = Intent(this, GorselActivity::class.java)
             intent.putExtra("resim", selectedCommentImage)
             startActivity(intent)
@@ -482,12 +483,13 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                 }
             }
 
-            override fun onFailure(call: Call<MyResponse?>, t: Throwable?) {
+            override fun onFailure(call: Call<MyResponse?>, t: Throwable) {
 
             }
         })
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun verileriAl() {
         database.collection("Yanıtlar").whereEqualTo("selectedComment", selectedComment)
             .orderBy("tarih", Query.Direction.ASCENDING)
@@ -584,6 +586,7 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)

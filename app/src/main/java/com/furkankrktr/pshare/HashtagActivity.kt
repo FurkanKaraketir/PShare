@@ -79,6 +79,7 @@ class HashtagActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun verileriAl() {
         database.collection("Post")
             .orderBy("tarih", Query.Direction.DESCENDING)

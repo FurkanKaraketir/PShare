@@ -48,11 +48,13 @@
 
             <ImageView
                 android:id="@+id/recyclerRowImageView"
-                android:layout_width="350dp"
-                android:layout_height="250dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:contentDescription="@string/image" />
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/image"
+                android:maxHeight="400dp"
+                android:scaleType="fitCenter" />
 
 
             <TextView
@@ -84,7 +86,10 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_margin="7dp"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="7dp"
                     android:text="@string/_0_yorum"
                     android:textSize="12sp"
                     tools:ignore="RelativeOverlap" />
