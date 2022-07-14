@@ -14,9 +14,6 @@
         android:title="@string/profil"
         app:showAsAction="always" />
     <item
-        android:id="@+id/themeChange"
-        android:title="@string/tema_de_i_tir" />
-    <item
         android:id="@+id/webSiteButton"
         android:title="@string/web_sitesi" />
     <item

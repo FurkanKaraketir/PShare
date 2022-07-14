@@ -7,7 +7,6 @@ package com.furkankrktr.pshare
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -15,7 +14,6 @@ import android.view.View
 import android.view.ViewAnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.furkankrktr.pshare.adapter.HaberRecyclerAdapter
@@ -41,7 +39,6 @@ class HaberlerActivity : AppCompatActivity() {
     private lateinit var recyclerViewAdapter: HaberRecyclerAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var guncelKullaniciEmail: String
-    private lateinit var theme: String
     private lateinit var takipArray: ArrayList<String>
     private var postList = ArrayList<Post>()
     private lateinit var apiService: APIService
@@ -116,46 +113,6 @@ class HaberlerActivity : AppCompatActivity() {
                 finish()
 
             }
-            R.id.temaDegistir -> {
-                when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-                    Configuration.UI_MODE_NIGHT_YES -> {
-                        database.collection("Users").whereEqualTo("useremail", guncelKullaniciEmail)
-                            .addSnapshotListener { snapshot, exception ->
-                                if (exception == null) {
-
-                                    if (snapshot != null) {
-                                        if (!snapshot.isEmpty) {
-                                            val documents = snapshot.documents
-                                            for (document in documents) {
-                                                database.collection("Users")
-                                                    .document(document.id)
-                                                    .update("theme", "light")
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                    }
-                    Configuration.UI_MODE_NIGHT_NO -> {
-                        database.collection("Users").whereEqualTo("useremail", guncelKullaniciEmail)
-                            .addSnapshotListener { snapshot, exception ->
-                                if (exception == null) {
-
-                                    if (snapshot != null) {
-                                        if (!snapshot.isEmpty) {
-                                            val documents = snapshot.documents
-                                            for (document in documents) {
-                                                database.collection("Users")
-                                                    .document(document.id)
-                                                    .update("theme", "dark")
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                    }
-                }
-            }
             R.id.WebSite -> {
                 val intent = Intent(this, WebViewActivity::class.java)
                 intent.putExtra("link", "https://furkankaraketir.com/")
@@ -180,34 +137,53 @@ class HaberlerActivity : AppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     private fun verileriAl() {
         database.collection("Users").whereEqualTo("useremail", guncelKullaniciEmail)
-            .addSnapshotListener { snapshot, exception ->
-                if (exception != null) {
-                    theme = "dark"
-                } else {
-                    if (snapshot != null) {
-                        if (!snapshot.isEmpty) {
-                            val documents = snapshot.documents
-                            for (document in documents) {
-                                theme = document.get("theme") as String
-                                takipArray =
-                                    document.get("takipEdilenEmailler") as ArrayList<String>
+            .addSnapshotListener { snapshot, _ ->
+
+                if (snapshot != null) {
+                    if (!snapshot.isEmpty) {
+                        val documents = snapshot.documents
+                        for (document in documents) {
+                            takipArray =
+                                document.get("takipEdilenEmailler") as ArrayList<String>
 
 
-                                database.collection("Post")
-                                    .whereIn("kullaniciemail", takipArray)
-                                    .orderBy("tarih", Query.Direction.DESCENDING)
-                                    .addSnapshotListener { snapshot2, exception2 ->
-                                        if (exception2 != null) {
-                                            println(exception2)
-                                        } else {
-                                            if (snapshot2 != null) {
-                                                if (!snapshot2.isEmpty) {
-                                                    val documents2 = snapshot2.documents
+                            database.collection("Post")
+                                .whereIn("kullaniciemail", takipArray)
+                                .orderBy("tarih", Query.Direction.DESCENDING)
+                                .addSnapshotListener { snapshot2, exception2 ->
+                                    if (exception2 != null) {
+                                        println(exception2)
+                                    } else {
+                                        if (snapshot2 != null) {
+                                            if (!snapshot2.isEmpty) {
+                                                val documents2 = snapshot2.documents
 
-                                                    postList.clear()
+                                                postList.clear()
 
-                                                    for (document2 in documents2) {
+                                                for (document2 in documents2) {
+                                                    try {
+                                                        val kullaniciEmail =
+                                                            document2.get("kullaniciemail") as String
+                                                        val kullaniciYorum =
+                                                            document2.get("kullaniciyorum") as String
+                                                        val gorselUrl =
+                                                            document2.get("gorselurl") as String
+                                                        val postId =
+                                                            document2.get("postId") as String
+                                                        val kullaniciUID =
+                                                            document2.get("userID") as String
+                                                        val indirilenPost =
+                                                            Post(
+                                                                kullaniciEmail,
+                                                                kullaniciYorum,
+                                                                gorselUrl,
+                                                                postId,
+                                                                kullaniciUID
+                                                            )
+                                                        postList.add(indirilenPost)
+                                                    } catch (e: Exception) {
                                                         try {
+
                                                             val kullaniciEmail =
                                                                 document2.get("kullaniciemail") as String
                                                             val kullaniciYorum =
@@ -217,7 +193,7 @@ class HaberlerActivity : AppCompatActivity() {
                                                             val postId =
                                                                 document2.get("postId") as String
                                                             val kullaniciUID =
-                                                                document2.get("userID") as String
+                                                                "M6OZguiPKVQs6Z2qfh9HCntoKQi2"
                                                             val indirilenPost =
                                                                 Post(
                                                                     kullaniciEmail,
@@ -226,71 +202,42 @@ class HaberlerActivity : AppCompatActivity() {
                                                                     postId,
                                                                     kullaniciUID
                                                                 )
+
                                                             postList.add(indirilenPost)
                                                         } catch (e: Exception) {
-                                                            try {
+                                                            val kullaniciEmail =
+                                                                document2.get("kullaniciemail") as String
+                                                            val kullaniciYorum =
+                                                                document2.get("kullaniciyorum") as String
+                                                            val gorselUrl = ""
+                                                            val postId =
+                                                                document2.get("postId") as String
+                                                            val kullaniciUID =
+                                                                "M6OZguiPKVQs6Z2qfh9HCntoKQi2"
+                                                            val indirilenPost =
+                                                                Post(
+                                                                    kullaniciEmail,
+                                                                    kullaniciYorum,
+                                                                    gorselUrl,
+                                                                    postId,
+                                                                    kullaniciUID
+                                                                )
 
-                                                                val kullaniciEmail =
-                                                                    document2.get("kullaniciemail") as String
-                                                                val kullaniciYorum =
-                                                                    document2.get("kullaniciyorum") as String
-                                                                val gorselUrl =
-                                                                    document2.get("gorselurl") as String
-                                                                val postId =
-                                                                    document2.get("postId") as String
-                                                                val kullaniciUID =
-                                                                    "M6OZguiPKVQs6Z2qfh9HCntoKQi2"
-                                                                val indirilenPost =
-                                                                    Post(
-                                                                        kullaniciEmail,
-                                                                        kullaniciYorum,
-                                                                        gorselUrl,
-                                                                        postId,
-                                                                        kullaniciUID
-                                                                    )
-
-                                                                postList.add(indirilenPost)
-                                                            } catch (e: Exception) {
-                                                                val kullaniciEmail =
-                                                                    document2.get("kullaniciemail") as String
-                                                                val kullaniciYorum =
-                                                                    document2.get("kullaniciyorum") as String
-                                                                val gorselUrl = ""
-                                                                val postId =
-                                                                    document2.get("postId") as String
-                                                                val kullaniciUID =
-                                                                    "M6OZguiPKVQs6Z2qfh9HCntoKQi2"
-                                                                val indirilenPost =
-                                                                    Post(
-                                                                        kullaniciEmail,
-                                                                        kullaniciYorum,
-                                                                        gorselUrl,
-                                                                        postId,
-                                                                        kullaniciUID
-                                                                    )
-
-                                                                postList.add(indirilenPost)
-                                                            }
-
+                                                            postList.add(indirilenPost)
                                                         }
 
-
                                                     }
-                                                    recyclerViewAdapter.notifyDataSetChanged()
 
 
                                                 }
+                                                recyclerViewAdapter.notifyDataSetChanged()
+
+
                                             }
                                         }
+
                                     }
-
-
-                                if (theme == "dark") {
-                                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                                } else if (theme == "light") {
-                                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                                 }
-                            }
                         }
                     }
                 }

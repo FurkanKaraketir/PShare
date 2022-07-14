@@ -4,7 +4,6 @@ package com.furkankrktr.pshare
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -220,46 +219,6 @@ class KesfetActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
 
-            }
-            R.id.themeChange -> {
-                when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-                    Configuration.UI_MODE_NIGHT_YES -> {
-                        database.collection("Users").whereEqualTo("useremail", guncelKullaniciEmail)
-                            .addSnapshotListener { snapshot, exception ->
-                                if (exception == null) {
-
-                                    if (snapshot != null) {
-                                        if (!snapshot.isEmpty) {
-                                            val documents = snapshot.documents
-                                            for (document in documents) {
-                                                database.collection("Users")
-                                                    .document(document.id)
-                                                    .update("theme", "light")
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                    }
-                    Configuration.UI_MODE_NIGHT_NO -> {
-                        database.collection("Users").whereEqualTo("useremail", guncelKullaniciEmail)
-                            .addSnapshotListener { snapshot, exception ->
-                                if (exception == null) {
-
-                                    if (snapshot != null) {
-                                        if (!snapshot.isEmpty) {
-                                            val documents = snapshot.documents
-                                            for (document in documents) {
-                                                database.collection("Users")
-                                                    .document(document.id)
-                                                    .update("theme", "dark")
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                    }
-                }
             }
             R.id.webSiteButton -> {
                 val intent = Intent(this, WebViewActivity::class.java)

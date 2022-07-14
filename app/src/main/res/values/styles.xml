@@ -1,9 +1,17 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">#0AA1DD</item>
-        <item name="colorPrimaryDark">#2155CD</item>
-        <item name="colorAccent">#00DFFF</item>
+    <style name="AppTheme" parent="Theme.Material3.Dark">
+
+        <item name="colorPrimary">#2357DD</item>
+        <item name="colorPrimaryVariant">#32C5FF</item>
+        <item name="colorAccent">#F73757</item>
+        <item name="actionBarTheme">@style/AppTheme</item>
+        <item name="colorOnPrimary">@color/beyaz</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#32C5FF</item>
+        <item name="colorSecondaryVariant">#6D58FC</item>
+        <item name="colorOnSecondary">#000000</item>
+
     </style>
 
     <style name="FullscreenTheme" parent="AppTheme">
