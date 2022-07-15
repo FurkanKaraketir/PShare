@@ -32,27 +32,26 @@
                 android:text=""
                 android:textSize="17sp" />
 
-            <TextView
+            <Button
                 android:id="@+id/followButton"
+                style="@style/Widget.Material3.Button.ElevatedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
                 android:layout_toEndOf="@id/userNameView"
                 android:text="@string/tak_p_et"
-                android:textStyle="bold"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
-            <TextView
+            <Button
                 android:id="@+id/unFollowButton"
+                style="@style/Widget.Material3.Button.ElevatedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
                 android:layout_toEndOf="@id/userNameView"
                 android:text="@string/tak_b_birak"
-                android:textColor="@color/gri"
-                android:textStyle="bold"
                 android:visibility="gone" />
         </RelativeLayout>
 

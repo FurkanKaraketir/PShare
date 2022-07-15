@@ -28,13 +28,15 @@
 
     <Button
         android:id="@+id/addUserNameBtn"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/userNameAddText"
         android:layout_centerHorizontal="true"
-        android:layout_margin="30dp"
-        android:text="@string/devam_et"
-        android:textColor="@color/gri" />
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:text="@string/devam_et" />
 
 </RelativeLayout>

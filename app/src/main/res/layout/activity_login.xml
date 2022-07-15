@@ -37,14 +37,13 @@
 
     <Button
         android:id="@+id/loginGirisYap"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/passwordLoginText"
         android:layout_centerHorizontal="true"
         android:layout_margin="30dp"
-        android:text="@string/giri_yap"
-        android:textColor="@color/gri" />
+        android:text="@string/giri_yap" />
 
     <TextView
         android:id="@+id/loginToRegisterButton"
