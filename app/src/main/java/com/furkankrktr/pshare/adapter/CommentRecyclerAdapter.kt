@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionManager
 import com.furkankrktr.pshare.GorselActivity
 import com.furkankrktr.pshare.R
 import com.furkankrktr.pshare.RepliesActivity
@@ -90,8 +91,12 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
             binding.comment.text = commentList[position].kullaniciComment
 
             if (commentList[position].kullaniciEmail == guncelKullanici) {
+                TransitionManager.beginDelayedTransition(binding.commentContainer)
+
                 binding.deleteYorumButton.visibility = View.VISIBLE
             } else {
+                TransitionManager.beginDelayedTransition(binding.commentContainer)
+
                 binding.deleteYorumButton.visibility = View.GONE
             }
 

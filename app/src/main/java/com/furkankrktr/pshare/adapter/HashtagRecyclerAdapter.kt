@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionManager
 import com.furkankrktr.pshare.CommentsActivity
 import com.furkankrktr.pshare.GorselActivity
 import com.furkankrktr.pshare.R
@@ -116,6 +117,8 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
                         "takipEdilenEmailler",
                         FieldValue.arrayUnion(a)
                     ).addOnSuccessListener {
+                        TransitionManager.beginDelayedTransition(binding.rowContainer)
+
                         binding.followButton.visibility = View.GONE
                         binding.unFollowButton.visibility = View.VISIBLE
 
@@ -134,6 +137,8 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
                         "takipEdilenEmailler",
                         FieldValue.arrayRemove(a)
                     ).addOnSuccessListener {
+                        TransitionManager.beginDelayedTransition(binding.rowContainer)
+
                         binding.followButton.visibility = View.VISIBLE
                         binding.unFollowButton.visibility = View.GONE
                     }
@@ -153,6 +158,8 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
 
 
             if (guncelKullanici == postList[position].kullaniciEmail) {
+                TransitionManager.beginDelayedTransition(binding.rowContainer)
+
                 binding.followButton.visibility = View.GONE
                 binding.unFollowButton.visibility = View.GONE
                 binding.deleteButton.visibility = View.VISIBLE
@@ -174,20 +181,27 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
                                             document.get("takipEdilenEmailler") as ArrayList<String>
                                     }
                                     if (takipArray.contains(postList[position].kullaniciEmail)) {
+                                        TransitionManager.beginDelayedTransition(binding.rowContainer)
 
                                         binding.followButton.visibility = View.GONE
                                         binding.unFollowButton.visibility = View.VISIBLE
                                     } else {
+                                        TransitionManager.beginDelayedTransition(binding.rowContainer)
+
                                         binding.followButton.visibility = View.VISIBLE
                                         binding.unFollowButton.visibility = View.GONE
                                     }
 
                                 } else {
+                                    TransitionManager.beginDelayedTransition(binding.rowContainer)
+
                                     binding.followButton.visibility = View.VISIBLE
                                     binding.unFollowButton.visibility = View.GONE
 
                                 }
                             } else {
+                                TransitionManager.beginDelayedTransition(binding.rowContainer)
+
                                 binding.followButton.visibility = View.VISIBLE
                                 binding.unFollowButton.visibility = View.GONE
                             }
@@ -197,8 +211,12 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
             binding.recyclerRowKullaniciYorum.text = postList[position].kullaniciYorum
 
             if (postList[position].gorselUrl == "") {
+                TransitionManager.beginDelayedTransition(binding.rowContainer)
+
                 binding.recyclerRowImageView.visibility = View.GONE
             } else {
+                TransitionManager.beginDelayedTransition(binding.rowContainer)
+
                 binding.recyclerRowImageView.visibility = View.VISIBLE
                 binding.recyclerRowImageView.glide(
                     postList[position].gorselUrl,
@@ -249,8 +267,12 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
 
 
             if (postList[position].kullaniciEmail == guncelKullanici) {
+                TransitionManager.beginDelayedTransition(binding.rowContainer)
+
                 binding.deleteButton.visibility = View.VISIBLE
             } else {
+                TransitionManager.beginDelayedTransition(binding.rowContainer)
+
                 binding.deleteButton.visibility = View.GONE
             }
 

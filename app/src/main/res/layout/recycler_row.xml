@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/rowContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp">
@@ -18,15 +19,15 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="70dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profileImage"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:layout_margin="5dp"
-                    android:layout_toStartOf="@id/recyclerRowKullaniciEmail"
+                    android:layout_marginStart="10dp"
                     android:contentDescription="@string/image"
                     android:scaleType="centerCrop"
                     app:civ_border_overlay="false" />
@@ -36,13 +37,41 @@
                     style="@style/TextAppearance.AppCompat.Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_margin="2dp"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="5dp"
+                    android:layout_toEndOf="@id/profileImage"
                     android:gravity="center_horizontal"
                     android:text=""
                     android:textAlignment="center"
                     android:textSize="15sp"
                     tools:ignore="RelativeOverlap" />
+
+                <Button
+                    android:id="@+id/followButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@id/recyclerRowKullaniciEmail"
+                    android:gravity="center_vertical"
+                    android:text="@string/tak_p_et"
+                    android:textStyle="bold"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/unFollowButton"
+                    style="@style/Widget.Material3.Button.ElevatedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10dp"
+                    android:layout_toEndOf="@id/recyclerRowKullaniciEmail"
+                    android:text="@string/tak_b_birak"
+                    android:textAlignment="center"
+                    android:visibility="invisible"
+                    tools:ignore="RelativeOverlap" />
+
+
             </RelativeLayout>
 
 
@@ -127,28 +156,6 @@
                     android:contentDescription="@string/deletebutton"
                     android:src="@drawable/ic_baseline_cancel_24"
                     android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/followButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="10dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/tak_p_et"
-                    android:textStyle="bold"
-                    android:visibility="invisible" />
-
-                <Button
-                    android:id="@+id/unFollowButton"
-                    style="@style/Widget.Material3.Button.ElevatedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="10dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/tak_b_birak"
-                    android:visibility="visible" />
 
 
             </RelativeLayout>

@@ -12,6 +12,7 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
+            android:id="@+id/userContainer"
             android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView

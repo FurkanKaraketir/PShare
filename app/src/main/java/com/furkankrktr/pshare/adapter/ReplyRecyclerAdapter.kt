@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionManager
 import com.furkankrktr.pshare.GorselActivity
 import com.furkankrktr.pshare.R
 import com.furkankrktr.pshare.databinding.RecyclerReplyBinding
@@ -93,8 +94,12 @@ class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
             }
 
             if (replyList[position].kullaniciEmail == guncelKullanici) {
+                TransitionManager.beginDelayedTransition(binding.replyContainer)
+
                 binding.deleteReplyButton.visibility = View.VISIBLE
             } else {
+                TransitionManager.beginDelayedTransition(binding.replyContainer)
+
                 binding.deleteReplyButton.visibility = View.GONE
             }
             binding.deleteReplyButton.setOnClickListener {

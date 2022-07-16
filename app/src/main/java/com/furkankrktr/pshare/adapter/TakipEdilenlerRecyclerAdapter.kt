@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionManager
 import com.furkankrktr.pshare.GorselActivity
 import com.furkankrktr.pshare.R
 import com.furkankrktr.pshare.databinding.RecyclerUserBinding
@@ -94,6 +95,8 @@ class TakipEdilenlerRecyclerAdapter(private val userList: ArrayList<User>) :
             database.collection("Users").whereEqualTo("useremail", guncelKullanici)
                 .addSnapshotListener { snapshot, exception ->
                     if (exception != null) {
+                        TransitionManager.beginDelayedTransition(binding.userContainer)
+
                         binding.followButton.visibility = View.VISIBLE
                         binding.unFollowButton.visibility = View.GONE
                     } else {
@@ -105,20 +108,27 @@ class TakipEdilenlerRecyclerAdapter(private val userList: ArrayList<User>) :
                                         document.get("takipEdilenEmailler") as ArrayList<String>
                                 }
                                 if (userList.size > 0 && takipArray.contains(userList[position].kullaniciEmail)) {
+                                    TransitionManager.beginDelayedTransition(binding.userContainer)
 
                                     binding.followButton.visibility = View.GONE
                                     binding.unFollowButton.visibility = View.VISIBLE
                                 } else {
+                                    TransitionManager.beginDelayedTransition(binding.userContainer)
+
                                     binding.followButton.visibility = View.VISIBLE
                                     binding.unFollowButton.visibility = View.GONE
                                 }
 
                             } else {
+                                TransitionManager.beginDelayedTransition(binding.userContainer)
+
                                 binding.followButton.visibility = View.VISIBLE
                                 binding.unFollowButton.visibility = View.GONE
 
                             }
                         } else {
+                            TransitionManager.beginDelayedTransition(binding.userContainer)
+
                             binding.followButton.visibility = View.VISIBLE
                             binding.unFollowButton.visibility = View.GONE
                         }
@@ -131,6 +141,8 @@ class TakipEdilenlerRecyclerAdapter(private val userList: ArrayList<User>) :
                         "takipEdilenEmailler",
                         FieldValue.arrayUnion(a)
                     ).addOnSuccessListener {
+                        TransitionManager.beginDelayedTransition(binding.userContainer)
+
                         binding.followButton.visibility = View.GONE
                         binding.unFollowButton.visibility = View.VISIBLE
 
@@ -151,6 +163,8 @@ class TakipEdilenlerRecyclerAdapter(private val userList: ArrayList<User>) :
                         "takipEdilenEmailler",
                         FieldValue.arrayRemove(a)
                     ).addOnSuccessListener {
+                        TransitionManager.beginDelayedTransition(binding.userContainer)
+
                         binding.followButton.visibility = View.VISIBLE
                         binding.unFollowButton.visibility = View.GONE
                     }
