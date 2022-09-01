@@ -19,9 +19,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.furkankrktr.pshare.adapter.HaberRecyclerAdapter
 import com.furkankrktr.pshare.databinding.ActivityHaberlerBinding
 import com.furkankrktr.pshare.model.Post
-import com.furkankrktr.pshare.send_notification_pack.APIService
-import com.furkankrktr.pshare.send_notification_pack.Client
-import com.furkankrktr.pshare.send_notification_pack.Token
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -41,7 +38,6 @@ class HaberlerActivity : AppCompatActivity() {
     private lateinit var guncelKullaniciEmail: String
     private lateinit var takipArray: ArrayList<String>
     private var postList = ArrayList<Post>()
-    private lateinit var apiService: APIService
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,8 +57,6 @@ class HaberlerActivity : AppCompatActivity() {
             val intent = Intent(this, FotografPaylasmaActivity::class.java)
             startActivity(intent)
         }
-
-        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService::class.java)
 
         recyclerView = binding.recyclerView
         val layoutManager = LinearLayoutManager(applicationContext)
@@ -270,10 +264,7 @@ class HaberlerActivity : AppCompatActivity() {
 
 
     private fun updateToken() {
-        val refreshToken: String = FirebaseMessaging.getInstance().token.toString()
-        val token = Token(refreshToken)
-        FirebaseDatabase.getInstance().getReference("Tokens")
-            .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(token)
+        auth.currentUser?.let { FirebaseMessaging.getInstance().subscribeToTopic(it.email.toString()) };
     }
 
 

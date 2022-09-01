@@ -143,8 +143,8 @@ class TakipEdilenlerRecyclerAdapter(private val userList: ArrayList<User>) :
                     ).addOnSuccessListener {
                         TransitionManager.beginDelayedTransition(binding.userContainer)
 
-                        binding.followButton.visibility = View.GONE
-                        binding.unFollowButton.visibility = View.VISIBLE
+                       // binding.followButton.visibility = View.GONE
+                      //  binding.unFollowButton.visibility = View.VISIBLE
 
                     }
 
@@ -165,8 +165,8 @@ class TakipEdilenlerRecyclerAdapter(private val userList: ArrayList<User>) :
                     ).addOnSuccessListener {
                         TransitionManager.beginDelayedTransition(binding.userContainer)
 
-                        binding.followButton.visibility = View.VISIBLE
-                        binding.unFollowButton.visibility = View.GONE
+                      //  binding.followButton.visibility = View.VISIBLE
+                      //  binding.unFollowButton.visibility = View.GONE
                     }
             }
             unfollowAlert.setNegativeButton("İPTAL") { _, _ ->

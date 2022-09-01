@@ -51,9 +51,6 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
 import de.hdodenhof.circleimageview.CircleImageView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.hypot
@@ -85,7 +82,6 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     private lateinit var database: FirebaseFirestore
     private lateinit var recyclerReplyViewAdapter: ReplyRecyclerAdapter
     private var replyList = ArrayList<Reply>()
-    private lateinit var apiService: APIService
     private var yorumYapildi: Boolean = false
 
     @SuppressLint("RestrictedApi", "NotifyDataSetChanged")
@@ -112,7 +108,6 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         recyclerRepliesView.layoutManager = layoutManager
         recyclerReplyViewAdapter = ReplyRecyclerAdapter(replyList)
         recyclerRepliesView.adapter = recyclerReplyViewAdapter
-        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService::class.java)
 
 
         secilenReplyIamgeView.visibility = View.GONE
@@ -455,38 +450,16 @@ class RepliesActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
 
     private fun updateToken() {
-        val refreshToken: String = FirebaseMessaging.getInstance().token.toString()
-        val token = Token(refreshToken)
-        FirebaseDatabase.getInstance().getReference("Tokens")
-            .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(token)
+
+        auth.currentUser?.let {
+            FirebaseMessaging.getInstance().subscribeToTopic(it.email.toString())
+        }
+
     }
 
     private fun sendNotification(usertoken: String, message: String) {
-        val data = Data(
-            "Yorumunuza Yeni Yanıt",
-            message,
-            selectedComment,
-            selectedCommentEmail,
-            selectedCommentText,
-            selectedCommentUID,
-            selectedCommentImage,
-            ""
-        )
-        val sender = NotificationSender(data, usertoken)
-        apiService.sendNotifcation(sender)!!.enqueue(object : Callback<MyResponse?> {
-
-            override fun onResponse(call: Call<MyResponse?>, response: Response<MyResponse?>) {
-                if (response.code() === 200) {
-                    if (response.body()!!.success !== 1) {
-                        Toast.makeText(this@RepliesActivity, "Failed ", Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<MyResponse?>, t: Throwable) {
-
-            }
-        })
+        val sender = FcmNotificationsSender(usertoken, "Yorumunuza Yeni Yanıt", message, this)
+        sender.sendNotifications()
     }
 
     @SuppressLint("NotifyDataSetChanged")

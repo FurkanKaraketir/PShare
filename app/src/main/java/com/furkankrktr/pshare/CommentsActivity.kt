@@ -88,7 +88,6 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
     //true Image       false GIF
     private lateinit var recyclerCommentViewAdapter: CommentRecyclerAdapter
     private var commentList = ArrayList<Comment>()
-    private lateinit var apiService: APIService
 
     @SuppressLint("RestrictedApi", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,7 +119,6 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
 
         secilenImageView.visibility = View.GONE
         Giphy.configure(this, "Qyq8K6rBLuR2bYRetJteXkb6k7ngKUG8")
-        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService::class.java)
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -326,25 +324,10 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                                         gifOrImageBtn.visibility = View.GONE
                                         if (guncelKullaniciEmail != selectedPostEmail) {
                                             try {
-                                                FirebaseDatabase.getInstance().reference.child("Tokens")
-                                                    .child(selectedPostUID.trim()).child("token")
-                                                    .addListenerForSingleValueEvent(object :
-                                                        ValueEventListener {
-                                                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                                            val usertoken: String =
-                                                                dataSnapshot.getValue(String::class.java)
-                                                                    .toString()
-                                                            sendNotification(
-                                                                usertoken,
-                                                                commentText,
-                                                                selectedPostImage
-                                                            )
-                                                        }
-
-                                                        override fun onCancelled(databaseError: DatabaseError) {
-
-                                                        }
-                                                    })
+                                                sendNotification(
+                                                    selectedPostEmail,
+                                                    commentText
+                                                )
                                             } catch (e: Exception) {
                                                 println(e.localizedMessage)
                                             }
@@ -419,25 +402,11 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
                                 verileriAl()
                                 if (guncelKullaniciEmail != selectedPostEmail) {
                                     try {
-                                        FirebaseDatabase.getInstance().reference.child("Tokens")
-                                            .child(selectedPostUID.trim()).child("token")
-                                            .addListenerForSingleValueEvent(object :
-                                                ValueEventListener {
-                                                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                                    val usertoken: String =
-                                                        dataSnapshot.getValue(String::class.java)
-                                                            .toString()
-                                                    sendNotification(
-                                                        usertoken,
-                                                        commentText,
-                                                        selectedPostImage
-                                                    )
-                                                }
+                                        sendNotification(
+                                            selectedPostEmail,
+                                            commentText
+                                        )
 
-                                                override fun onCancelled(databaseError: DatabaseError) {
-
-                                                }
-                                            })
                                     } catch (e: Exception) {
                                         println(e.localizedMessage)
                                     }
@@ -456,8 +425,6 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
 
 
         }
-
-        updateToken()
         verileriAl()
 
     }
@@ -610,39 +577,12 @@ class CommentsActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLi
         gifOrImage = false
     }
 
-    private fun updateToken() {
-        val refreshToken: String = FirebaseMessaging.getInstance().token.toString()
-        val token = Token(refreshToken)
-        FirebaseDatabase.getInstance().getReference("Tokens")
-            .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(token)
-    }
+    private fun sendNotification(usertoken: String, message: String) {
+        val sender =
+            FcmNotificationsSender("/topics/$usertoken", "Postunuza Yeni Yorum", "message", this)
 
-    private fun sendNotification(usertoken: String, message: String, selectedCommentImage: String) {
-        val data = Data(
-            "Postunuza Yeni Yorum",
-            message,
-            selectedPost,
-            selectedPostEmail,
-            selectedPostText,
-            "",
-            selectedCommentImage,
-            selectedPostUID
-        )
-        val sender = NotificationSender(data, usertoken)
-        apiService.sendNotifcation(sender)!!.enqueue(object : Callback<MyResponse?> {
+        sender.sendNotifications()
 
-            override fun onResponse(call: Call<MyResponse?>, response: Response<MyResponse?>) {
-                if (response.code() === 200) {
-                    if (response.body()!!.success !== 1) {
-                        Toast.makeText(this@CommentsActivity, "Failed ", Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<MyResponse?>, t: Throwable) {
-
-            }
-        })
     }
 
 

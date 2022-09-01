@@ -171,9 +171,6 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
                     ).addOnSuccessListener {
                         TransitionManager.beginDelayedTransition(binding.rowContainer)
 
-                        binding.followButton.visibility = View.GONE
-                        binding.unFollowButton.visibility = View.VISIBLE
-
                     }
             }
             val unfollowAlert = AlertDialog.Builder(holder.itemView.context)
@@ -191,8 +188,6 @@ open class UserEmailFilterAdapter(private val postList: ArrayList<Post>) :
                     ).addOnSuccessListener {
                         TransitionManager.beginDelayedTransition(binding.rowContainer)
 
-                        binding.followButton.visibility = View.VISIBLE
-                        binding.unFollowButton.visibility = View.GONE
                     }
 
                 unfollowAlert.setNegativeButton("İPTAL") { _, _ ->

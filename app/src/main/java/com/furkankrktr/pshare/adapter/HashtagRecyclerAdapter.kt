@@ -119,8 +119,6 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
                     ).addOnSuccessListener {
                         TransitionManager.beginDelayedTransition(binding.rowContainer)
 
-                        binding.followButton.visibility = View.GONE
-                        binding.unFollowButton.visibility = View.VISIBLE
 
                     }
             }
@@ -139,8 +137,6 @@ open class HashtagRecyclerAdapter(private val postList: ArrayList<Post>) :
                     ).addOnSuccessListener {
                         TransitionManager.beginDelayedTransition(binding.rowContainer)
 
-                        binding.followButton.visibility = View.VISIBLE
-                        binding.unFollowButton.visibility = View.GONE
                     }
 
             }

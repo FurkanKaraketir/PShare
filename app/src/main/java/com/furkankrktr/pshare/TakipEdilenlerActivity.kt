@@ -63,8 +63,8 @@ class TakipEdilenlerActivity : AppCompatActivity() {
                 } else {
                     if (snapshot != null) {
                         if (!snapshot.isEmpty) {
-                            userList.clear()
                             fullList.clear()
+                            userList.clear()
                             val documents1 = snapshot.documents
                             for (document1 in documents1) {
                                 fullList = document1.get("takipEdilenEmailler") as ArrayList<String>

@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
@@ -104,20 +105,11 @@
             android:value="true" />
 
         <service
-            android:name=".send_notification_pack.MyFireBaseMessagingService"
-            android:enabled="true"
-            android:exported="false"
-            tools:ignore="Instantiatable">
+            android:name=".send_notification_pack.FirebaseMessagingService"
+            tools:ignore="ExportedService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".send_notification_pack.MyFirebaseIdService"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
