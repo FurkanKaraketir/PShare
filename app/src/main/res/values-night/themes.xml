@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.CoachingApp" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.PShare" parent="Theme.Material3.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_200</item>
         <item name="colorPrimaryVariant">#2A3063</item>
@@ -17,7 +17,7 @@
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen.IconBackground">
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
-        <item name="postSplashScreenTheme">@style/Theme.CoachingApp</item>
+        <item name="postSplashScreenTheme">@style/Theme.PShare</item>
         <item name="windowSplashScreenIconBackgroundColor">#2357dd</item>
     </style>
 

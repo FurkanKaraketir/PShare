@@ -11,4 +11,12 @@
     <string name="profil_resmi">Profil Resmi</string>
     <string name="kaydet">Kaydet</string>
     <string name="k_yap">Çıkış Yap</string>
+    <string name="profil">Profil</string>
+    <string name="post_resim">Post Resim</string>
+    <string name="takip_et">Takip Et</string>
+    <string name="takibi_b_rak">Takibi Bırak</string>
+    <string name="commentbutton">Yorum Tuşu</string>
+    <string name="_0_yorum">0 Yorum</string>
+    <string name="sil_tu_u">Sil Tuşu</string>
+    <string name="post_ekle">Post Ekle</string>
 </resources>

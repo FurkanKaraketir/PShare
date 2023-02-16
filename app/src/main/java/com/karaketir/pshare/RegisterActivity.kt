@@ -91,7 +91,7 @@ class RegisterActivity : AppCompatActivity() {
 
                     val followingID = UUID.randomUUID().toString()
                     val follow = hashMapOf(
-                        "main" to email, "followsWho" to email
+                        "main" to documentID, "followsWho" to documentID
                     )
                     db.collection("Followings").document(followingID).set(follow)
                         .addOnSuccessListener {
