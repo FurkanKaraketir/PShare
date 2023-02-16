@@ -1,15 +1,24 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+    id 'com.google.firebase.firebase-perf'
+
 }
 
 android {
+
+    buildFeatures {
+        viewBinding = true
+    }
+
     namespace 'com.karaketir.pshare'
     compileSdk 33
 
     defaultConfig {
         applicationId "com.karaketir.pshare"
-        minSdk 22
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -30,13 +39,38 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    namespace 'com.karaketir.pshare'
+
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.core:core-splashscreen:1.0.0'
+
+    implementation 'androidx.work:work-runtime-ktx:2.8.0'
+    implementation 'com.giphy.sdk:ui:2.3.0'
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
+    implementation 'com.github.bumptech.glide:glide:4.14.2'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
+
+
+    implementation platform('com.google.firebase:firebase-bom:31.2.1')
+
+    implementation('com.google.firebase:firebase-auth-ktx:21.1.0') {
+        exclude module: "play-services-safetynet"
+    }
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.4.3'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.2.0'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.4'
+    implementation 'com.google.firebase:firebase-perf-ktx:20.3.1'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.1.1'
+
+
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

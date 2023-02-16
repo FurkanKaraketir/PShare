@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfilePictureActivity">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/photoCard"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        app:cardCornerRadius="10dp">
+
+        <ImageView
+            android:id="@+id/addProfilePhoto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/profil_resmi"
+            android:src="@drawable/baseline_add_photo_alternate_24" />
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/saveProfilePhoto"
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        android:layout_width="320dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/photoCard"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:text="@string/kaydet"
+        android:textSize="18sp" />
+
+</RelativeLayout>
