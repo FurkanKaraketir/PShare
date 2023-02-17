@@ -1,6 +1,8 @@
 package com.karaketir.pshare.services
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.widget.ImageView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
@@ -12,6 +14,12 @@ fun ImageView.glide(url: String?, placeholder: CircularProgressDrawable) {
 
     Glide.with(context.applicationContext).setDefaultRequestOptions(options).load(url).into(this)
 }
+
+fun openLink(link: String, context: Context) {
+    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+    context.startActivity(browserIntent)
+}
+
 
 fun placeHolderYap(context: Context): CircularProgressDrawable {
     return CircularProgressDrawable(context).apply {

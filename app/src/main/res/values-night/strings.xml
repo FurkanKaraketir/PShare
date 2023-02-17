@@ -19,4 +19,13 @@
     <string name="_0_yorum">0 Yorum</string>
     <string name="sil_tu_u">Sil Tuşu</string>
     <string name="post_ekle">Post Ekle</string>
+    <string name="kullan_c_ad_le_ara">Kullanıcı Adı İle Ara</string>
+    <string name="ana_men">Ana Menü</string>
+    <string name="yeni_kullan_c_ad">Yeni Kullanıcı Adı</string>
+    <string name="post_a_klamas">Post Açıklaması</string>
+    <string name="medya_ekle">Medya Ekle</string>
+    <string name="be_enildi_tu_u">Beğenildi Tuşu</string>
+    <string name="_0_be_eni">0 Beğeni</string>
+    <string name="postu_in_yorumlar">Postu İçin Yorumlar</string>
+    <string name="yorum_yap">Yorum Yap</string>
 </resources>

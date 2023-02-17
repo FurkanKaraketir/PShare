@@ -8,4 +8,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#737373</color>
+    <color name="colorPrimary">#6900FF</color>
+    <color name="colorPrimaryDark">#4900EF</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="aciklama">#00DCC7</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="gri">#888888</color>
+    <color name="beyaz">#ffffffff</color>
+    <color name="mavi">#00DCC7</color>
 </resources>

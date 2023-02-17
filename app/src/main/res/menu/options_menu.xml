@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/homeBtn"
+        android:icon="@drawable/baseline_home_24"
+        android:title="@string/ana_men"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/profile"
+        android:icon="@drawable/baseline_account_circle_24"
+        android:title="@string/profil"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/signOutBtn"
+        android:title="@string/k_yap" />
+</menu>

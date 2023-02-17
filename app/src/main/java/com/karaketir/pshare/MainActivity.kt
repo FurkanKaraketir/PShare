@@ -3,21 +3,18 @@ package com.karaketir.pshare
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.karaketir.pshare.adapter.PostRecyclerAdapter
 import com.karaketir.pshare.databinding.ActivityMainBinding
@@ -25,7 +22,7 @@ import com.karaketir.pshare.model.Post
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseFirestore
     private lateinit var postAddButton: FloatingActionButton
@@ -48,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -63,58 +61,67 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
         recyclerViewAdapter = PostRecyclerAdapter(postList)
         recyclerView.adapter = recyclerViewAdapter
-
+        postAddButton = binding.addPostButton
 
         database.collection("Followings").whereEqualTo("main", auth.uid.toString())
             .addSnapshotListener { followList, error ->
                 if (followList != null) {
                     idList.clear()
+                    postList.clear()
                     for (id in followList) {
                         idList.add(id.get("followsWho").toString())
+
                     }
-                    verileriAl()
+                    getData()
+
                 }
                 if (error != null) {
                     println(error.localizedMessage)
                 }
             }
 
+        postAddButton.setOnClickListener {
+            val intent = Intent(this, AddPostActivity::class.java)
+            startActivity(intent)
+        }
+
 
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun verileriAl() {
-        postList.clear()
-        for (id in idList) {
-            database.collection("Post").whereEqualTo("postOwnerID", id)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .addSnapshotListener { posts, error ->
-                    postList.clear()
-
-                    if (error != null) {
-                        println(error.localizedMessage)
-                    }
-
-                    if (posts != null) {
-                        for (post in posts) {
-
-                            val newPost = Post(
-                                post.get("id").toString(),
-                                post.get("postDescription").toString(),
-                                post.get("postImageURL").toString(),
-                                post.get("postOwnerID").toString(),
-                                post.get("timestamp") as Timestamp
-                            )
-
-                            postList.add(newPost)
-
-
-                        }
-                        recyclerViewAdapter.notifyDataSetChanged()
-                    }
+    private fun getData() {
+        database.collection("Post")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { posts, error2 ->
+                postList.clear()
+                if (error2 != null) {
+                    println(error2.localizedMessage)
                 }
-        }
+                if (posts != null) {
+                    for (post in posts) {
+
+                        val newPost = Post(
+                            post.get("postID").toString(),
+                            post.get("postDescription").toString(),
+                            post.get("postImageURL").toString(),
+                            post.get("postOwnerID").toString(),
+                            post.get("timestamp") as Timestamp
+                        )
+
+                        if (newPost.postOwnerID in idList){
+                            postList.add(newPost)
+                        }
+
+
+                    }
+                    recyclerViewAdapter.notifyDataSetChanged()
+                }
+
+
+            }
+
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val menuInflater = menuInflater
@@ -140,6 +147,14 @@ class MainActivity : AppCompatActivity() {
                 signOutAlertDialog.show()
 
 
+            }
+            R.id.search -> {
+                val intent = Intent(this, ExploreActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.profil -> {
+                val intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
             }
 
         }
