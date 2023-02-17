@@ -67,7 +67,6 @@ class MainActivity : AppCompatActivity() {
             .addSnapshotListener { followList, error ->
                 if (followList != null) {
                     idList.clear()
-                    postList.clear()
                     for (id in followList) {
                         idList.add(id.get("followsWho").toString())
 
@@ -90,8 +89,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun getData() {
-        database.collection("Post")
-            .orderBy("timestamp", Query.Direction.DESCENDING)
+        database.collection("Post").orderBy("timestamp", Query.Direction.DESCENDING)
             .addSnapshotListener { posts, error2 ->
                 postList.clear()
                 if (error2 != null) {
@@ -108,7 +106,7 @@ class MainActivity : AppCompatActivity() {
                             post.get("timestamp") as Timestamp
                         )
 
-                        if (newPost.postOwnerID in idList){
+                        if (newPost.postOwnerID in idList) {
                             postList.add(newPost)
                         }
 

@@ -28,4 +28,7 @@
     <string name="_0_be_eni">0 Beğeni</string>
     <string name="postu_in_yorumlar">Postu İçin Yorumlar</string>
     <string name="yorum_yap">Yorum Yap</string>
+    <string name="_0_yan_t">0 Yanıt</string>
+    <string name="yorumu_in_yan_tlar">Yorumu İçin Yanıtlar</string>
+    <string name="yan_t_yaz">Yanıt Yaz</string>
 </resources>

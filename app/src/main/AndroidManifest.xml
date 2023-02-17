@@ -21,6 +21,9 @@
         android:theme="@style/Theme.PShare"
         tools:targetApi="31">
         <activity
+            android:name=".RepliesActivity"
+            android:exported="false" />
+        <activity
             android:name=".FollowingsActivity"
             android:exported="false" />
         <activity
@@ -48,11 +51,13 @@
         <activity
             android:name=".HashtagActivity"
             android:exported="false"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".CommentsActivity"
             android:exported="false"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity

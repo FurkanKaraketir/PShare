@@ -6,7 +6,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -19,7 +18,7 @@ import com.karaketir.pshare.model.Post
 import com.karaketir.pshare.services.glide
 import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
-import java.util.UUID
+import java.util.*
 
 open class PostRecyclerAdapter(private val postList: ArrayList<Post>) :
     RecyclerView.Adapter<PostRecyclerAdapter.PostHolder>() {
@@ -178,11 +177,7 @@ open class PostRecyclerAdapter(private val postList: ArrayList<Post>) :
                                     for (i in value) {
                                         db.collection("Followings").document(i.id).delete()
                                             .addOnSuccessListener {
-                                                Toast.makeText(
-                                                    holder.itemView.context,
-                                                    "İşlem Başarılı",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
+
                                             }
                                     }
                                 }
@@ -242,33 +237,47 @@ open class PostRecyclerAdapter(private val postList: ArrayList<Post>) :
 
                 binding.deleteButton.setOnClickListener {
 
-                    val signOutAlertDialog = AlertDialog.Builder(holder.itemView.context)
-                    signOutAlertDialog.setTitle("Postu Sil")
-                    signOutAlertDialog.setMessage("Postu Silmek İstediğinize Emin misiniz?")
-                    signOutAlertDialog.setPositiveButton("Postu Sil") { _, _ ->
+                    val deleteAlertDialog = AlertDialog.Builder(holder.itemView.context)
+                    deleteAlertDialog.setTitle("Postu Sil")
+                    deleteAlertDialog.setMessage("Postu Silmek İstediğinize Emin misiniz?")
+                    deleteAlertDialog.setPositiveButton("Postu Sil") { _, _ ->
 
                         db.collection("Replies").whereEqualTo("replyToPost", myItem.postID)
-                            .addSnapshotListener { value, _ ->
-                                if (value != null) {
-                                    for (i in value) {
+                            .addSnapshotListener { value1, _ ->
+                                if (value1 != null) {
+                                    for (i in value1) {
                                         db.collection("Replies").document(i.id).delete()
                                     }
                                 }
-                            }
-                        db.collection("Comments").whereEqualTo("commentToPost", myItem.postID)
-                            .addSnapshotListener { value, _ ->
-                                if (value != null) {
-                                    for (i in value) {
-                                        db.collection("Comments").document(i.id).delete()
+                                db.collection("Comments")
+                                    .whereEqualTo("commentToPost", myItem.postID)
+                                    .addSnapshotListener { value2, _ ->
+                                        if (value2 != null) {
+                                            for (a in value2) {
+                                                db.collection("Comments").document(a.id).delete()
+                                            }
+                                        }
+                                        db.collection("Post").document(myItem.postID).delete()
+                                        db.collection("Likes").whereEqualTo("postID", myItem.postID)
+                                            .addSnapshotListener { value3, _ ->
+
+                                                if (value3 != null) {
+                                                    for (q in value3) {
+                                                        db.collection("Likes").document(q.id)
+                                                            .delete()
+                                                    }
+                                                }
+
+                                            }
                                     }
-                                }
                             }
-                        db.collection("Post").document(myItem.postID).delete()
-                    }
-                    signOutAlertDialog.setNegativeButton("İptal") { _, _ ->
+
 
                     }
-                    signOutAlertDialog.show()
+                    deleteAlertDialog.setNegativeButton("İptal") { _, _ ->
+
+                    }
+                    deleteAlertDialog.show()
 
 
                 }
