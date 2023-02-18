@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.karaketir.pshare.adapter.PostRecyclerAdapter
 import com.karaketir.pshare.databinding.ActivityMainBinding
 import com.karaketir.pshare.model.Post
+import com.karaketir.pshare.services.openLink
 
 class MainActivity : AppCompatActivity() {
 
@@ -63,12 +65,36 @@ class MainActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(applicationContext)
         recyclerView.layoutManager = layoutManager
         recyclerViewAdapter = PostRecyclerAdapter(postList)
-
-
-
+        val updateLayout = binding.updateLayout
+        val updateButton = binding.updateButton
 
         recyclerView.adapter = recyclerViewAdapter
         postAddButton = binding.addPostButton
+
+        updateButton.setOnClickListener {
+            openLink(
+                "https://play.google.com/store/apps/details?id=com.karaketir.pshare", this
+            )
+        }
+
+
+        database.collection("Keys").document("Version").get().addOnSuccessListener {
+            val myVersion = BuildConfig.VERSION_CODE
+            val latestVersion = it.get("key").toString().toInt()
+            if (myVersion < latestVersion) {
+                postAddButton.visibility = View.GONE
+                recyclerView.visibility = View.GONE
+                updateLayout.visibility = View.VISIBLE
+
+            } else {
+                postAddButton.visibility = View.VISIBLE
+                recyclerView.visibility = View.VISIBLE
+                updateLayout.visibility = View.GONE
+
+            }
+        }
+
+
 
         database.collection("Followings").whereEqualTo("main", auth.uid.toString())
             .addSnapshotListener { followList, error ->

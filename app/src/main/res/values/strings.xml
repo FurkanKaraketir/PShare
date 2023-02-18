@@ -38,4 +38,6 @@
     <string name="engeli_kald_r">Engeli Kaldır</string>
     <string name="default_notification_channel_id">212121</string>
     <string name="postu_be_enenler">Postu Beğenenler</string>
+    <string name="uygulamay_g_ncellemeniz_gerekmektedir">Uygulamayı Güncellemeniz Gerekmektedir</string>
+    <string name="g_ncellemek_in_t_klay_n">Güncellemek İçin Tıklayın</string>
 </resources>

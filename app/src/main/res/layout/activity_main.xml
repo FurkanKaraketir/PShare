@@ -5,6 +5,40 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/updateLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/updateText"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="@string/uygulamay_g_ncellemeniz_gerekmektedir" />
+
+            <Button
+                android:id="@+id/updateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/updateText"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="15dp"
+                android:text="@string/g_ncellemek_in_t_klay_n" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/postRecyclerView"
         android:layout_width="match_parent"
@@ -22,5 +56,7 @@
         android:contentDescription="@string/post_ekle"
         android:src="@drawable/baseline_add_circle_outline_24"
         tools:ignore="RelativeOverlap" />
+
+
 
 </RelativeLayout>
