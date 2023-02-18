@@ -21,6 +21,7 @@ import com.google.firebase.firestore.Query
 import com.karaketir.pshare.adapter.ReplyRecyclerAdapter
 import com.karaketir.pshare.databinding.ActivityRepliesBinding
 import com.karaketir.pshare.model.Reply
+import com.karaketir.pshare.services.FcmNotificationsSenderService
 import com.karaketir.pshare.services.glide
 import com.karaketir.pshare.services.placeHolderYap
 import de.hdodenhof.circleimageview.CircleImageView
@@ -44,6 +45,8 @@ class RepliesActivity : AppCompatActivity() {
     private lateinit var database: FirebaseFirestore
     private lateinit var recyclerReplyViewAdapter: ReplyRecyclerAdapter
     private var replyList = ArrayList<Reply>()
+    private var myBlockList = java.util.ArrayList<String>()
+    private var blockedMe = java.util.ArrayList<String>()
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,27 +85,35 @@ class RepliesActivity : AppCompatActivity() {
                     }
             }
 
-        database.collection("Replies").whereEqualTo("replyToComment", selectedCommentID)
-            .orderBy("timestamp", Query.Direction.DESCENDING).addSnapshotListener { value, _ ->
-                replyList.clear()
-                if (value != null) {
-                    for (reply in value) {
-                        val newReply = Reply(
-                            reply.get("reply").toString(),
-                            reply.id,
-                            reply.get("replyOwnerID").toString(),
-                            reply.get("replyToComment").toString(),
-                            reply.get("replyToPost").toString(),
-                            reply.get("replyToWho").toString(),
-                            reply.get("timestamp") as Timestamp
-                        )
-
-                        replyList.add(newReply)
+        database.collection("Blocks").whereEqualTo("main", auth.uid.toString())
+            .addSnapshotListener { blockList, error ->
+                if (blockList != null) {
+                    myBlockList.clear()
+                    for (id in blockList) {
+                        myBlockList.add(id.get("blocksWho").toString())
 
                     }
+                    database.collection("Blocks").whereEqualTo("blocksWho", auth.uid.toString())
+                        .addSnapshotListener { blockMeList, _ ->
+                            if (blockMeList != null) {
+                                blockedMe.clear()
+                                for (id2 in blockMeList) {
+                                    blockedMe.add(id2.get("main").toString())
+
+                                }
+
+                            }
+                            verileriAl()
+
+                        }
+
                 }
-                recyclerReplyViewAdapter.notifyDataSetChanged()
+                if (error != null) {
+                    println(error.localizedMessage)
+                }
             }
+
+
 
 
 
@@ -182,7 +193,19 @@ class RepliesActivity : AppCompatActivity() {
                 )
 
                 database.collection("Replies").document(documentID).set(data).addOnSuccessListener {
+
+                    if (auth.uid.toString() != selectedCommentOwnerID) {
+                        val notificationsSender = FcmNotificationsSenderService(
+                            "/topics/$selectedCommentOwnerID",
+                            "Yeni Yanıt",
+                            "Yeni Yanıtınız Var \n${replySendEditText.text}",
+                            this
+                        )
+                        notificationsSender.sendNotifications()
+                    }
+
                     replySendEditText.text.clear()
+
                     documentID = UUID.randomUUID().toString()
                 }
 
@@ -191,5 +214,31 @@ class RepliesActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun verileriAl() {
+        database.collection("Replies").whereEqualTo("replyToComment", selectedCommentID)
+            .orderBy("timestamp", Query.Direction.DESCENDING).addSnapshotListener { value, _ ->
+                replyList.clear()
+                if (value != null) {
+                    for (reply in value) {
+                        val newReply = Reply(
+                            reply.get("reply").toString(),
+                            reply.id,
+                            reply.get("replyOwnerID").toString(),
+                            reply.get("replyToComment").toString(),
+                            reply.get("replyToPost").toString(),
+                            reply.get("replyToWho").toString(),
+                            reply.get("timestamp") as Timestamp
+                        )
+
+                        if (newReply.replyOwnerID !in myBlockList && newReply.replyOwnerID !in blockedMe) {
+                            replyList.add(newReply)
+                        }
+                    }
+                }
+                recyclerReplyViewAdapter.notifyDataSetChanged()
+            }
     }
 }

@@ -7,10 +7,22 @@
     tools:context=".ProfilePictureActivity">
 
 
+    <TextView
+        android:id="@+id/profilPhotoAddText"
+        style="@style/MaterialAlertDialog.Material3.Title.Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="@string/profil_resmi"
+        android:textSize="32sp"
+        android:textStyle="bold" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/photoCard"
         android:layout_width="240dp"
         android:layout_height="240dp"
+        android:layout_below="@id/profilPhotoAddText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         app:cardCornerRadius="10dp">

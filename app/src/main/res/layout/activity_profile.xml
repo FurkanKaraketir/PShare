@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -33,6 +32,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="10dp"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/takipciText"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/blockedText"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
                 android:text="" />
         </LinearLayout>
 
@@ -69,7 +86,6 @@
 
 
     <EditText
-        android:visibility="gone"
         android:id="@+id/userNameChangeEditText"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
@@ -78,17 +94,18 @@
         android:hint="@string/yeni_kullan_c_ad"
         android:importantForAutofill="no"
         android:inputType="text"
-        android:textColorHint="@color/gri" />
+        android:textColorHint="@color/gri"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/kaydetBtn"
-        android:visibility="gone"
         style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="20dp"
-        android:text="@string/kaydet" />
+        android:text="@string/kaydet"
+        android:visibility="gone" />
 
 
     <ProgressBar
@@ -107,5 +124,15 @@
         android:layout_marginTop="40dp"
         android:text=""
         android:textSize="20sp" />
+
+
+    <Button
+        android:id="@+id/deleteAccountButton"
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
+        android:text="@string/hesab_sil" />
 
 </LinearLayout>

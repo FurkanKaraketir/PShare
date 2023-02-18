@@ -23,8 +23,10 @@ class HashtagActivity : AppCompatActivity() {
     private lateinit var hashtagPostAddBtn: FloatingActionButton
     private lateinit var selectedHashtag: String
     private lateinit var recyclerView: RecyclerView
+    private var myBlockList = java.util.ArrayList<String>()
 
     private var postList = ArrayList<Post>()
+    private var blockedMe = ArrayList<String>()
 
 
     @SuppressLint("NotifyDataSetChanged")
@@ -54,8 +56,43 @@ class HashtagActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
+        database.collection("Blocks").whereEqualTo("main", auth.uid.toString())
+            .addSnapshotListener { blockList, error ->
+                if (blockList != null) {
+                    myBlockList.clear()
+                    for (id in blockList) {
+                        myBlockList.add(id.get("blocksWho").toString())
+
+                    }
+                    database.collection("Blocks").whereEqualTo("blocksWho", auth.uid.toString())
+                        .addSnapshotListener { blockMeList, _ ->
+                            if (blockMeList != null) {
+                                blockedMe.clear()
+                                for (id2 in blockMeList) {
+                                    blockedMe.add(id2.get("main").toString())
+
+                                }
+
+                            }
+                            verileriAl()
+
+                        }
+
+                }
+                if (error != null) {
+                    println(error.localizedMessage)
+                }
+            }
+
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun verileriAl() {
         database.collection("Post").orderBy("timestamp", Query.Direction.DESCENDING)
             .addSnapshotListener { value, _ ->
+                postList.clear()
                 if (value != null) {
                     for (post in value) {
                         val newPost = Post(
@@ -67,12 +104,13 @@ class HashtagActivity : AppCompatActivity() {
                         )
 
                         if (newPost.postDescription.contains(selectedHashtag)) {
-                            postList.add(newPost)
+                            if (newPost.postOwnerID !in myBlockList && newPost.postOwnerID !in blockedMe) {
+                                postList.add(newPost)
+                            }
                         }
                     }
                 }
                 recyclerViewAdapter.notifyDataSetChanged()
             }
-
     }
 }

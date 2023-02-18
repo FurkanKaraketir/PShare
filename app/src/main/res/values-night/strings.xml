@@ -31,4 +31,10 @@
     <string name="_0_yan_t">0 Yanıt</string>
     <string name="yorumu_in_yan_tlar">Yorumu İçin Yanıtlar</string>
     <string name="yan_t_yaz">Yanıt Yaz</string>
+    <string name="hesab_sil">Hesabı Sil</string>
+    <string name="daha_fazla_se_enek">Daha Fazla Seçenek</string>
+    <string name="engelle">Engelle</string>
+    <string name="engeli_kald_r">Engeli Kaldır</string>
+    <string name="default_notification_channel_id">212121</string>
+    <string name="postu_be_enenler">Postu Beğenenler</string>
 </resources>

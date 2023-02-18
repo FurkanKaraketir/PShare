@@ -30,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private var idList = ArrayList<String>()
     private var postList = ArrayList<Post>()
+    private var myBlockList = ArrayList<String>()
+    private var blockedMe = ArrayList<String>()
 
     public override fun onStart() {
         super.onStart()
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity() {
             this.startActivity(intent)
             finish()
         } else {
+            FirebaseMessaging.getInstance().subscribeToTopic("allUsers")
             FirebaseMessaging.getInstance().subscribeToTopic(auth.uid.toString())
         }
     }
@@ -60,6 +63,10 @@ class MainActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(applicationContext)
         recyclerView.layoutManager = layoutManager
         recyclerViewAdapter = PostRecyclerAdapter(postList)
+
+
+
+
         recyclerView.adapter = recyclerViewAdapter
         postAddButton = binding.addPostButton
 
@@ -71,9 +78,34 @@ class MainActivity : AppCompatActivity() {
                         idList.add(id.get("followsWho").toString())
 
                     }
-                    getData()
+
 
                 }
+                database.collection("Blocks").whereEqualTo("main", auth.uid.toString())
+                    .addSnapshotListener { blockList, _ ->
+                        if (blockList != null) {
+                            myBlockList.clear()
+                            for (id in blockList) {
+                                myBlockList.add(id.get("blocksWho").toString())
+
+                            }
+
+                        }
+                        database.collection("Blocks").whereEqualTo("blocksWho", auth.uid.toString())
+                            .addSnapshotListener { blockMeList, _ ->
+                                if (blockMeList != null) {
+                                    blockedMe.clear()
+                                    for (id2 in blockMeList) {
+                                        blockedMe.add(id2.get("main").toString())
+
+                                    }
+
+                                }
+                                getData()
+
+                            }
+
+                    }
                 if (error != null) {
                     println(error.localizedMessage)
                 }
@@ -86,6 +118,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
 
     @SuppressLint("NotifyDataSetChanged")
     private fun getData() {
@@ -107,7 +140,11 @@ class MainActivity : AppCompatActivity() {
                         )
 
                         if (newPost.postOwnerID in idList) {
-                            postList.add(newPost)
+                            if (newPost.postOwnerID !in myBlockList && newPost.postOwnerID !in blockedMe) {
+                                postList.add(newPost)
+
+                            }
+
                         }
 
 

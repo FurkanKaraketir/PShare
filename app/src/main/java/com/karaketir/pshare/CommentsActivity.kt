@@ -19,10 +19,10 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.storage.FirebaseStorage
 import com.karaketir.pshare.adapter.CommentRecyclerAdapter
 import com.karaketir.pshare.databinding.ActivityCommentsBinding
 import com.karaketir.pshare.model.Comment
+import com.karaketir.pshare.services.FcmNotificationsSenderService
 import com.karaketir.pshare.services.glide
 import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
@@ -32,7 +32,6 @@ import kotlin.math.hypot
 
 class CommentsActivity : AppCompatActivity() {
 
-    private lateinit var storage: FirebaseStorage
     private lateinit var auth: FirebaseAuth
     private lateinit var database: FirebaseFirestore
     private lateinit var selectedPostID: String
@@ -49,6 +48,8 @@ class CommentsActivity : AppCompatActivity() {
     private lateinit var commentToUserNameText: TextView
     private lateinit var recyclerCommentViewAdapter: CommentRecyclerAdapter
     private var commentList = ArrayList<Comment>()
+    private var myBlockList = ArrayList<String>()
+    private var blockedMe = ArrayList<String>()
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +65,6 @@ class CommentsActivity : AppCompatActivity() {
         commentToPostText = binding.commentToPostText
         commentToUserNameText = binding.commentToEmailText
 
-        storage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
         database = FirebaseFirestore.getInstance()
 
@@ -105,28 +105,36 @@ class CommentsActivity : AppCompatActivity() {
         recyclerCommentViewAdapter = CommentRecyclerAdapter(commentList)
         recyclerCommentsView.adapter = recyclerCommentViewAdapter
 
-        database.collection("Comments").whereEqualTo("commentToPost", selectedPostID)
-            .orderBy("timestamp", Query.Direction.DESCENDING).addSnapshotListener { value, error ->
+
+        database.collection("Blocks").whereEqualTo("main", auth.uid.toString())
+            .addSnapshotListener { blockList, error ->
+                if (blockList != null) {
+                    myBlockList.clear()
+                    for (id in blockList) {
+                        myBlockList.add(id.get("blocksWho").toString())
+
+                    }
+                    database.collection("Blocks").whereEqualTo("blocksWho", auth.uid.toString())
+                        .addSnapshotListener { blockMeList, _ ->
+                            if (blockMeList != null) {
+                                blockedMe.clear()
+                                for (id2 in blockMeList) {
+                                    blockedMe.add(id2.get("main").toString())
+
+                                }
+
+                            }
+                            verileriAl()
+
+                        }
+
+                }
                 if (error != null) {
                     println(error.localizedMessage)
                 }
-                commentList.clear()
-                if (value != null) {
-                    for (comment in value) {
-                        val newComment = Comment(
-                            comment.get("comment").toString(),
-                            comment.id,
-                            comment.get("commentOwnerID").toString(),
-                            comment.get("commentToPost").toString(),
-                            comment.get("commentToWho").toString(),
-                            comment.get("timestamp") as Timestamp
-
-                        )
-                        commentList.add(newComment)
-                    }
-                }
-                recyclerCommentViewAdapter.notifyDataSetChanged()
             }
+
+
 
         commentSendEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -204,8 +212,20 @@ class CommentsActivity : AppCompatActivity() {
 
                 database.collection("Comments").document(documentID).set(data)
                     .addOnSuccessListener {
-                        commentSendEditText.text.clear()
                         documentID = UUID.randomUUID().toString()
+
+                        if (auth.uid.toString() != selectedPostOwnerID) {
+                            val notificationsSender = FcmNotificationsSenderService(
+                                "/topics/$selectedPostOwnerID",
+                                "Yeni Yorum",
+                                "Yeni Yorumunuz Var \n${commentSendEditText.text}",
+                                this
+                            )
+                            notificationsSender.sendNotifications()
+                        }
+
+
+                        commentSendEditText.text.clear()
                     }
 
             } else {
@@ -214,5 +234,35 @@ class CommentsActivity : AppCompatActivity() {
 
         }
 
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun verileriAl() {
+        database.collection("Comments").whereEqualTo("commentToPost", selectedPostID)
+            .orderBy("timestamp", Query.Direction.DESCENDING).addSnapshotListener { value, error ->
+                if (error != null) {
+                    println(error.localizedMessage)
+                }
+                commentList.clear()
+                if (value != null) {
+                    for (comment in value) {
+                        val newComment = Comment(
+                            comment.get("comment").toString(),
+                            comment.id,
+                            comment.get("commentOwnerID").toString(),
+                            comment.get("commentToPost").toString(),
+                            comment.get("commentToWho").toString(),
+                            comment.get("timestamp") as Timestamp
+
+                        )
+
+                        if (newComment.commentOwnerID !in myBlockList && newComment.commentOwnerID !in blockedMe) {
+                            commentList.add(newComment)
+                        }
+
+                    }
+                }
+                recyclerCommentViewAdapter.notifyDataSetChanged()
+            }
     }
 }

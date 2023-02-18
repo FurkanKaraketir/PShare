@@ -23,6 +23,7 @@ import com.karaketir.pshare.adapter.PostRecyclerAdapter
 import com.karaketir.pshare.databinding.ActivityExploreBinding
 import com.karaketir.pshare.model.Post
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.hypot
 
 class ExploreActivity : AppCompatActivity() {
@@ -36,6 +37,8 @@ class ExploreActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
     private lateinit var filteredList: ArrayList<Post>
     private var postList = ArrayList<Post>()
+    private var myBlockList = ArrayList<String>()
+    private var blockedMe = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,7 +114,35 @@ class ExploreActivity : AppCompatActivity() {
             }
         }
 
-        verileriAl()
+
+        database.collection("Blocks").whereEqualTo("main", auth.uid.toString())
+            .addSnapshotListener { blockList, error ->
+                if (blockList != null) {
+                    myBlockList.clear()
+                    for (id in blockList) {
+                        myBlockList.add(id.get("blocksWho").toString())
+
+                    }
+                    database.collection("Blocks").whereEqualTo("blocksWho", auth.uid.toString())
+                        .addSnapshotListener { blockMeList, _ ->
+                            if (blockMeList != null) {
+                                blockedMe.clear()
+                                for (id2 in blockMeList) {
+                                    blockedMe.add(id2.get("main").toString())
+
+                                }
+
+                            }
+                            verileriAl()
+
+                        }
+
+                }
+                if (error != null) {
+                    println(error.localizedMessage)
+                }
+            }
+
     }
 
     private fun setupRecyclerView(list: ArrayList<Post>) {
@@ -145,7 +176,11 @@ class ExploreActivity : AppCompatActivity() {
                             post.get("timestamp") as Timestamp
                         )
 
-                        postList.add(newPost)
+                        if (newPost.postOwnerID !in myBlockList && newPost.postOwnerID !in blockedMe) {
+                            postList.add(newPost)
+
+                        }
+
                     }
 
                     recyclerKesfetViewAdapter.notifyDataSetChanged()

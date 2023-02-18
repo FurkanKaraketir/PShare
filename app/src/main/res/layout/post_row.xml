@@ -27,6 +27,17 @@
                 android:scaleType="centerCrop"
                 app:civ_border_overlay="false" />
 
+            <ImageView
+                android:id="@+id/moreOptionsPost"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="7dp"
+                android:contentDescription="@string/daha_fazla_se_enek"
+                android:gravity="center"
+                android:src="@drawable/baseline_more_vert_24"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/userName"
                 style="@style/TextAppearance.AppCompat.Title"
@@ -132,7 +143,6 @@
 
 
                 <ImageView
-                    android:visibility="gone"
                     android:id="@+id/likedButton"
                     android:layout_width="27dp"
                     android:layout_height="27dp"
@@ -142,9 +152,10 @@
                     android:layout_marginEnd="5dp"
                     android:layout_marginBottom="5dp"
                     android:contentDescription="@string/be_enildi_tu_u"
-                    android:src="@drawable/baseline_thumb_up_alt_24" />
+                    android:src="@drawable/baseline_thumb_up_alt_24"
+                    android:visibility="gone" />
+
                 <ImageView
-                    android:visibility="gone"
                     android:id="@+id/unlikedButton"
                     android:layout_width="27dp"
                     android:layout_height="27dp"
@@ -154,7 +165,9 @@
                     android:layout_marginEnd="5dp"
                     android:layout_marginBottom="5dp"
                     android:contentDescription="@string/be_enildi_tu_u"
-                    android:src="@drawable/baseline_thumb_up_off_alt_24" />
+                    android:src="@drawable/baseline_thumb_up_off_alt_24"
+                    android:visibility="gone" />
+
                 <TextView
                     android:id="@+id/likeCountText"
                     style="@style/TextAppearance.AppCompat.Title"

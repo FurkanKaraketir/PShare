@@ -1,17 +1,24 @@
 package com.karaketir.pshare.adapter
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.karaketir.pshare.R
+import com.karaketir.pshare.UserFilteredPostsActivity
 import com.karaketir.pshare.databinding.ReplyRowBinding
 import com.karaketir.pshare.model.Reply
 import com.karaketir.pshare.services.glide
 import com.karaketir.pshare.services.placeHolderYap
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
     RecyclerView.Adapter<ReplyRecyclerAdapter.ReplyHolder>() {
@@ -49,11 +56,99 @@ class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
                         )
 
                         binding.replyText.text = myItem.reply
-
+                        binding.replyUserName.setOnClickListener {
+                            val intent = Intent(
+                                holder.itemView.context, UserFilteredPostsActivity::class.java
+                            )
+                            intent.putExtra("postOwnerID", myItem.replyOwnerID)
+                            holder.itemView.context.startActivity(intent)
+                        }
                         if (myItem.replyOwnerID == auth.uid.toString()) {
+                            binding.moreOptionsReply.visibility = View.GONE
                             binding.deleteReplyButton.visibility = View.VISIBLE
                         } else {
+                            binding.moreOptionsReply.visibility = View.VISIBLE
                             binding.deleteReplyButton.visibility = View.GONE
+                        }
+                        binding.moreOptionsReply.setOnClickListener {
+
+                            val popup = PopupMenu(holder.itemView.context, binding.moreOptionsReply)
+                            popup.inflate(R.menu.post_options_menu)
+
+                            popup.setOnMenuItemClickListener(object :
+                                MenuItem.OnMenuItemClickListener,
+                                PopupMenu.OnMenuItemClickListener {
+                                override fun onMenuItemClick(item: MenuItem): Boolean {
+                                    return when (item.itemId) {
+                                        R.id.blockButton -> {
+                                            val documentName = UUID.randomUUID().toString()
+                                            val data = hashMapOf(
+                                                "main" to auth.uid.toString(),
+                                                "blocksWho" to myItem.replyOwnerID
+                                            )
+
+                                            val blockAlert =
+                                                AlertDialog.Builder(holder.itemView.context)
+                                            blockAlert.setTitle("Engelle")
+                                            blockAlert.setMessage("Engellemek İstedğinizden Emin misiniz?")
+                                            blockAlert.setPositiveButton("Engelle") { _, _ ->
+
+                                                database.collection("Blocks").document(documentName)
+                                                    .set(data)
+
+                                                database.collection("Followings")
+                                                    .whereEqualTo("main", auth.uid.toString())
+                                                    .whereEqualTo("followsWho", myItem.replyOwnerID)
+                                                    .addSnapshotListener { value, _ ->
+                                                        if (value != null) {
+                                                            for (i in value) {
+                                                                database.collection("Followings")
+                                                                    .document(i.id).delete()
+                                                            }
+                                                        }
+                                                        database.collection("Followings")
+                                                            .whereEqualTo(
+                                                                "followsWho", auth.uid.toString()
+                                                            ).whereEqualTo(
+                                                                "main", myItem.replyOwnerID
+                                                            ).addSnapshotListener { value2, _ ->
+                                                                if (value2 != null) {
+                                                                    for (j in value2) {
+                                                                        database.collection("Followings")
+                                                                            .document(j.id).delete()
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        Toast.makeText(
+                                                            holder.itemView.context,
+                                                            "Engellendi",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+
+                                                    }
+
+                                            }
+
+                                            blockAlert.setNegativeButton("İptal") { _, _ ->
+
+                                            }
+                                            blockAlert.show()
+
+
+                                            //handle menu1 click
+                                            true
+                                        }
+
+                                        else -> {
+                                            false
+                                        }
+                                    }
+                                }
+                            })
+                            //displaying the popup
+                            //displaying the popup
+                            popup.show()
                         }
 
                         binding.deleteReplyButton.setOnClickListener {

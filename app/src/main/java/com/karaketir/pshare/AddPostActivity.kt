@@ -28,6 +28,8 @@ import com.giphy.sdk.ui.themes.GPHTheme
 import com.giphy.sdk.ui.themes.GridType
 import com.giphy.sdk.ui.views.GiphyDialogFragment
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -38,6 +40,7 @@ import com.karaketir.pshare.services.glide
 import com.karaketir.pshare.services.placeHolderYap
 import java.util.*
 import kotlin.math.hypot
+
 
 class AddPostActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionListener {
 
@@ -61,6 +64,14 @@ class AddPostActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         super.onCreate(savedInstanceState)
         val binding = ActivityAddPostBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        MobileAds.initialize(
+            this
+        ) { }
+
+        val adView = AdView(this)
+
+        adView.adUnitId = "ca-app-pub-3786123641227695/6890618464"
+
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
