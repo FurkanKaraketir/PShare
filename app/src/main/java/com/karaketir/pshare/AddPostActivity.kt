@@ -58,6 +58,7 @@ class AddPostActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     private lateinit var database: FirebaseFirestore
     private lateinit var spaceRef: StorageReference
     private var urlFinal = ""
+    private var fileName = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,9 +98,10 @@ class AddPostActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         secilenGorsel.visibility = View.GONE
 
         val storageRef = storage.reference
-        val imagesRef = storageRef.child("userProfilePhotos")
+        val imagesRef = storageRef.child("photos")
+        val randomID = UUID.randomUUID().toString()
 
-        val fileName = "${auth.uid.toString()}.jpg"
+        fileName = "${randomID}.jpg"
         spaceRef = imagesRef.child(fileName)
 
         val alertDialog = AlertDialog.Builder(this@AddPostActivity)
@@ -181,11 +183,7 @@ class AddPostActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
                     // create the animation (the final radius is zero)
                     val anim = ViewAnimationUtils.createCircularReveal(
-                        sendButton,
-                        cx,
-                        cy,
-                        initialRadius,
-                        0f
+                        sendButton, cx, cy, initialRadius, 0f
                     )
 
                     // make the view invisible when the animation is done
@@ -272,8 +270,7 @@ class AddPostActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                 spaceRef.putFile(uri).addOnSuccessListener {
 
                     val yuklenenGorselReference =
-                        FirebaseStorage.getInstance().reference.child("userProfilePhotos")
-                            .child(auth.uid.toString() + ".jpg")
+                        FirebaseStorage.getInstance().reference.child("photos").child(fileName)
 
                     yuklenenGorselReference.downloadUrl.addOnSuccessListener { downloadURL ->
 
