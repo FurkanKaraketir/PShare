@@ -28,6 +28,7 @@ import com.giphy.sdk.ui.themes.GPHTheme
 import com.giphy.sdk.ui.themes.GridType
 import com.giphy.sdk.ui.views.GiphyDialogFragment
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -69,9 +70,9 @@ class AddPostActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
             this
         ) { }
 
-        val adView = AdView(this)
-
-        adView.adUnitId = "ca-app-pub-3786123641227695/6890618464"
+        val mAdView: AdView = binding.adView
+        val adRequest: AdRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
 
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
