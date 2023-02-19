@@ -3,6 +3,7 @@ package com.karaketir.pshare
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -88,6 +89,15 @@ class CommentsActivity : AppCompatActivity() {
                     }
                     commentToPostText.text = selectedPostDescription
                     commentToUserNameText.text = selectedPostUserName
+                    commentToUserNameText.setOnClickListener {
+                        val newIntent = Intent(this, UserFilteredPostsActivity::class.java)
+                        newIntent.putExtra("postOwnerID", selectedPostOwnerID)
+                        startActivity(newIntent)
+                    }
+                    profileImageView.setOnClickListener {
+                        openLink(it2.get("profileImageURL").toString(), this)
+                    }
+
                     selectedPostImageView.setOnClickListener {
                         openLink(selectedPostImageURL, this)
                     }

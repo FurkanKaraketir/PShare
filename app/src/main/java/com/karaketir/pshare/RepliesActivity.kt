@@ -3,6 +3,7 @@ package com.karaketir.pshare
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -23,6 +24,7 @@ import com.karaketir.pshare.databinding.ActivityRepliesBinding
 import com.karaketir.pshare.model.Reply
 import com.karaketir.pshare.services.FcmNotificationsSenderService
 import com.karaketir.pshare.services.glide
+import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
 import de.hdodenhof.circleimageview.CircleImageView
 import java.util.*
@@ -77,9 +79,19 @@ class RepliesActivity : AppCompatActivity() {
                         selectedCommentPostID = comment.get("commentToPost").toString()
                         selectedCommentOwnerID = comment.get("commentOwnerID").toString()
                         replyToEmailText.text = it.get("username").toString()
+                        replyToEmailText.setOnClickListener {
+                            val newIntent = Intent(this, UserFilteredPostsActivity::class.java)
+                            newIntent.putExtra("postOwnerID", selectedCommentOwnerID)
+                            startActivity(newIntent)
+                        }
                         profileImageReplyActivity.glide(
                             it.get("profileImageURL").toString(), placeHolderYap(this)
                         )
+
+                        profileImageReplyActivity.setOnClickListener { _ ->
+                            openLink(it.get("profileImageURL").toString(), this)
+                        }
+
                         replyToCommentText.text = comment.get("comment").toString()
 
                     }

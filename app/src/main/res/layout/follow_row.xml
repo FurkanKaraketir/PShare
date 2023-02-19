@@ -10,15 +10,17 @@
         android:layout_margin="5dp"
         app:cardCornerRadius="10dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/userContainer"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/userProfileImageRow"
-                android:layout_width="65dp"
-                android:layout_height="65dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_margin="10dp"
                 android:contentDescription="@string/profil_resmi"
                 android:src="@drawable/baseline_add_photo_alternate_24" />
@@ -26,35 +28,41 @@
             <TextView
                 android:id="@+id/userNameRowView"
                 style="@style/TextAppearance.AppCompat.Title"
-                android:layout_width="160dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/userProfileImageRow"
+                android:layout_margin="5dp"
                 android:text=""
                 android:textSize="17sp" />
 
             <Button
                 android:id="@+id/followRowButton"
                 style="@style/Widget.Material3.Button.ElevatedButton"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="10dp"
-                android:layout_toEndOf="@id/userNameRowView"
+                android:layout_margin="10dp"
                 android:text="@string/takip_et"
                 android:visibility="gone" />
 
             <Button
                 android:id="@+id/unFollowRowButton"
                 style="@style/Widget.Material3.Button.ElevatedButton"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="10dp"
-                android:layout_toEndOf="@id/userNameRowView"
+                android:layout_margin="10dp"
                 android:text="@string/takibi_b_rak"
                 android:visibility="gone" />
-        </RelativeLayout>
+
+            <Button
+                android:id="@+id/moreOptionsFollow"
+                style="@style/Widget.Material3.Button.IconButton.Outlined"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:contentDescription="@string/daha_fazla_se_enek"
+                android:gravity="center"
+                android:visibility="visible"
+                app:icon="@drawable/baseline_more_vert_24" />
+
+        </LinearLayout>
 
 
     </androidx.cardview.widget.CardView>

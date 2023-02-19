@@ -18,6 +18,7 @@ import com.karaketir.pshare.UserFilteredPostsActivity
 import com.karaketir.pshare.databinding.CommentRowBinding
 import com.karaketir.pshare.model.Comment
 import com.karaketir.pshare.services.glide
+import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
 import java.util.*
 import kotlin.collections.ArrayList
@@ -59,6 +60,9 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
                             it.get("profileImageURL").toString(),
                             placeHolderYap(holder.itemView.context)
                         )
+                        binding.profileImageComment.setOnClickListener { _ ->
+                            openLink(it.get("profileImageURL").toString(), holder.itemView.context)
+                        }
 
                         binding.commentUserName.setOnClickListener {
                             val intent = Intent(

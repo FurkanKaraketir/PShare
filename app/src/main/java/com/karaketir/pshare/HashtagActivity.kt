@@ -110,6 +110,7 @@ class HashtagActivity : AppCompatActivity() {
                         }
                     }
                 }
+                supportActionBar?.title = "$selectedHashtag - ${postList.size} Post"
                 recyclerViewAdapter.notifyDataSetChanged()
             }
     }

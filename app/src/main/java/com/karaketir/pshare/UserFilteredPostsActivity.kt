@@ -51,6 +51,16 @@ class UserFilteredPostsActivity : AppCompatActivity() {
         database.collection("User").document(selectedPostOwnerID).get().addOnSuccessListener {
             supportActionBar?.title = it.get("username").toString()
 
+            database.collection("Followings").whereEqualTo("followsWho", selectedPostOwnerID)
+                .addSnapshotListener { value, _ ->
+
+                    if (value != null && !value.isEmpty) {
+                        supportActionBar?.title =
+                            "${it.get("username").toString()} - ${value.size() - 1} Takipçi"
+                    }
+
+                }
+
         }
 
 

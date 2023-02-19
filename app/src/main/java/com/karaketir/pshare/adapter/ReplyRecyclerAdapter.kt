@@ -16,6 +16,7 @@ import com.karaketir.pshare.UserFilteredPostsActivity
 import com.karaketir.pshare.databinding.ReplyRowBinding
 import com.karaketir.pshare.model.Reply
 import com.karaketir.pshare.services.glide
+import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
 import java.util.*
 import kotlin.collections.ArrayList
@@ -54,6 +55,9 @@ class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
                             it.get("profileImageURL").toString(),
                             placeHolderYap(holder.itemView.context)
                         )
+                        binding.profileImageReply.setOnClickListener { _ ->
+                            openLink(it.get("profileImageURL").toString(), holder.itemView.context)
+                        }
 
                         binding.replyText.text = myItem.reply
                         binding.replyUserName.setOnClickListener {

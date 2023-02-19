@@ -1,6 +1,7 @@
 package com.karaketir.pshare
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -77,6 +78,15 @@ class LikesActivity : AppCompatActivity() {
                     selectedPostImageView.setOnClickListener {
                         openLink(selectedPostImageURL, this)
                     }
+                    profileImageView.setOnClickListener {
+                        openLink(it2.get("profileImageURL").toString(), this)
+                    }
+                    commentToUserNameText.setOnClickListener {
+                        val newIntent = Intent(this, UserFilteredPostsActivity::class.java)
+                        newIntent.putExtra("postOwnerID", selectedPostOwnerID)
+                        startActivity(newIntent)
+                    }
+
                 }
 
 
@@ -146,10 +156,9 @@ class LikesActivity : AppCompatActivity() {
 
                                 if (newUser.userID !in myBlockList && newUser.userID !in blockedMe) {
                                     userList.add(newUser)
-                                    likeCountTextLikeActivity.text = "${userList.size} Beğeni"
-                                    recyclerCommentViewAdapter.notifyDataSetChanged()
-
                                 }
+                                likeCountTextLikeActivity.text = "${userList.size} Beğeni"
+                                recyclerCommentViewAdapter.notifyDataSetChanged()
 
 
                             }
