@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.ads.nativetemplates.rvadapter.AdmobNativeAdAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -65,10 +66,13 @@ class MainActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(applicationContext)
         recyclerView.layoutManager = layoutManager
         recyclerViewAdapter = PostRecyclerAdapter(postList)
+        val admobNativeAdAdapter = AdmobNativeAdAdapter.Builder.with(
+            "ca-app-pub-3786123641227695/9515747961", recyclerViewAdapter, "medium"
+        ).adItemInterval(5).build()
         val updateLayout = binding.updateLayout
         val updateButton = binding.updateButton
 
-        recyclerView.adapter = recyclerViewAdapter
+        recyclerView.adapter = admobNativeAdAdapter
         postAddButton = binding.addPostButton
 
         updateButton.setOnClickListener {
@@ -141,7 +145,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, AddPostActivity::class.java)
             startActivity(intent)
         }
-
 
     }
 

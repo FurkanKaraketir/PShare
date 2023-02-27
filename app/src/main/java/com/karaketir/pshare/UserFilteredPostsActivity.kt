@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.ads.nativetemplates.rvadapter.AdmobNativeAdAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -46,7 +47,10 @@ class UserFilteredPostsActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
         recyclerViewAdapter = PostRecyclerAdapter(postList)
-        recyclerView.adapter = recyclerViewAdapter
+        val admobNativeAdAdapter = AdmobNativeAdAdapter.Builder.with(
+            "ca-app-pub-3786123641227695/9515747961", recyclerViewAdapter, "medium"
+        ).adItemInterval(5).build()
+        recyclerView.adapter = admobNativeAdAdapter
 
         database.collection("User").document(selectedPostOwnerID).get().addOnSuccessListener {
             supportActionBar?.title = it.get("username").toString()

@@ -14,6 +14,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.ads.nativetemplates.rvadapter.AdmobNativeAdAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -149,7 +150,10 @@ class ExploreActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this)
         recyclerKesfetView.layoutManager = layoutManager
         recyclerKesfetViewAdapter = PostRecyclerAdapter(list)
-        recyclerKesfetView.adapter = recyclerKesfetViewAdapter
+        val admobNativeAdAdapter = AdmobNativeAdAdapter.Builder.with(
+            "ca-app-pub-3786123641227695/9515747961", recyclerKesfetViewAdapter, "medium"
+        ).adItemInterval(5).build()
+        recyclerKesfetView.adapter = admobNativeAdAdapter
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -162,9 +166,9 @@ class ExploreActivity : AppCompatActivity() {
                 if (error != null) {
                     println(error.localizedMessage)
                 }
+                postList.clear()
 
-                if (posts != null) {
-                    postList.clear()
+                if (posts != null && !posts.isEmpty) {
 
                     for (post in posts) {
 
@@ -183,9 +187,9 @@ class ExploreActivity : AppCompatActivity() {
 
                     }
 
-                    recyclerKesfetViewAdapter.notifyDataSetChanged()
 
                 }
+                recyclerKesfetViewAdapter.notifyDataSetChanged()
             }
     }
 
