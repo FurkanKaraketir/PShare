@@ -20,8 +20,8 @@ android {
         applicationId "com.karaketir.pshare"
         minSdk 26
         targetSdk 33
-        versionCode 7
-        versionName "1.7"
+        versionCode 8
+        versionName "1.8"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -45,12 +45,12 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
-    implementation 'androidx.core:core-splashscreen:1.0.0'
+    implementation 'androidx.core:core-splashscreen:1.0.1'
 
-    implementation 'androidx.work:work-runtime-ktx:2.8.0'
+    implementation 'androidx.work:work-runtime-ktx:2.8.1'
     implementation 'com.giphy.sdk:ui:2.3.0'
     implementation 'com.github.dhaval2404:imagepicker:2.1'
     implementation 'com.github.bumptech.glide:glide:4.14.2'
@@ -60,16 +60,16 @@ dependencies {
 
     implementation platform('com.google.firebase:firebase-bom:31.2.1')
 
-    implementation('com.google.firebase:firebase-auth-ktx:21.1.0') {
+    implementation('com.google.firebase:firebase-auth-ktx:21.3.0') {
         exclude module: "play-services-safetynet"
     }
-    implementation 'com.google.firebase:firebase-firestore-ktx:24.4.3'
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.2.0'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.5'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.5.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.2.2'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.6'
     implementation 'com.google.firebase:firebase-perf-ktx:20.3.1'
     implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'
-    implementation 'com.google.firebase:firebase-messaging-ktx:23.1.1'
-    implementation 'com.google.android.gms:play-services-ads:21.5.0'
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.1.2'
+    implementation 'com.google.android.gms:play-services-ads:22.0.0'
     implementation project(':nativetemplates')
 
 
