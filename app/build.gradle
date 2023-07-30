@@ -20,8 +20,8 @@ android {
         applicationId "com.karaketir.pshare"
         minSdk 26
         targetSdk 33
-        versionCode 9
-        versionName "1.9"
+        versionCode 10
+        versionName "1.10"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -60,15 +60,15 @@ dependencies {
 
     implementation platform('com.google.firebase:firebase-bom:31.2.1')
 
-    implementation('com.google.firebase:firebase-auth-ktx:22.0.0') {
+    implementation('com.google.firebase:firebase-auth-ktx:22.1.0') {
         exclude module: "play-services-safetynet"
     }
-    implementation 'com.google.firebase:firebase-firestore-ktx:24.6.0'
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.2.2'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.7'
-    implementation 'com.google.firebase:firebase-perf-ktx:20.3.2'
-    implementation 'com.google.firebase:firebase-storage-ktx:20.2.0'
-    implementation 'com.google.firebase:firebase-messaging-ktx:23.1.2'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.7.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.3.0'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.4.0'
+    implementation 'com.google.firebase:firebase-perf-ktx:20.4.0'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.2.1'
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.2.0'
 
 
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
