@@ -7,6 +7,7 @@ import android.widget.ImageView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.karaketir.pshare.PhotoViewerActivity
 import com.karaketir.pshare.R
 
 fun ImageView.glide(url: String?, placeholder: CircularProgressDrawable) {
@@ -16,8 +17,15 @@ fun ImageView.glide(url: String?, placeholder: CircularProgressDrawable) {
 }
 
 fun openLink(link: String, context: Context) {
-    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
-    context.startActivity(browserIntent)
+
+    if (link.contains("giphy")) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+        context.startActivity(intent)
+    } else {
+        val intent = Intent(context, PhotoViewerActivity::class.java)
+        intent.putExtra("photoLink", link)
+        context.startActivity(intent)
+    }
 }
 
 

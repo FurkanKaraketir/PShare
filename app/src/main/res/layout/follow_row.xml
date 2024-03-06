@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,59 +11,84 @@
         android:layout_margin="5dp"
         app:cardCornerRadius="10dp">
 
-        <LinearLayout
-            android:id="@+id/userContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/userProfileImageRow"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:contentDescription="@string/profil_resmi"
-                android:src="@drawable/baseline_add_photo_alternate_24" />
-
-            <TextView
-                android:id="@+id/userNameRowView"
-                style="@style/TextAppearance.AppCompat.Title"
+            <LinearLayout
+                android:id="@+id/userContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                tools:ignore="RelativeOverlap">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/userProfileImageRow"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:contentDescription="@string/profil_resmi"
+                    android:src="@drawable/baseline_add_photo_alternate_24" />
+
+                <TextView
+                    android:id="@+id/userNameRowView"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text=""
+                    android:textSize="17sp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_margin="5dp"
-                android:text=""
-                android:textSize="17sp" />
-
-            <Button
-                android:id="@+id/followRowButton"
-                style="@style/Widget.Material3.Button.ElevatedButton"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="@string/takip_et"
-                android:visibility="gone" />
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                tools:ignore="RelativeOverlap">
 
-            <Button
-                android:id="@+id/unFollowRowButton"
-                style="@style/Widget.Material3.Button.ElevatedButton"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="@string/takibi_b_rak"
-                android:visibility="gone" />
+                <TextView
+                    android:textSize="12sp"
+                    android:id="@+id/followRowButton"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/takip_et"
+                    android:visibility="gone" />
 
-            <Button
-                android:id="@+id/moreOptionsFollow"
-                style="@style/Widget.Material3.Button.IconButton.Outlined"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:contentDescription="@string/daha_fazla_se_enek"
-                android:gravity="center"
-                android:visibility="visible"
-                app:icon="@drawable/baseline_more_vert_24" />
+                <TextView
+                    android:textSize="12sp"
+                    android:id="@+id/unFollowRowButton"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/takibi_b_rak"
+                    android:visibility="gone" />
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/moreOptionsFollow"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/daha_fazla_se_enek"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    app:icon="@drawable/baseline_more_vert_24" />
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
 
 
     </androidx.cardview.widget.CardView>

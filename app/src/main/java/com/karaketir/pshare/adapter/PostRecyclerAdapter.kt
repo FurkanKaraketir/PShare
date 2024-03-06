@@ -50,22 +50,24 @@ open class PostRecyclerAdapter(
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
         val followList = ArrayList<String>()
+
         with(holder) {
+            val myBinding = binding
 
             if (postList.isNotEmpty() && position >= 0 && position < postList.size) {
                 val myItem = postList[position]
                 var profileImageURL = ""
                 db.collection("User").document(myItem.postOwnerID).get().addOnSuccessListener {
-                    binding.userName.text = it.get("username").toString()
+                    myBinding.userName.text = it.get("username").toString()
                     profileImageURL = it.get("profileImageURL").toString()
-                    binding.profileImage.glide(
+                    myBinding.profileImage.glide(
                         profileImageURL, placeHolderYap(holder.itemView.context)
                     )
                 }
 
-                binding.moreOptionsPost.setOnClickListener {
+                myBinding.moreOptionsPost.setOnClickListener {
 
-                    val popup = PopupMenu(holder.itemView.context, binding.moreOptionsPost)
+                    val popup = PopupMenu(holder.itemView.context, myBinding.moreOptionsPost)
                     popup.inflate(R.menu.post_options_menu)
 
                     popup.setOnMenuItemClickListener(object : MenuItem.OnMenuItemClickListener,
@@ -137,21 +139,21 @@ open class PostRecyclerAdapter(
                     //displaying the popup
                     popup.show()
                 }
-                binding.postDescription.text = myItem.postDescription
+                myBinding.postDescription.text = myItem.postDescription
 
                 if (myItem.postImageURL != "") {
-                    binding.postImage.visibility = View.VISIBLE
-                    binding.postImage.glide(
+                    myBinding.postImage.visibility = View.VISIBLE
+                    myBinding.postImage.glide(
                         myItem.postImageURL, placeHolderYap(holder.itemView.context)
                     )
                 } else {
-                    binding.postImage.visibility = View.GONE
+                    myBinding.postImage.visibility = View.GONE
                 }
 
                 if (myItem.postOwnerID != auth.uid.toString()) {
 
-                    binding.deleteButton.visibility = View.GONE
-                    binding.moreOptionsPost.visibility = View.VISIBLE
+                    myBinding.deleteButton.visibility = View.GONE
+                    myBinding.moreOptionsPost.visibility = View.VISIBLE
 
                     db.collection("Followings").whereEqualTo("main", auth.uid.toString())
                         .addSnapshotListener { followIDs, error ->
@@ -166,19 +168,19 @@ open class PostRecyclerAdapter(
                                 }
                             }
                             if (myItem.postOwnerID in followList) {
-                                binding.followButton.visibility = View.GONE
-                                binding.unFollowButton.visibility = View.VISIBLE
+                                myBinding.followButton.visibility = View.GONE
+                                myBinding.unFollowButton.visibility = View.VISIBLE
                             } else {
-                                binding.followButton.visibility = View.VISIBLE
-                                binding.unFollowButton.visibility = View.GONE
+                                myBinding.followButton.visibility = View.VISIBLE
+                                myBinding.unFollowButton.visibility = View.GONE
                             }
 
                         }
                 } else {
-                    binding.deleteButton.visibility = View.VISIBLE
-                    binding.moreOptionsPost.visibility = View.GONE
-                    binding.followButton.visibility = View.GONE
-                    binding.unFollowButton.visibility = View.GONE
+                    myBinding.deleteButton.visibility = View.VISIBLE
+                    myBinding.moreOptionsPost.visibility = View.GONE
+                    myBinding.followButton.visibility = View.GONE
+                    myBinding.unFollowButton.visibility = View.GONE
                 }
 
                 var likedID = ""
@@ -191,14 +193,14 @@ open class PostRecyclerAdapter(
                             println(error.localizedMessage)
                         }
                         if (value != null && !value.isEmpty) {
-                            binding.likedButton.visibility = View.VISIBLE
-                            binding.unlikedButton.visibility = View.GONE
+                            myBinding.likedButton.visibility = View.VISIBLE
+                            myBinding.unlikedButton.visibility = View.GONE
                             for (i in value) {
                                 likedID = i.id
                             }
                         } else {
-                            binding.likedButton.visibility = View.GONE
-                            binding.unlikedButton.visibility = View.VISIBLE
+                            myBinding.likedButton.visibility = View.GONE
+                            myBinding.unlikedButton.visibility = View.VISIBLE
                         }
                     }
 
@@ -208,24 +210,24 @@ open class PostRecyclerAdapter(
                             println(error.localizedMessage)
                         }
                         if (value != null && !value.isEmpty) {
-                            binding.likeCountText.text = "${value.size()} Beğeni"
+                            myBinding.likeCountText.text = "${value.size()} Beğeni"
                         } else {
-                            binding.likeCountText.text = "0 Beğeni"
+                            myBinding.likeCountText.text = "0 Beğeni"
 
                         }
                     }
 
 
-                binding.likeCountText.setOnClickListener {
+                myBinding.likeCountText.setOnClickListener {
                     val intent = Intent(holder.itemView.context, LikesActivity::class.java)
                     intent.putExtra("postID", myItem.postID)
                     holder.itemView.context.startActivity(intent)
                 }
 
-                binding.likedButton.setOnClickListener {
+                myBinding.likedButton.setOnClickListener {
                     db.collection("Likes").document(likedID).delete()
                 }
-                binding.unlikedButton.setOnClickListener {
+                myBinding.unlikedButton.setOnClickListener {
                     val documentName = UUID.randomUUID().toString()
                     val data = hashMapOf("userID" to auth.uid.toString(), "postID" to myItem.postID)
                     db.collection("Likes").document(documentName).set(data).addOnSuccessListener {
@@ -244,7 +246,7 @@ open class PostRecyclerAdapter(
                     }
                 }
 
-                binding.followButton.setOnClickListener {
+                myBinding.followButton.setOnClickListener {
 
 
                     val documentID = UUID.randomUUID().toString()
@@ -268,7 +270,7 @@ open class PostRecyclerAdapter(
 
                 }
 
-                binding.unFollowButton.setOnClickListener {
+                myBinding.unFollowButton.setOnClickListener {
 
                     val unFollowAlert = AlertDialog.Builder(holder.itemView.context)
                     unFollowAlert.setTitle("Takibi Bırak")
@@ -294,31 +296,32 @@ open class PostRecyclerAdapter(
 
 
                 }
-                binding.commentsButton.setOnClickListener {
+                myBinding.commentsButton.setOnClickListener {
                     commentGit(holder, myItem)
                 }
-                binding.commentCountText.setOnClickListener {
+                myBinding.commentCountText.setOnClickListener {
                     commentGit(holder, myItem)
                 }
 
-                binding.postImage.setOnClickListener {
+                myBinding.postImage.setOnClickListener {
                     openLink(myItem.postImageURL, holder.itemView.context)
                 }
-                binding.profileImage.setOnClickListener {
+                myBinding.profileImage.setOnClickListener {
                     openLink(profileImageURL, holder.itemView.context)
                 }
 
-                binding.postDescription.setOnClickListener {
-                    if (binding.postDescription.text.contains("#")) {
+                myBinding.postDescription.setOnClickListener {
+                    if (myBinding.postDescription.text.contains("#")) {
                         val intent = Intent(holder.itemView.context, HashtagActivity::class.java)
                         intent.putExtra(
-                            "selectedHashtag", findHashTag(binding.postDescription.text.toString())
+                            "selectedHashtag",
+                            findHashTag(myBinding.postDescription.text.toString())
                         )
                         holder.itemView.context.startActivity(intent)
                     }
                 }
 
-                binding.userName.setOnClickListener {
+                myBinding.userName.setOnClickListener {
 
                     val intent =
                         Intent(holder.itemView.context, UserFilteredPostsActivity::class.java)
@@ -333,13 +336,13 @@ open class PostRecyclerAdapter(
                             println(error.localizedMessage)
                         }
                         if (value != null) {
-                            binding.commentCountText.text = "${value.size()} Yorum"
+                            myBinding.commentCountText.text = "${value.size()} Yorum"
                         } else {
-                            binding.commentCountText.text = "0 Yorum"
+                            myBinding.commentCountText.text = "0 Yorum"
                         }
                     }
 
-                binding.deleteButton.setOnClickListener {
+                myBinding.deleteButton.setOnClickListener {
 
                     val deleteAlertDialog = AlertDialog.Builder(holder.itemView.context)
                     deleteAlertDialog.setTitle("Postu Sil")

@@ -100,26 +100,60 @@ class AddPostActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         alertDialog.setNegativeButton("GIF") { _, _ ->
             GiphyDialogFragment.newInstance(settings).show(supportFragmentManager, "giphy_dialog")
         }
-        alertDialog.setPositiveButton("Resim") { _, _ ->
-            if (ContextCompat.checkSelfPermission(
-                    this, Manifest.permission.READ_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-                    this, Manifest.permission.CAMERA
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                //İzin Verilmedi, iste
-                ActivityCompat.requestPermissions(
-                    this, arrayOf(
-                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA
-                    ), 1
-                )
 
+        alertDialog.setPositiveButton("Resim") { _, _ ->
+
+            //check if android version is greater than 32
+
+            if (android.os.Build.VERSION.SDK_INT > 32) {
+
+                if (ContextCompat.checkSelfPermission(
+                        this, Manifest.permission.READ_MEDIA_IMAGES
+                    ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
+                        this, Manifest.permission.CAMERA
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+
+                    //İzin Verilmedi, iste
+                    ActivityCompat.requestPermissions(
+                        this, arrayOf(
+                            Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.CAMERA
+                        ), 1
+                    )
+
+
+                } else {
+
+                    ImagePicker.with(this@AddPostActivity)
+                        .crop(10f, 10f) //Crop square image, its same as crop(1f, 1f)
+                        .start()
+                }
 
             } else {
-                ImagePicker.with(this@AddPostActivity)
-                    .crop(10f, 10f) //Crop square image, its same as crop(1f, 1f)
-                    .start()
+                if (ContextCompat.checkSelfPermission(
+                        this, Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
+                        this, Manifest.permission.CAMERA
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+
+                    //İzin Verilmedi, iste
+                    ActivityCompat.requestPermissions(
+                        this, arrayOf(
+                            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA
+                        ), 1
+                    )
+
+
+                } else {
+
+                    ImagePicker.with(this@AddPostActivity)
+                        .crop(10f, 10f) //Crop square image, its same as crop(1f, 1f)
+                        .start()
+                }
             }
+
+
         }
         imageSec.setOnClickListener {
             alertDialog.show()

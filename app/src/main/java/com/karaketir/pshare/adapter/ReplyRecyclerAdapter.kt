@@ -44,23 +44,25 @@ class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
 
         with(holder) {
 
+            val myBinding = binding
+
             if (replyList.isNotEmpty() && position <= replyList.size) {
 
                 val myItem = replyList[position]
 
                 database.collection("User").document(myItem.replyOwnerID).get()
                     .addOnSuccessListener {
-                        binding.replyUserName.text = it.get("username").toString()
-                        binding.profileImageReply.glide(
+                        myBinding.replyUserName.text = it.get("username").toString()
+                        myBinding.profileImageReply.glide(
                             it.get("profileImageURL").toString(),
                             placeHolderYap(holder.itemView.context)
                         )
-                        binding.profileImageReply.setOnClickListener { _ ->
+                        myBinding.profileImageReply.setOnClickListener { _ ->
                             openLink(it.get("profileImageURL").toString(), holder.itemView.context)
                         }
 
-                        binding.replyText.text = myItem.reply
-                        binding.replyUserName.setOnClickListener {
+                        myBinding.replyText.text = myItem.reply
+                        myBinding.replyUserName.setOnClickListener {
                             val intent = Intent(
                                 holder.itemView.context, UserFilteredPostsActivity::class.java
                             )
@@ -68,15 +70,16 @@ class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
                             holder.itemView.context.startActivity(intent)
                         }
                         if (myItem.replyOwnerID == auth.uid.toString()) {
-                            binding.moreOptionsReply.visibility = View.GONE
-                            binding.deleteReplyButton.visibility = View.VISIBLE
+                            myBinding.moreOptionsReply.visibility = View.GONE
+                            myBinding.deleteReplyButton.visibility = View.VISIBLE
                         } else {
-                            binding.moreOptionsReply.visibility = View.VISIBLE
-                            binding.deleteReplyButton.visibility = View.GONE
+                            myBinding.moreOptionsReply.visibility = View.VISIBLE
+                            myBinding.deleteReplyButton.visibility = View.GONE
                         }
-                        binding.moreOptionsReply.setOnClickListener {
+                        myBinding.moreOptionsReply.setOnClickListener {
 
-                            val popup = PopupMenu(holder.itemView.context, binding.moreOptionsReply)
+                            val popup =
+                                PopupMenu(holder.itemView.context, myBinding.moreOptionsReply)
                             popup.inflate(R.menu.post_options_menu)
 
                             popup.setOnMenuItemClickListener(object :
@@ -150,12 +153,10 @@ class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
                                     }
                                 }
                             })
-                            //displaying the popup
-                            //displaying the popup
                             popup.show()
                         }
 
-                        binding.deleteReplyButton.setOnClickListener {
+                        myBinding.deleteReplyButton.setOnClickListener {
 
                             val deleteAlertDialog = AlertDialog.Builder(holder.itemView.context)
                             deleteAlertDialog.setTitle("Yanıtı Sil")

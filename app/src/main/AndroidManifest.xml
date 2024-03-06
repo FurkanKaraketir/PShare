@@ -9,7 +9,11 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_IMAGES"
+        tools:ignore="SelectedPhotoAccess" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission
@@ -25,6 +29,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PShare"
         tools:targetApi="31">
+        <activity
+            android:name=".PhotoViewerActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".LikesActivity"
             android:exported="false"
@@ -123,7 +131,8 @@
             android:value="@string/default_notification_channel_id" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3786123641227695~2955242882"/>
+            android:value="ca-app-pub-3786123641227695~2955242882" />
+
         <service
             android:name=".services.MyFirebaseMessagingService"
             android:exported="false">

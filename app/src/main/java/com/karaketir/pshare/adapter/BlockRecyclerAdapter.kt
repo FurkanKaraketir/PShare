@@ -42,21 +42,21 @@ class BlockRecyclerAdapter(private val userList: ArrayList<User>) :
 
         database = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
-
         with(holder) {
+            val myBinding = binding
 
             if (userList.isNotEmpty() && position <= userList.size) {
                 val myItem = userList[position]
 
-                binding.userNameBlockRowView.text = myItem.username
-                binding.userProfileImageBlockRow.glide(
+                myBinding.userNameBlockRowView.text = myItem.username
+                myBinding.userProfileImageBlockRow.glide(
                     myItem.userProfilePhotoURL, placeHolderYap(holder.itemView.context)
                 )
-                binding.userProfileImageBlockRow.setOnClickListener {
+                myBinding.userProfileImageBlockRow.setOnClickListener {
                     openLink(myItem.userProfilePhotoURL, holder.itemView.context)
                 }
 
-                binding.userNameBlockRowView.setOnClickListener {
+                myBinding.userNameBlockRowView.setOnClickListener {
                     val intent =
                         Intent(holder.itemView.context, UserFilteredPostsActivity::class.java)
                     intent.putExtra("postOwnerID", myItem.userID)
@@ -66,18 +66,18 @@ class BlockRecyclerAdapter(private val userList: ArrayList<User>) :
                 database.collection("Blocks").whereEqualTo("main", auth.uid.toString())
                     .whereEqualTo("blocksWho", myItem.userID).addSnapshotListener { value, _ ->
                         if (value != null && !value.isEmpty) {
-                            binding.blockRowButton.visibility = View.GONE
-                            binding.unBlockRowButton.visibility = View.VISIBLE
+                            myBinding.blockRowButton.visibility = View.GONE
+                            myBinding.unBlockRowButton.visibility = View.VISIBLE
                         } else {
-                            binding.blockRowButton.visibility = View.VISIBLE
-                            binding.unBlockRowButton.visibility = View.GONE
+                            myBinding.blockRowButton.visibility = View.VISIBLE
+                            myBinding.unBlockRowButton.visibility = View.GONE
                         }
                     }
 
 
                 val documentName = UUID.randomUUID().toString()
 
-                binding.blockRowButton.setOnClickListener {
+                myBinding.blockRowButton.setOnClickListener {
 
                     val blockAlert = AlertDialog.Builder(holder.itemView.context)
                     blockAlert.setTitle("Engelle")
@@ -116,7 +116,7 @@ class BlockRecyclerAdapter(private val userList: ArrayList<User>) :
 
 
                 }
-                binding.unBlockRowButton.setOnClickListener {
+                myBinding.unBlockRowButton.setOnClickListener {
 
                     val unBlockAlert = AlertDialog.Builder(holder.itemView.context)
                     unBlockAlert.setTitle("Engeli Kaldır")

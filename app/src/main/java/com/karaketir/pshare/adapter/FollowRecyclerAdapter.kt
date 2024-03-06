@@ -45,17 +45,19 @@ class FollowRecyclerAdapter(private val userList: ArrayList<User>) :
 
         with(holder) {
 
+            val myBinding = binding
+
             if (userList.isNotEmpty() && position <= userList.size) {
                 val myItem = userList[position]
 
-                binding.userNameRowView.text = myItem.username
-                binding.userProfileImageRow.glide(
+                myBinding.userNameRowView.text = myItem.username
+                myBinding.userProfileImageRow.glide(
                     myItem.userProfilePhotoURL, placeHolderYap(holder.itemView.context)
                 )
-                binding.userProfileImageRow.setOnClickListener {
+                myBinding.userProfileImageRow.setOnClickListener {
                     openLink(myItem.userProfilePhotoURL, holder.itemView.context)
                 }
-                binding.userNameRowView.setOnClickListener {
+                myBinding.userNameRowView.setOnClickListener {
                     val intent =
                         Intent(holder.itemView.context, UserFilteredPostsActivity::class.java)
                     intent.putExtra("postOwnerID", myItem.userID)
@@ -64,26 +66,26 @@ class FollowRecyclerAdapter(private val userList: ArrayList<User>) :
                 database.collection("Followings").whereEqualTo("main", auth.uid.toString())
                     .whereEqualTo("followsWho", myItem.userID).addSnapshotListener { value, _ ->
                         if (value != null && !value.isEmpty) {
-                            binding.followRowButton.visibility = View.GONE
-                            binding.unFollowRowButton.visibility = View.VISIBLE
+                            myBinding.followRowButton.visibility = View.GONE
+                            myBinding.unFollowRowButton.visibility = View.VISIBLE
 
                         } else {
-                            binding.followRowButton.visibility = View.VISIBLE
-                            binding.unFollowRowButton.visibility = View.GONE
+                            myBinding.followRowButton.visibility = View.VISIBLE
+                            myBinding.unFollowRowButton.visibility = View.GONE
                         }
 
                         if (myItem.userID == auth.uid.toString()) {
-                            binding.moreOptionsFollow.visibility = View.GONE
-                            binding.followRowButton.visibility = View.GONE
-                            binding.unFollowRowButton.visibility = View.GONE
+                            myBinding.moreOptionsFollow.visibility = View.GONE
+                            myBinding.followRowButton.visibility = View.GONE
+                            myBinding.unFollowRowButton.visibility = View.GONE
                         } else {
-                            binding.moreOptionsFollow.visibility = View.VISIBLE
+                            myBinding.moreOptionsFollow.visibility = View.VISIBLE
                         }
 
                     }
 
-                binding.moreOptionsFollow.setOnClickListener {
-                    val popup = PopupMenu(holder.itemView.context, binding.moreOptionsFollow)
+                myBinding.moreOptionsFollow.setOnClickListener {
+                    val popup = PopupMenu(holder.itemView.context, myBinding.moreOptionsFollow)
                     popup.inflate(R.menu.post_options_menu)
 
                     popup.setOnMenuItemClickListener(object : MenuItem.OnMenuItemClickListener,
@@ -157,7 +159,7 @@ class FollowRecyclerAdapter(private val userList: ArrayList<User>) :
 
                 val documentName = UUID.randomUUID().toString()
 
-                binding.followRowButton.setOnClickListener {
+                myBinding.followRowButton.setOnClickListener {
 
                     val followAlert = AlertDialog.Builder(holder.itemView.context)
                     followAlert.setTitle("Takip Et")
@@ -176,7 +178,7 @@ class FollowRecyclerAdapter(private val userList: ArrayList<User>) :
 
 
                 }
-                binding.unFollowRowButton.setOnClickListener {
+                myBinding.unFollowRowButton.setOnClickListener {
 
                     val unFollowAlert = AlertDialog.Builder(holder.itemView.context)
                     unFollowAlert.setTitle("Takibi Bırak")

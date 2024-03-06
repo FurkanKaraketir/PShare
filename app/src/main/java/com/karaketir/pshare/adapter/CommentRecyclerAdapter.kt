@@ -47,24 +47,26 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
 
         with(holder) {
 
+            val myBinding = binding
+
             if (commentList.isNotEmpty() && position <= commentList.size) {
 
                 val myItem = commentList[position]
 
-                binding.comment.text = myItem.comment
+                myBinding.comment.text = myItem.comment
 
                 database.collection("User").document(myItem.commentOwnerID).get()
                     .addOnSuccessListener {
-                        binding.commentUserName.text = it.get("username").toString()
-                        binding.profileImageComment.glide(
+                        myBinding.commentUserName.text = it.get("username").toString()
+                        myBinding.profileImageComment.glide(
                             it.get("profileImageURL").toString(),
                             placeHolderYap(holder.itemView.context)
                         )
-                        binding.profileImageComment.setOnClickListener { _ ->
+                        myBinding.profileImageComment.setOnClickListener { _ ->
                             openLink(it.get("profileImageURL").toString(), holder.itemView.context)
                         }
 
-                        binding.commentUserName.setOnClickListener {
+                        myBinding.commentUserName.setOnClickListener {
                             val intent = Intent(
                                 holder.itemView.context, UserFilteredPostsActivity::class.java
                             )
@@ -77,22 +79,22 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
                 database.collection("Replies").whereEqualTo("replyToComment", myItem.commentID)
                     .addSnapshotListener { value, _ ->
                         if (value != null && !value.isEmpty) {
-                            binding.replyCount.text = "${value.size()} Yanıt"
+                            myBinding.replyCount.text = "${value.size()} Yanıt"
                         } else {
-                            binding.replyCount.text = "0 Yanıt"
+                            myBinding.replyCount.text = "0 Yanıt"
                         }
                     }
                 if (myItem.commentOwnerID == auth.uid.toString()) {
-                    binding.deleteYorumButton.visibility = View.VISIBLE
-                    binding.moreOptionsComment.visibility = View.GONE
+                    myBinding.deleteYorumButton.visibility = View.VISIBLE
+                    myBinding.moreOptionsComment.visibility = View.GONE
                 } else {
-                    binding.deleteYorumButton.visibility = View.GONE
-                    binding.moreOptionsComment.visibility = View.VISIBLE
+                    myBinding.deleteYorumButton.visibility = View.GONE
+                    myBinding.moreOptionsComment.visibility = View.VISIBLE
                 }
 
-                binding.moreOptionsComment.setOnClickListener {
+                myBinding.moreOptionsComment.setOnClickListener {
 
-                    val popup = PopupMenu(holder.itemView.context, binding.moreOptionsComment)
+                    val popup = PopupMenu(holder.itemView.context, myBinding.moreOptionsComment)
                     popup.inflate(R.menu.post_options_menu)
 
                     popup.setOnMenuItemClickListener(object : MenuItem.OnMenuItemClickListener,
@@ -168,7 +170,7 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
                     popup.show()
                 }
 
-                binding.deleteYorumButton.setOnClickListener {
+                myBinding.deleteYorumButton.setOnClickListener {
 
                     val deleteAlertDialog = AlertDialog.Builder(holder.itemView.context)
                     deleteAlertDialog.setTitle("Yorumu Sil")
@@ -195,10 +197,10 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
 
                 }
 
-                binding.replyYorumButton.setOnClickListener {
+                myBinding.replyYorumButton.setOnClickListener {
                     replyGit(holder, myItem)
                 }
-                binding.replyCount.setOnClickListener {
+                myBinding.replyCount.setOnClickListener {
                     replyGit(holder, myItem)
                 }
 
