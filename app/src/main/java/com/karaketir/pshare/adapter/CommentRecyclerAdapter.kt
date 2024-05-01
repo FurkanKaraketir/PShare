@@ -17,6 +17,7 @@ import com.karaketir.pshare.RepliesActivity
 import com.karaketir.pshare.UserFilteredPostsActivity
 import com.karaketir.pshare.databinding.CommentRowBinding
 import com.karaketir.pshare.model.Comment
+import com.karaketir.pshare.services.getRelativeTime
 import com.karaketir.pshare.services.glide
 import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
@@ -169,6 +170,8 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
                     //displaying the popup
                     popup.show()
                 }
+
+                myBinding.commentDate.text = getRelativeTime(myItem.timestamp)
 
                 myBinding.deleteYorumButton.setOnClickListener {
 

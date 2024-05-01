@@ -16,6 +16,7 @@ import com.karaketir.pshare.*
 import com.karaketir.pshare.databinding.PostRowBinding
 import com.karaketir.pshare.model.Post
 import com.karaketir.pshare.services.FcmNotificationsSenderService
+import com.karaketir.pshare.services.getRelativeTime
 import com.karaketir.pshare.services.glide
 import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
@@ -64,6 +65,8 @@ open class PostRecyclerAdapter(
                         profileImageURL, placeHolderYap(holder.itemView.context)
                     )
                 }
+
+                myBinding.postDate.text = getRelativeTime(myItem.timestamp)
 
                 myBinding.moreOptionsPost.setOnClickListener {
 

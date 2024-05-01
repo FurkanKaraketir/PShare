@@ -21,13 +21,14 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profileImageComment"
-                android:layout_alignParentStart="true"
                 android:layout_width="27dp"
                 android:layout_height="27dp"
+                android:layout_alignParentStart="true"
                 android:layout_margin="5dp"
                 android:contentDescription="@string/profil_resmi"
                 android:scaleType="centerCrop"
                 app:civ_border_overlay="false" />
+
             <ImageView
                 android:id="@+id/moreOptionsComment"
                 android:layout_width="27dp"
@@ -38,14 +39,15 @@
                 android:gravity="center"
                 android:src="@drawable/baseline_more_vert_24"
                 android:visibility="gone" />
+
             <TextView
-                android:layout_toEndOf="@id/profileImageComment"
                 android:id="@+id/commentUserName"
                 style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
+                android:layout_toEndOf="@id/profileImageComment"
                 android:text=""
                 android:textSize="15sp" />
 
@@ -116,6 +118,16 @@
                 android:contentDescription="@string/_0_yorum"
                 android:src="@drawable/baseline_cancel_24"
                 android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/commentDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="10dp"
+                android:layout_toEndOf="@id/deleteYorumButton"
+                android:text=""
+                android:textSize="12sp" />
         </RelativeLayout>
 
     </LinearLayout>

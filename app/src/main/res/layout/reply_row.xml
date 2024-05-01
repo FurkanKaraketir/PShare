@@ -62,15 +62,30 @@
         android:textSize="18sp" />
 
 
-    <ImageView
-        android:id="@+id/deleteReplyButton"
-        android:layout_width="27dp"
-        android:layout_height="27dp"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="5dp"
-        android:contentDescription="@string/_0_yan_t"
-        android:src="@drawable/baseline_cancel_24"
-        android:visibility="gone" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/deleteReplyButton"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_margin="5dp"
+            android:contentDescription="@string/_0_yan_t"
+            android:src="@drawable/baseline_cancel_24"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/replyDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text=""
+            android:textSize="12sp" />
+    </LinearLayout>
+
 
     <View
         android:layout_width="match_parent"

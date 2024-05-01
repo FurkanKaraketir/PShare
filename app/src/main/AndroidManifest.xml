@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -38,81 +40,93 @@
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".BlocksActivity"
             android:exported="false"
             android:parentActivityName=".ProfileActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".RepliesActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".FollowingsActivity"
             android:exported="false"
             android:parentActivityName=".ProfileActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".AddPostActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".ProfileActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".ExploreActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".UserFilteredPostsActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".HashtagActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".CommentsActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".ProfilePictureActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".RegisterActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".LoginActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.App.Starting"
-            tools:ignore="LockedOrientationActivity">
+            tools:ignore="LockedOrientationActivity, DiscouragedApi">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -15,6 +15,7 @@ import com.karaketir.pshare.R
 import com.karaketir.pshare.UserFilteredPostsActivity
 import com.karaketir.pshare.databinding.ReplyRowBinding
 import com.karaketir.pshare.model.Reply
+import com.karaketir.pshare.services.getRelativeTime
 import com.karaketir.pshare.services.glide
 import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
@@ -155,6 +156,9 @@ class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
                             })
                             popup.show()
                         }
+
+                        myBinding.replyDate.text = getRelativeTime(myItem.timestamp)
+
 
                         myBinding.deleteReplyButton.setOnClickListener {
 
