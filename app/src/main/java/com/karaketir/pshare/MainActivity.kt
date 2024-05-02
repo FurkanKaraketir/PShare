@@ -3,11 +3,15 @@ package com.karaketir.pshare
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +25,7 @@ import com.karaketir.pshare.adapter.PostRecyclerAdapter
 import com.karaketir.pshare.databinding.ActivityMainBinding
 import com.karaketir.pshare.model.Post
 import com.karaketir.pshare.services.openLink
+import android.Manifest
 
 class MainActivity : AppCompatActivity() {
 
@@ -78,6 +83,16 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+            if (ContextCompat.checkSelfPermission(
+                    this, Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // Permission not granted, request it
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
 
         database.collection("Keys").document("Version").get().addOnSuccessListener {
             val myVersion = BuildConfig.VERSION_CODE
@@ -264,4 +279,10 @@ class MainActivity : AppCompatActivity() {
         this.startActivity(intent)
         finish()
     }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { _: Boolean ->
+
+        }
+
 }
