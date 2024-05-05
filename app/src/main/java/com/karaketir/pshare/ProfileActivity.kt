@@ -17,6 +17,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.ui.GPHContentType
 import com.giphy.sdk.ui.GPHSettings
@@ -25,15 +27,19 @@ import com.giphy.sdk.ui.themes.GPHTheme
 import com.giphy.sdk.ui.themes.GridType
 import com.giphy.sdk.ui.views.GiphyDialogFragment
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import com.karaketir.pshare.adapter.PostRecyclerAdapter
 import com.karaketir.pshare.databinding.ActivityProfileBinding
+import com.karaketir.pshare.model.Post
 import com.karaketir.pshare.services.glide
 import com.karaketir.pshare.services.placeHolderYap
 
@@ -47,6 +53,8 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     private lateinit var documentName: String
     private var istenen: String = ""
 
+    private lateinit var recyclerViewAdapter: PostRecyclerAdapter
+    private lateinit var recyclerView: RecyclerView
     private lateinit var userNameChangeEditText: EditText
     private lateinit var userNameEditButton: ImageView
     private lateinit var progressCircularProfile: ProgressBar
@@ -57,6 +65,7 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     private lateinit var takipciTextView: TextView
     private lateinit var engellenenTextView: TextView
     private lateinit var spaceRef: StorageReference
+    private var postList = ArrayList<Post>()
 
     private var urlFinal: String = ""
     private lateinit var userName: String
@@ -77,9 +86,15 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         takipciTextView = binding.takipciText
         engellenenTextView = binding.blockedText
 
+        recyclerView = binding.postRecyclerViewProfile
+        val layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = layoutManager
+        recyclerViewAdapter = PostRecyclerAdapter(postList)
+        recyclerView.adapter = recyclerViewAdapter
+
+
         userNameView = binding.userNameView
         versionTextView = binding.versionTextView
-        val deleteAccountButton = binding.deleteAccountButton
 
 
         auth = Firebase.auth
@@ -148,11 +163,6 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
         verileriAl()
 
-        deleteAccountButton.setOnClickListener {
-
-            deleteAccount()
-
-        }
 
         secilenGorsel.setOnClickListener {
 
@@ -223,109 +233,111 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
         }
 
-    }
+    }/*
+        private fun deleteAccount() {
+            val deleteAlertDialog = AlertDialog.Builder(this)
+            deleteAlertDialog.setTitle("Hesabı Sil")
+            deleteAlertDialog.setMessage("Hesabı Silmek İstediğinize Emin misiniz?")
+            deleteAlertDialog.setPositiveButton("Hesabı Sil") { _, _ ->
 
-    private fun deleteAccount() {
-        val deleteAlertDialog = AlertDialog.Builder(this)
-        deleteAlertDialog.setTitle("Hesabı Sil")
-        deleteAlertDialog.setMessage("Hesabı Silmek İstediğinize Emin misiniz?")
-        deleteAlertDialog.setPositiveButton("Hesabı Sil") { _, _ ->
-
-            db.collection("Likes").whereEqualTo("userID", auth.uid.toString())
-                .addSnapshotListener { likes, _ ->
-                    if (likes != null) {
-                        for (like in likes) {
-                            db.collection("Likes").document(like.id).delete()
-                        }
-                    }
-
-                    db.collection("Followings").whereEqualTo("main", auth.uid.toString())
-                        .addSnapshotListener { followings, _ ->
-                            if (followings != null) {
-                                for (following in followings) {
-                                    db.collection("Followings").document(following.id).delete()
-                                }
+                db.collection("Likes").whereEqualTo("userID", auth.uid.toString())
+                    .addSnapshotListener { likes, _ ->
+                        if (likes != null) {
+                            for (like in likes) {
+                                db.collection("Likes").document(like.id).delete()
                             }
+                        }
 
-                            db.collection("Followings")
-                                .whereEqualTo("followsWho", auth.uid.toString())
-                                .addSnapshotListener { followings2, _ ->
-                                    if (followings2 != null) {
-                                        for (following1 in followings2) {
-                                            db.collection("Followings").document(following1.id)
-                                                .delete()
-                                        }
+                        db.collection("Followings").whereEqualTo("main", auth.uid.toString())
+                            .addSnapshotListener { followings, _ ->
+                                if (followings != null) {
+                                    for (following in followings) {
+                                        db.collection("Followings").document(following.id).delete()
                                     }
+                                }
 
-                                    db.collection("Post")
-                                        .whereEqualTo("postOwnerID", auth.uid.toString())
-                                        .addSnapshotListener { posts, _ ->
-                                            if (posts != null) {
-                                                for (post in posts) {
-                                                    db.collection("Post").document(post.id).delete()
-                                                }
+                                db.collection("Followings")
+                                    .whereEqualTo("followsWho", auth.uid.toString())
+                                    .addSnapshotListener { followings2, _ ->
+                                        if (followings2 != null) {
+                                            for (following1 in followings2) {
+                                                db.collection("Followings").document(following1.id)
+                                                    .delete()
                                             }
+                                        }
 
-                                            db.collection("Comments").whereEqualTo(
-                                                "commentToWho", auth.uid.toString()
-                                            ).addSnapshotListener { comments, _ ->
-                                                if (comments != null) {
-                                                    for (comment in comments) {
-                                                        db.collection("Comments")
-                                                            .document(comment.id).delete()
+                                        db.collection("Post")
+                                            .whereEqualTo("postOwnerID", auth.uid.toString())
+                                            .addSnapshotListener { posts, _ ->
+                                                if (posts != null) {
+                                                    for (post in posts) {
+                                                        db.collection("Post").document(post.id).delete()
                                                     }
                                                 }
 
-
                                                 db.collection("Comments").whereEqualTo(
-                                                    "commentOwnerID", auth.uid.toString()
-                                                ).addSnapshotListener { comments2, _ ->
-                                                    if (comments2 != null) {
-                                                        for (comment2 in comments2) {
+                                                    "commentToWho", auth.uid.toString()
+                                                ).addSnapshotListener { comments, _ ->
+                                                    if (comments != null) {
+                                                        for (comment in comments) {
                                                             db.collection("Comments")
-                                                                .document(comment2.id).delete()
+                                                                .document(comment.id).delete()
                                                         }
                                                     }
 
-                                                    db.collection("Replies").whereEqualTo(
-                                                        "replyOwnerID", auth.uid.toString()
-                                                    ).addSnapshotListener { replies, _ ->
-                                                        if (replies != null) {
-                                                            for (reply in replies) {
-                                                                db.collection("Replies")
-                                                                    .document(reply.id).delete()
+
+                                                    db.collection("Comments").whereEqualTo(
+                                                        "commentOwnerID", auth.uid.toString()
+                                                    ).addSnapshotListener { comments2, _ ->
+                                                        if (comments2 != null) {
+                                                            for (comment2 in comments2) {
+                                                                db.collection("Comments")
+                                                                    .document(comment2.id).delete()
                                                             }
                                                         }
 
                                                         db.collection("Replies").whereEqualTo(
-                                                            "replyToWho", auth.uid.toString()
-                                                        ).addSnapshotListener { replies2, _ ->
-                                                            if (replies2 != null) {
-                                                                for (reply2 in replies2) {
+                                                            "replyOwnerID", auth.uid.toString()
+                                                        ).addSnapshotListener { replies, _ ->
+                                                            if (replies != null) {
+                                                                for (reply in replies) {
                                                                     db.collection("Replies")
-                                                                        .document(
-                                                                            reply2.id
-                                                                        ).delete()
+                                                                        .document(reply.id).delete()
                                                                 }
                                                             }
 
-                                                            db.collection("User")
-                                                                .document(auth.uid.toString())
-                                                                .delete().addOnSuccessListener {
-                                                                    auth.currentUser!!.delete()
-                                                                        .addOnCompleteListener { task ->
-                                                                            if (task.isSuccessful) {
-                                                                                val intent = Intent(
-                                                                                    this,
-                                                                                    LoginActivity::class.java
-                                                                                )
-                                                                                startActivity(
-                                                                                    intent
-                                                                                )
-                                                                                finish()
-                                                                            }
-                                                                        }
+                                                            db.collection("Replies").whereEqualTo(
+                                                                "replyToWho", auth.uid.toString()
+                                                            ).addSnapshotListener { replies2, _ ->
+                                                                if (replies2 != null) {
+                                                                    for (reply2 in replies2) {
+                                                                        db.collection("Replies")
+                                                                            .document(
+                                                                                reply2.id
+                                                                            ).delete()
+                                                                    }
                                                                 }
+
+                                                                db.collection("User")
+                                                                    .document(auth.uid.toString())
+                                                                    .delete().addOnSuccessListener {
+                                                                        auth.currentUser!!.delete()
+                                                                            .addOnCompleteListener { task ->
+                                                                                if (task.isSuccessful) {
+                                                                                    val intent = Intent(
+                                                                                        this,
+                                                                                        LoginActivity::class.java
+                                                                                    )
+                                                                                    startActivity(
+                                                                                        intent
+                                                                                    )
+                                                                                    finish()
+                                                                                }
+                                                                            }
+                                                                    }
+
+                                                            }
+
 
                                                         }
 
@@ -338,24 +350,21 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
                                             }
 
+                                    }
 
-                                        }
-
-                                }
-
-                        }
+                            }
 
 
-                }
-        }
+                    }
+            }
 
-        deleteAlertDialog.setNegativeButton("İptal") { _, _ ->
+            deleteAlertDialog.setNegativeButton("İptal") { _, _ ->
 
-        }
-        deleteAlertDialog.show()
-    }
+            }
+            deleteAlertDialog.show()
+        }*/
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     private fun verileriAl() {
         db.collection("User").document(auth.uid.toString()).get().addOnSuccessListener {
 
@@ -406,6 +415,27 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                 }
 
 
+        }
+
+        db.collection("Post").whereEqualTo(
+            "postOwnerID", auth.uid.toString()
+        ).orderBy("timestamp", Query.Direction.DESCENDING).addSnapshotListener { value, _ ->
+            if (value != null) {
+                for (post in value) {
+                    val newPost = Post(
+                        post.id,
+                        post.get("postDescription").toString(),
+                        post.get("postImageURL").toString(),
+                        post.get("postOwnerID").toString(),
+                        post.get("timestamp") as Timestamp
+                    )
+
+                    postList.add(newPost)
+
+
+                }
+            }
+            recyclerViewAdapter.notifyDataSetChanged()
         }
     }
 
