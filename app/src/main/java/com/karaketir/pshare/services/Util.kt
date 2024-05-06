@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.text.format.DateUtils
-import android.view.MenuItem
 import android.widget.ImageView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
@@ -28,7 +27,7 @@ fun ImageView.glideCircle(url: String?, placeholder: CircularProgressDrawable) {
 
 fun openLink(link: String, context: Context) {
 
-    if (link.contains("giphy")) {
+    if (link.contains("giphy") or link.contains("play.google.com")) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
         context.startActivity(intent)
     } else {
