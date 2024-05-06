@@ -22,8 +22,8 @@ android {
         minSdk 26
         //noinspection EditedTargetSdkVersion
         targetSdk 34
-        versionCode 17
-        versionName "1.17"
+        versionCode 18
+        versionName "1.18"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -57,7 +57,6 @@ dependencies {
     implementation 'com.github.dhaval2404:imagepicker:2.1'
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation platform('com.google.firebase:firebase-bom:33.0.0')
 
     implementation('com.google.firebase:firebase-auth-ktx:23.0.0') {

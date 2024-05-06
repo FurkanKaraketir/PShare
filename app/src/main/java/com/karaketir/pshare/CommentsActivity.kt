@@ -25,10 +25,11 @@ import com.karaketir.pshare.databinding.ActivityCommentsBinding
 import com.karaketir.pshare.model.Comment
 import com.karaketir.pshare.services.FcmNotificationsSenderService
 import com.karaketir.pshare.services.glide
+import com.karaketir.pshare.services.glideCircle
 import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
-import de.hdodenhof.circleimageview.CircleImageView
-import java.util.*
+import java.util.Calendar
+import java.util.UUID
 import kotlin.math.hypot
 
 class CommentsActivity : AppCompatActivity() {
@@ -41,7 +42,7 @@ class CommentsActivity : AppCompatActivity() {
     private lateinit var selectedPostUserName: String
     private lateinit var selectedPostImageURL: String
     private lateinit var selectedPostImageView: ImageView
-    private lateinit var profileImageView: CircleImageView
+    private lateinit var profileImageView: ImageView
     private lateinit var recyclerCommentsView: RecyclerView
     private lateinit var sendButton: FloatingActionButton
     private lateinit var commentSendEditText: EditText
@@ -77,7 +78,7 @@ class CommentsActivity : AppCompatActivity() {
             database.collection("User").document(selectedPostOwnerID).get()
                 .addOnSuccessListener { it2 ->
                     selectedPostUserName = it2.get("username").toString()
-                    profileImageView.glide(
+                    profileImageView.glideCircle(
                         it2.get("profileImageURL").toString(), placeHolderYap(this)
                     )
                     selectedPostImageURL = it.get("postImageURL").toString()

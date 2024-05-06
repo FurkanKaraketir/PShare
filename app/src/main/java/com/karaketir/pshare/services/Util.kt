@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.text.format.DateUtils
+import android.view.MenuItem
 import android.widget.ImageView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
@@ -17,6 +18,13 @@ fun ImageView.glide(url: String?, placeholder: CircularProgressDrawable) {
 
     Glide.with(context.applicationContext).setDefaultRequestOptions(options).load(url).into(this)
 }
+
+fun ImageView.glideCircle(url: String?, placeholder: CircularProgressDrawable) {
+    val options = RequestOptions().placeholder(placeholder).error(R.drawable.blank).circleCrop()
+
+    Glide.with(context.applicationContext).setDefaultRequestOptions(options).load(url).into(this)
+}
+
 
 fun openLink(link: String, context: Context) {
 

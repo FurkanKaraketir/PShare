@@ -41,6 +41,7 @@ import com.karaketir.pshare.adapter.PostRecyclerAdapter
 import com.karaketir.pshare.databinding.ActivityProfileBinding
 import com.karaketir.pshare.model.Post
 import com.karaketir.pshare.services.glide
+import com.karaketir.pshare.services.glideCircle
 import com.karaketir.pshare.services.placeHolderYap
 
 class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionListener {
@@ -378,7 +379,7 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
             userNameView.text = serverUserName
             userName = serverUserName
-            secilenGorsel.glide(urlFinal, placeHolderYap(this))
+            secilenGorsel.glideCircle(urlFinal, placeHolderYap(this))
 
             db.collection("Followings").whereEqualTo("main", auth.uid.toString())
                 .addSnapshotListener { value, _ ->
@@ -503,7 +504,7 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
             Activity.RESULT_OK -> {
                 //Image Uri will not be null for RESULT_OK
                 val uri: Uri = data?.data!!
-                secilenGorsel.glide("", placeHolderYap(this))
+                secilenGorsel.glideCircle("", placeHolderYap(this))
 
                 Toast.makeText(this, "Lütfen Bekleyiniz", Toast.LENGTH_SHORT).show()
 
@@ -521,7 +522,8 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                             .update("profileImageURL", urlFinal).addOnSuccessListener {
                                 Toast.makeText(this, "Başarılı", Toast.LENGTH_SHORT).show()
                             }
-                        secilenGorsel.setImageURI(uri)
+
+                        secilenGorsel.glideCircle(urlFinal, placeHolderYap(this))
 
                     }
 

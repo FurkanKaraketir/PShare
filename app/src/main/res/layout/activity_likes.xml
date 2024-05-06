@@ -33,14 +33,13 @@
                         android:layout_gravity="center"
                         android:orientation="horizontal">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
+                        <ImageView
                             android:id="@+id/profileImageLikeActivity"
                             android:layout_width="27dp"
                             android:layout_height="27dp"
                             android:layout_margin="5dp"
                             android:contentDescription="@string/post_resim"
-                            android:scaleType="centerCrop"
-                            app:civ_border_overlay="false" />
+                            android:scaleType="centerCrop" />
 
                         <TextView
                             android:id="@+id/likeToUserNameText"

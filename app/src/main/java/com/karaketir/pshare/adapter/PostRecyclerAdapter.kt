@@ -18,6 +18,7 @@ import com.karaketir.pshare.model.Post
 import com.karaketir.pshare.services.FcmNotificationsSenderService
 import com.karaketir.pshare.services.getRelativeTime
 import com.karaketir.pshare.services.glide
+import com.karaketir.pshare.services.glideCircle
 import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
 import java.util.*
@@ -61,7 +62,7 @@ open class PostRecyclerAdapter(
                 db.collection("User").document(myItem.postOwnerID).get().addOnSuccessListener {
                     myBinding.userName.text = it.get("username").toString()
                     profileImageURL = it.get("profileImageURL").toString()
-                    myBinding.profileImage.glide(
+                    myBinding.profileImage.glideCircle(
                         profileImageURL, placeHolderYap(holder.itemView.context)
                     )
                 }

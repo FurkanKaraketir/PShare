@@ -15,7 +15,7 @@ import com.karaketir.pshare.R
 import com.karaketir.pshare.UserFilteredPostsActivity
 import com.karaketir.pshare.databinding.FollowRowBinding
 import com.karaketir.pshare.model.User
-import com.karaketir.pshare.services.glide
+import com.karaketir.pshare.services.glideCircle
 import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
 import java.util.UUID
@@ -51,7 +51,7 @@ class FollowRecyclerAdapter(private val userList: ArrayList<User>) :
                 val myItem = userList[position]
 
                 myBinding.userNameRowView.text = myItem.username
-                myBinding.userProfileImageRow.glide(
+                myBinding.userProfileImageRow.glideCircle(
                     myItem.userProfilePhotoURL, placeHolderYap(holder.itemView.context)
                 )
                 myBinding.userProfileImageRow.setOnClickListener {

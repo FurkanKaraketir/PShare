@@ -16,11 +16,10 @@ import com.karaketir.pshare.UserFilteredPostsActivity
 import com.karaketir.pshare.databinding.ReplyRowBinding
 import com.karaketir.pshare.model.Reply
 import com.karaketir.pshare.services.getRelativeTime
-import com.karaketir.pshare.services.glide
+import com.karaketir.pshare.services.glideCircle
 import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.UUID
 
 class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
     RecyclerView.Adapter<ReplyRecyclerAdapter.ReplyHolder>() {
@@ -54,7 +53,7 @@ class ReplyRecyclerAdapter(private val replyList: ArrayList<Reply>) :
                 database.collection("User").document(myItem.replyOwnerID).get()
                     .addOnSuccessListener {
                         myBinding.replyUserName.text = it.get("username").toString()
-                        myBinding.profileImageReply.glide(
+                        myBinding.profileImageReply.glideCircle(
                             it.get("profileImageURL").toString(),
                             placeHolderYap(holder.itemView.context)
                         )

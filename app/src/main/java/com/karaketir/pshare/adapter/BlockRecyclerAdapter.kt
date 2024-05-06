@@ -12,11 +12,10 @@ import com.karaketir.pshare.R
 import com.karaketir.pshare.UserFilteredPostsActivity
 import com.karaketir.pshare.databinding.BlockRowBinding
 import com.karaketir.pshare.model.User
-import com.karaketir.pshare.services.glide
+import com.karaketir.pshare.services.glideCircle
 import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.UUID
 
 class BlockRecyclerAdapter(private val userList: ArrayList<User>) :
     RecyclerView.Adapter<BlockRecyclerAdapter.UserHolder>() {
@@ -49,7 +48,7 @@ class BlockRecyclerAdapter(private val userList: ArrayList<User>) :
                 val myItem = userList[position]
 
                 myBinding.userNameBlockRowView.text = myItem.username
-                myBinding.userProfileImageBlockRow.glide(
+                myBinding.userProfileImageBlockRow.glideCircle(
                     myItem.userProfilePhotoURL, placeHolderYap(holder.itemView.context)
                 )
                 myBinding.userProfileImageBlockRow.setOnClickListener {

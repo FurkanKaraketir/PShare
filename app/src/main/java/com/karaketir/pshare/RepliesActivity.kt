@@ -4,14 +4,15 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -23,12 +24,11 @@ import com.karaketir.pshare.adapter.ReplyRecyclerAdapter
 import com.karaketir.pshare.databinding.ActivityRepliesBinding
 import com.karaketir.pshare.model.Reply
 import com.karaketir.pshare.services.FcmNotificationsSenderService
-import com.karaketir.pshare.services.glide
+import com.karaketir.pshare.services.glideCircle
 import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
-import de.hdodenhof.circleimageview.CircleImageView
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Calendar
+import java.util.UUID
 import kotlin.math.hypot
 
 class RepliesActivity : AppCompatActivity() {
@@ -38,7 +38,7 @@ class RepliesActivity : AppCompatActivity() {
     private lateinit var replySendButton: FloatingActionButton
     private lateinit var replyToEmailText: TextView
     private lateinit var replySendEditText: EditText
-    private lateinit var profileImageReplyActivity: CircleImageView
+    private lateinit var profileImageReplyActivity: ImageView
     private lateinit var replyToCommentText: TextView
     private lateinit var selectedCommentOwnerID: String
     private lateinit var selectedCommentPostID: String
@@ -84,7 +84,7 @@ class RepliesActivity : AppCompatActivity() {
                             newIntent.putExtra("postOwnerID", selectedCommentOwnerID)
                             startActivity(newIntent)
                         }
-                        profileImageReplyActivity.glide(
+                        profileImageReplyActivity.glideCircle(
                             it.get("profileImageURL").toString(), placeHolderYap(this)
                         )
 

@@ -15,9 +15,9 @@ import com.karaketir.pshare.adapter.FollowRecyclerAdapter
 import com.karaketir.pshare.databinding.ActivityLikesBinding
 import com.karaketir.pshare.model.User
 import com.karaketir.pshare.services.glide
+import com.karaketir.pshare.services.glideCircle
 import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
-import de.hdodenhof.circleimageview.CircleImageView
 
 class LikesActivity : AppCompatActivity() {
 
@@ -29,7 +29,7 @@ class LikesActivity : AppCompatActivity() {
     private lateinit var selectedPostUserName: String
     private lateinit var selectedPostImageURL: String
     private lateinit var selectedPostImageView: ImageView
-    private lateinit var profileImageView: CircleImageView
+    private lateinit var profileImageView: ImageView
     private lateinit var recyclerCommentsView: RecyclerView
     private lateinit var commentToPostText: TextView
     private lateinit var commentToUserNameText: TextView
@@ -63,7 +63,7 @@ class LikesActivity : AppCompatActivity() {
             database.collection("User").document(selectedPostOwnerID).get()
                 .addOnSuccessListener { it2 ->
                     selectedPostUserName = it2.get("username").toString()
-                    profileImageView.glide(
+                    profileImageView.glideCircle(
                         it2.get("profileImageURL").toString(), placeHolderYap(this)
                     )
                     selectedPostImageURL = it.get("postImageURL").toString()

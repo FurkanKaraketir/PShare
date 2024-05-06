@@ -18,11 +18,10 @@ import com.karaketir.pshare.UserFilteredPostsActivity
 import com.karaketir.pshare.databinding.CommentRowBinding
 import com.karaketir.pshare.model.Comment
 import com.karaketir.pshare.services.getRelativeTime
-import com.karaketir.pshare.services.glide
+import com.karaketir.pshare.services.glideCircle
 import com.karaketir.pshare.services.openLink
 import com.karaketir.pshare.services.placeHolderYap
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.UUID
 
 class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
     RecyclerView.Adapter<CommentRecyclerAdapter.CommentHolder>() {
@@ -59,7 +58,7 @@ class CommentRecyclerAdapter(private val commentList: ArrayList<Comment>) :
                 database.collection("User").document(myItem.commentOwnerID).get()
                     .addOnSuccessListener {
                         myBinding.commentUserName.text = it.get("username").toString()
-                        myBinding.profileImageComment.glide(
+                        myBinding.profileImageComment.glideCircle(
                             it.get("profileImageURL").toString(),
                             placeHolderYap(holder.itemView.context)
                         )
