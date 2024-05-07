@@ -8,6 +8,7 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/profil"
+        android:actionLayout="@layout/menu_item_custom_layout"
         android:icon="@drawable/baseline_account_circle_24"
         android:title="@string/profil"
         app:showAsAction="always" />

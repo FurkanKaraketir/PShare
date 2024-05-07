@@ -13,7 +13,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -40,7 +45,6 @@ import com.google.firebase.storage.ktx.storage
 import com.karaketir.pshare.adapter.PostRecyclerAdapter
 import com.karaketir.pshare.databinding.ActivityProfileBinding
 import com.karaketir.pshare.model.Post
-import com.karaketir.pshare.services.glide
 import com.karaketir.pshare.services.glideCircle
 import com.karaketir.pshare.services.placeHolderYap
 
@@ -490,7 +494,7 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
         istenen = hepsi[hepsi.size - 1]
         urlFinal = "https://media.giphy.com/media/$istenen/giphy.gif"
-        secilenGorsel.glide(urlFinal, placeHolderYap(this))
+        secilenGorsel.glideCircle(urlFinal, placeHolderYap(this))
         db.collection("User").document(auth.uid.toString()).update("profileImageURL", urlFinal)
             .addOnSuccessListener {
                 Toast.makeText(this, "Başarılı", Toast.LENGTH_SHORT).show()

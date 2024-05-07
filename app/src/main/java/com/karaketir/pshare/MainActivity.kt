@@ -3,14 +3,16 @@ package com.karaketir.pshare
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -19,8 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -31,6 +31,7 @@ import com.karaketir.pshare.adapter.PostRecyclerAdapter
 import com.karaketir.pshare.databinding.ActivityMainBinding
 import com.karaketir.pshare.model.Post
 import com.karaketir.pshare.services.openLink
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -236,13 +237,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val menuInflater = menuInflater
-        menuInflater.inflate(R.menu.secenekler_menusu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.cikis_yap -> {
@@ -295,31 +289,47 @@ class MainActivity : AppCompatActivity() {
         invalidateOptionsMenu()  // Forces menu to be redrawn
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+
+        val menuInflater = menuInflater
+        menuInflater.inflate(R.menu.secenekler_menusu, menu)
+
+
+        return super.onCreateOptionsMenu(menu)
+
+
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         super.onPrepareOptionsMenu(menu)
-        val profileItem = menu.findItem(R.id.profil)
-
         getUserProfileUrl(object : UserProfileCallback {
+            @SuppressLint("InflateParams")
             override fun onProfileUrlRetrieved(url: String) {
-                Glide.with(this@MainActivity).load(url).apply(RequestOptions.circleCropTransform())
-                    .error(R.drawable.baseline_account_circle_24) // Default icon in case of error
-                    .into(object : CustomTarget<Drawable>() {
-                        override fun onResourceReady(
-                            resource: Drawable, transition: Transition<in Drawable>?
-                        ) {
-                            runOnUiThread {
-                                profileItem.icon = resource
-                            }
-                        }
-
-                        override fun onLoadCleared(placeholder: Drawable?) {
-                            // Not needed, but you might want to set a placeholder here
-                        }
-                    })
+                val item = menu.findItem(R.id.profil)
+                if (item.actionView == null) {
+                    val inflater =
+                        getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                    val actionView = inflater.inflate(R.layout.menu_item_custom_layout, null)
+                    item.actionView = actionView
+                }
+                val actionView = item.actionView
+                val menuImage = actionView?.findViewById<ImageView>(R.id.menu_image)
+                if (menuImage != null) {
+                    Glide.with(this@MainActivity).load(url).apply(RequestOptions().circleCrop())
+                        .placeholder(R.drawable.baseline_account_circle_24) // Make sure this is a valid drawable
+                        .error(R.drawable.baseline_cancel_24) // Make sure this is a valid drawable
+                        .into(menuImage)
+                    menuImage.setOnClickListener {
+                        val intent = Intent(this@MainActivity, ProfileActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
             }
         })
         return true
     }
+
 
     private fun getUserProfileUrl(callback: UserProfileCallback) {
         database.collection("User").document(auth.uid.toString()).get().addOnSuccessListener {
