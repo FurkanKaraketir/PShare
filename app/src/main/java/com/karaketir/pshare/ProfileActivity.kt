@@ -56,15 +56,13 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
     private lateinit var profileImageURL: String
     private lateinit var secilenGorsel: ImageView
     private lateinit var documentName: String
+    private var preUserName: String = ""
     private var istenen: String = ""
 
     private lateinit var recyclerViewAdapter: PostRecyclerAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var userNameChangeEditText: EditText
-    private lateinit var userNameEditButton: ImageView
     private lateinit var progressCircularProfile: ProgressBar
-    private lateinit var userNameView: TextView
-    private lateinit var versionTextView: TextView
     private lateinit var kaydetBtn: Button
     private lateinit var takipEdilenTextView: TextView
     private lateinit var takipciTextView: TextView
@@ -83,7 +81,6 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         setContentView(binding.root)
 
         kaydetBtn = binding.kaydetBtn
-        userNameEditButton = binding.userNameEditButton
         secilenGorsel = binding.profileImageAdd
         userNameChangeEditText = binding.userNameChangeEditText
         progressCircularProfile = binding.progressCircularProfile
@@ -96,10 +93,6 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         recyclerView.layoutManager = layoutManager
         recyclerViewAdapter = PostRecyclerAdapter(postList)
         recyclerView.adapter = recyclerViewAdapter
-
-
-        userNameView = binding.userNameView
-        versionTextView = binding.versionTextView
 
 
         auth = Firebase.auth
@@ -133,22 +126,20 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
             val intent = Intent(this, BlocksActivity::class.java)
             startActivity(intent)
         }
+        verileriAl()
 
-
-        userNameEditButton.setOnClickListener {
-            userNameChangeEditText.visibility = View.VISIBLE
-            i = 1
-        }
         userNameChangeEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (p0.toString() != "") {
+                if (p0.toString() != "" && p0.toString() != preUserName) {
                     kaydetBtn.visibility = View.VISIBLE
+                    i = 1
                 } else {
                     kaydetBtn.visibility = View.GONE
+                    i = 0
                 }
             }
 
@@ -166,7 +157,6 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
 
         }
 
-        verileriAl()
 
 
         secilenGorsel.setOnClickListener {
@@ -381,7 +371,10 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
             }
             urlFinal = profileImageURL
 
-            userNameView.text = serverUserName
+            userNameChangeEditText.setText(serverUserName)
+            kaydetBtn.visibility = View.GONE
+            preUserName = serverUserName
+
             userName = serverUserName
             secilenGorsel.glideCircle(urlFinal, placeHolderYap(this))
 
@@ -472,6 +465,9 @@ class ProfileActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
             .addOnSuccessListener {
                 progressCircularProfile.visibility = View.GONE
                 Toast.makeText(this, "İşlem Başarılı", Toast.LENGTH_SHORT).show()
+                kaydetBtn.isClickable = true
+                preUserName = userName
+                kaydetBtn.visibility = View.GONE
 
             }
 
