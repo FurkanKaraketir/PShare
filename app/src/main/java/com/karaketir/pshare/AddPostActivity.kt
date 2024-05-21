@@ -125,7 +125,7 @@ class AddPostActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                 } else {
 
                     ImagePicker.with(this@AddPostActivity)
-                        .crop(10f, 10f) //Crop square image, its same as crop(1f, 1f)
+                        .crop() //Crop square image, its same as crop(1f, 1f)
                         .start()
                 }
 
@@ -148,7 +148,7 @@ class AddPostActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                 } else {
 
                     ImagePicker.with(this@AddPostActivity)
-                        .crop(10f, 10f) //Crop square image, its same as crop(1f, 1f)
+                        .crop() //Crop square image, its same as crop(1f, 1f)
                         .start()
                 }
             }
@@ -307,6 +307,7 @@ class AddPostActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
                 }
 
             }
+
             ImagePicker.RESULT_ERROR -> {
                 Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
             }
@@ -321,7 +322,7 @@ class AddPostActivity : AppCompatActivity(), GiphyDialogFragment.GifSelectionLis
         if (requestCode == 1) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 ImagePicker.with(this@AddPostActivity)
-                    .crop(10f, 10f) //Crop square image, its same as crop(1f, 1f)
+                    .crop() //Crop square image, its same as crop(1f, 1f)
                     .start()
             }
         }
