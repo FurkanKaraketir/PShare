@@ -125,7 +125,6 @@
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.App.Starting"
             tools:ignore="LockedOrientationActivity, DiscouragedApi">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
